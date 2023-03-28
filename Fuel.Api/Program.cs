@@ -1,11 +1,16 @@
 
+using DataAccess;
+
 namespace Fuel.Api;
 
 public class Program
 {
     public static void Main(string[] args)
     {
+
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.Configure<DbConfig>(builder.Configuration);
 
         // Add services to the container.
 
@@ -13,6 +18,7 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
 
         var app = builder.Build();
 
