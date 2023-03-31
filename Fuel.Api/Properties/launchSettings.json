@@ -26,12 +26,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "DatabaseName": "Fuel",
-        "DishesCollectionName": "Dishes",
-        "MealsCollectionName": "Meals",
-        "NutrientsCollectionName": "Nutrients",
-        "ProductsCollectionName": "Products",
-        "UnitsCollectionName": "Units"
+        "DatabaseName": "Fuel"
       }
     },
     "Docker": {

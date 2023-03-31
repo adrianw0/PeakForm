@@ -6,9 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Models;
-public class Meal
+public class Meal : IDocument
 {
     public Guid Id { get; set; }
     List<Dictionary<IFoodItem, double>> FoodItems { get; set; } = new();
     public DateTime Date { get; set; }
+    //public User Owner { get; set; } //TODO
 }

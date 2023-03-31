@@ -1,5 +1,8 @@
 
+using Core.Interfaces;
+using Core.Models;
 using DataAccess;
+using DataAccess.Interfaces;
 
 namespace Fuel.Api;
 
@@ -12,6 +15,10 @@ public class Program
 
         builder.Services.Configure<DbConfig>(builder.Configuration);
 
+        builder.Services.AddSingleton<IDbContext, DbContext>();
+        builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+        
         // Add services to the container.
 
         builder.Services.AddControllers();
@@ -37,5 +44,8 @@ public class Program
         app.MapControllers();
 
         app.Run();
+
+      
+        
     }
 }
