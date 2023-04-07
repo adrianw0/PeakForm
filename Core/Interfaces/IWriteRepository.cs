@@ -6,8 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Interfaces;
-public interface IRepository<TDocument> where TDocument : IDocument
+public interface IWriteRepository<TDocument> where TDocument : IEntity
 {
-    Task<IEnumerable<TDocument>> GetAllAsync();
     Task InsertOneAsync(TDocument document);
+    Task InsertManyAsync(IEnumerable<TDocument> documents);
 }

@@ -1,7 +1,7 @@
 ﻿using Core.Interfaces;
 
 namespace Core.Models;
-public class Product : IDocument, IFoodItem
+public class Product : IEntity, IFoodItem
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;

@@ -16,9 +16,10 @@ public class Program
         builder.Services.Configure<DbConfig>(builder.Configuration);
 
         builder.Services.AddSingleton<IDbContext, DbContext>();
-        builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(WriteRepository<>));
+        builder.Services.AddScoped(typeof(IReadRepository<>), typeof(ReadRepository<>));
 
-        
+
         // Add services to the container.
 
         builder.Services.AddControllers();

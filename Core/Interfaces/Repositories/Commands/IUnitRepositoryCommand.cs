@@ -4,8 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Interfaces;
-public interface IDocument
+namespace Core.Interfaces.Repositories.Commands;
+internal interface IUnitRepositoryCommand
 {
-    public Guid Id { get; set; }
 }
