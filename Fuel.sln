@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fuel.Api", "Fuel.Api\Fuel.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{3A76ED62-696E-49E6-83E9-32D7C463EE3F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{086D9723-CFEC-4771-BF90-1987FD280301}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.Mongo", "DataAccess\DataAccess.Mongo.csproj", "{086D9723-CFEC-4771-BF90-1987FD280301}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

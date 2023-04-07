@@ -5,22 +5,17 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
-using DataAccess.Interfaces;
+using DataAccess.Mongo.Interfaces;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
-namespace DataAccess;
-public class Repository<TDocument> : IRepository<TDocument> where TDocument : IDocument
+namespace DataAccess.Mongo;
+public class WriteRepository<TDocument> : IWriteRepository<TDocument> where TDocument : IEntity
 {
     private readonly IMongoCollection<TDocument> _collection;
-    public Repository(IDbContext dbContext)
+    public WriteRepository(IDbContext dbContext)
     {
         _collection = dbContext.GetCollection<TDocument>();
-    }
-
-    public async Task<IEnumerable<TDocument>> GetAllAsync()
-    {
-        var result = await _collection.FindAsync(_ => true);
-        return await result.ToListAsync();
     }
 
     public async Task InsertOneAsync(TDocument document)
@@ -33,16 +28,14 @@ public class Repository<TDocument> : IRepository<TDocument> where TDocument : ID
         await InsertManyAsync(documents);
     }
 
-    public async Task<TDocument> FindByIdAsync(Guid Id)
+    public async Task DeleteByIdAsync(Guid Id)
     {
         var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, Id);
-        return await (await _collection.FindAsync(filter)).SingleOrDefaultAsync() ;
+        await _collection.FindOneAndDeleteAsync(filter);
     }
 
-    public async Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filter)
+    public async Task DeleteManyAsync(Expression<Func<TDocument, bool>> filter)
     {
-        return await (await _collection.FindAsync(filter)).SingleOrDefaultAsync();
+        await _collection.DeleteManyAsync(filter);
     }
-
-    
 }

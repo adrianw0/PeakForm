@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 
-namespace DataAccess;
+namespace DataAccess.Mongo;
 
 #pragma warning disable
 public class DbConfig

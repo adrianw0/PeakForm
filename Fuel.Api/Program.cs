@@ -1,8 +1,6 @@
 
 using Core.Interfaces;
-using Core.Models;
-using DataAccess;
-using DataAccess.Interfaces;
+
 
 namespace Fuel.Api;
 
@@ -13,12 +11,13 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.Configure<DbConfig>(builder.Configuration);
+        builder.Services.Configure<DataAccess.Mongo.DbConfig>(builder.Configuration);
 
-        builder.Services.AddSingleton<IDbContext, DbContext>();
-        builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        builder.Services.AddSingleton<DataAccess.Mongo.Interfaces.IDbContext, DataAccess.Mongo.DbContext>();
+        builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(DataAccess.Mongo.WriteRepository<>));
+        builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DataAccess.Mongo.ReadRepository<>));
 
-        
+
         // Add services to the container.
 
         builder.Services.AddControllers();

@@ -6,9 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Models;
-public class Unit : IDocument
+public class Unit : IEntity
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
     public string Code { get; set; } = null!;
+    public User? Owner { get; set; }
 }
