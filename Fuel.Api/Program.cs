@@ -1,6 +1,7 @@
 
 using Core.Interfaces;
-
+using Core.Interfaces.Providers;
+using Fuel.Api.Providers;
 
 namespace Fuel.Api;
 
@@ -11,14 +12,16 @@ public class Program
 
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.Configure<DataAccess.Mongo.DbConfig>(builder.Configuration);
 
+        // Add services to the container.
+        builder.Services.Configure<DataAccess.Mongo.DbConfig>(builder.Configuration);
         builder.Services.AddSingleton<DataAccess.Mongo.Interfaces.IDbContext, DataAccess.Mongo.DbContext>();
         builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(DataAccess.Mongo.WriteRepository<>));
         builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DataAccess.Mongo.ReadRepository<>));
 
+        //builder.Services.AddTransient<IUserProvider, UserProvider>();
 
-        // Add services to the container.
+
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
