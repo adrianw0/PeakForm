@@ -13,12 +13,6 @@ public class ReadRepository<TDocument> : IReadRepository<TDocument> where TDocum
         _collection = dbContext.GetCollection<TDocument>();
     }
 
-    public async Task<IEnumerable<TDocument>> GetAllAsync()
-    {
-
-        return await (await _collection.FindAsync(_ => true)).ToListAsync();
-    }
-
     public async Task<TDocument> FindByIdAsync(Guid Id)
     {
         var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, Id);
@@ -30,9 +24,13 @@ public class ReadRepository<TDocument> : IReadRepository<TDocument> where TDocum
         return await (await _collection.FindAsync(filter)).SingleOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<TDocument>> FindAsync(Expression<Func<TDocument, bool>> filter)
+    public async Task<IEnumerable<TDocument>> FindAsync(Expression<Func<TDocument, bool>> filter, int pageNumber, int pageSize)
     {
-        var result = await _collection.FindAsync(filter);
-        return await result.ToListAsync();
+
+        var result = await _collection.Find(filter)
+            .Skip((pageNumber - 1) * pageSize)
+            .Limit(pageSize)
+            .ToListAsync();
+        return result;
     }
 }

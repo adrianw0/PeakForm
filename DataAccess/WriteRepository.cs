@@ -34,8 +34,14 @@ public class WriteRepository<TDocument> : IWriteRepository<TDocument> where TDoc
         await _collection.FindOneAndDeleteAsync(filter);
     }
 
-    public async Task DeleteManyAsync(Expression<Func<TDocument, bool>> filter)
+    public async Task DeleteOneAsync(Expression<Func<TDocument, bool>> filter)
     {
         await _collection.DeleteManyAsync(filter);
+    }
+    
+    public async Task UpdateAsync(TDocument Document) //replace but will be update someday...
+    {
+        var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, Document.Id);
+        await _collection.ReplaceOneAsync(filter, Document);
     }
 }
