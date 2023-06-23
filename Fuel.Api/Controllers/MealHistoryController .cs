@@ -1,4 +1,4 @@
-﻿using Core.Interfaces;
+﻿using Core.Interfaces.Repositories;
 using Core.Models;
 using Fuel.Api.DTOs;
 using Fuel.Api.Mappers;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Fuel.Api.Controllers;
 
 [ApiController]
-[Route("[MealHistory]")]
+[Route("MealHistory")]
 public class MealHistoryController : ControllerBase
 {
     private readonly IReadRepository<Meal> _mealReadRepository;
@@ -25,8 +25,8 @@ public class MealHistoryController : ControllerBase
     public async Task<IActionResult> GetMeals([FromQuery] PagingParams pagingParams, DateTime DateFrom, DateTime DateTo)
     {
         var meals = await _mealReadRepository.FindAsync(m=> DateFrom <= m.Date && m.Date >= DateTo, pagingParams.Page, pagingParams.PageSize); ;
-        var productsDto = meals.Select(m => m.MapToDto()).ToList();
-        return Ok(productsDto);
+        var MealDto = meals.Select(m => m.MapToDto()).ToList();
+        return Ok(MealDto);
     }
 
     [HttpPost("AddMeal")]

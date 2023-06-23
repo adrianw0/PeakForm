@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.Interfaces;
+namespace Core.Interfaces.Repositories;
 public interface IWriteRepository<TDocument> where TDocument : IEntity
 {
     Task InsertOneAsync(TDocument document);

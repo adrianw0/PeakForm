@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Interfaces;
+using Core.Interfaces.Repositories;
 using DataAccess.Mongo.Interfaces;
 using MongoDB.Bson;
 using MongoDB.Driver;

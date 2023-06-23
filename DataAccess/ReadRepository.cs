@@ -1,5 +1,5 @@
 ﻿using Core.Interfaces;
-
+using Core.Interfaces.Repositories;
 using DataAccess.Mongo.Interfaces;
 using MongoDB.Driver;
 using System.Linq.Expressions;

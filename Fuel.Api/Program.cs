@@ -1,6 +1,5 @@
-
-using Core.Interfaces;
 using Core.Interfaces.Providers;
+using Core.Interfaces.Repositories;
 using DataAccess.Mongo;
 using Fuel.Api.Providers;
 

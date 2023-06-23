@@ -2,7 +2,7 @@
 namespace Fuel.Api.Controllers;
 
 [ApiController]
-[Route("[Summary]")]
+[Route("Summary")]
 public class SummaryController : ControllerBase
 {
 }

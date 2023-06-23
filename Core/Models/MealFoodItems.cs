@@ -9,6 +9,6 @@ namespace Core.Models;
 public class MealFoodItems
 {
     IFoodItem FoodItem { get; set; } = null!;
-    double Weight { get; set; } = 0;
+    decimal Weight { get; set; } = 0;
     public Unit WeightUnit { get; set; } = null!;
 }

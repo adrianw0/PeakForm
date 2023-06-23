@@ -1,9 +1,9 @@
-﻿using Core.Interfaces;
-using Core.Models;
+﻿using Core.Models;
 using Fuel.Api.DTOs;
 using Fuel.Api.Params;
 using Microsoft.AspNetCore.Mvc;
 using Fuel.Api.Mappers;
+using Core.Interfaces.Repositories;
 
 namespace Fuel.Api.Controllers;
 
@@ -63,7 +63,7 @@ public class ProductsController : ControllerBase
 
     [HttpDelete("DeleteProduct")]
     public async Task<IActionResult> DeleteProduct(Guid id)
-    {
+    { 
         bool deleted;
         try
         {
