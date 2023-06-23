@@ -28,10 +28,11 @@ public class WriteRepository<TDocument> : IWriteRepository<TDocument> where TDoc
         await InsertManyAsync(documents);
     }
 
-    public async Task DeleteByIdAsync(Guid Id)
+    public async Task<bool> DeleteByIdAsync(Guid Id)
     {
         var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, Id);
-        await _collection.FindOneAndDeleteAsync(filter);
+        var r= await _collection.DeleteOneAsync(filter);
+        return r.DeletedCount > 0;
     }
 
     public async Task DeleteOneAsync(Expression<Func<TDocument, bool>> filter)
@@ -39,9 +40,11 @@ public class WriteRepository<TDocument> : IWriteRepository<TDocument> where TDoc
         await _collection.DeleteManyAsync(filter);
     }
     
-    public async Task UpdateAsync(TDocument Document) //replace but will be update someday...
+    public async Task<bool> UpdateAsync(TDocument Document) //replace but will be update someday...
     {
+        
         var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, Document.Id);
-        await _collection.ReplaceOneAsync(filter, Document);
+        var updated= await _collection.ReplaceOneAsync(filter, Document);
+        return updated.ModifiedCount > 0;
     }
 }

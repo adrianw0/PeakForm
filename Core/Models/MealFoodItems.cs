@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Models;
-public class Unit : IEntity
+public class MealFoodItems
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; } = null!;
-    public string Code { get; set; } = null!;
+    IFoodItem FoodItem { get; set; } = null!;
+    double Weight { get; set; } = 0;
+    public Unit WeightUnit { get; set; } = null!;
 }

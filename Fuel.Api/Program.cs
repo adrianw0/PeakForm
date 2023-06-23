@@ -1,6 +1,7 @@
 
 using Core.Interfaces;
 using Core.Interfaces.Providers;
+using DataAccess.Mongo;
 using Fuel.Api.Providers;
 
 namespace Fuel.Api;
@@ -44,6 +45,12 @@ public class Program
 
 
         app.MapControllers();
+
+        //seed
+        var dbContext = app.Services.GetService<DataAccess.Mongo.Interfaces.IDbContext>();
+#pragma warning disable CS8604 // Possible null reference argument.
+        Seeder.SeedAsync(dbContext).GetAwaiter().GetResult();
+#pragma warning restore CS8604 // Possible null reference argument.
 
         app.Run();
 

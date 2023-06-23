@@ -1,4 +1,4 @@
-﻿namespace Fuel.Api.Controllers.Params;
+﻿namespace Fuel.Api.Params;
 
 public class PagingParams
 {
