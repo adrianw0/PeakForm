@@ -7,6 +7,6 @@ using System.Threading.Tasks;
 namespace Core.Models;
 public class NutrientValues
 {
-    public Nutrient Nutrient { get; set; }
-    public double Value { get; set; }
+    public Nutrient Nutrient { get; set; } = null!;
+    public decimal Value { get; set; } = 0;
 }
