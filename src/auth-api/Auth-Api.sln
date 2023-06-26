@@ -3,13 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth-Api", "Auth-Api\Auth-Api.csproj", "{EB061BAA-0996-4DD5-8858-054CEFA7EC26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth-Api", "Auth-Api\Auth-Api.csproj", "{EB061BAA-0996-4DD5-8858-054CEFA7EC26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.DAL", "Auth.DAL\Auth.DAL.csproj", "{B1062D53-A011-4E78-9D6A-BB6DEB384A95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth.DAL", "Auth.DAL\Auth.DAL.csproj", "{B1062D53-A011-4E78-9D6A-BB6DEB384A95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Domain", "Auth.Domain\Auth.Domain.csproj", "{59D7D7ED-701E-47E4-8A2B-258A22B9A8D8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Infrastructure", "Auth.Infrastructure\Auth.Infrastructure.csproj", "{29DBE589-0DBA-4689-B72C-8300EDE866B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth.Infrastructure", "Auth.Infrastructure\Auth.Infrastructure.csproj", "{29DBE589-0DBA-4689-B72C-8300EDE866B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +23,6 @@ Global
 		{B1062D53-A011-4E78-9D6A-BB6DEB384A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1062D53-A011-4E78-9D6A-BB6DEB384A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1062D53-A011-4E78-9D6A-BB6DEB384A95}.Release|Any CPU.Build.0 = Release|Any CPU
-		{59D7D7ED-701E-47E4-8A2B-258A22B9A8D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{59D7D7ED-701E-47E4-8A2B-258A22B9A8D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{59D7D7ED-701E-47E4-8A2B-258A22B9A8D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{59D7D7ED-701E-47E4-8A2B-258A22B9A8D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{29DBE589-0DBA-4689-B72C-8300EDE866B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{29DBE589-0DBA-4689-B72C-8300EDE866B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29DBE589-0DBA-4689-B72C-8300EDE866B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
