@@ -8,12 +8,10 @@ namespace DataAccess.Mongo;
 public class DbContext : IDbContext
 {
     private readonly IOptions<DbConfig> DbConfig;
-    //private readonly IUserProvider _userProvider;
 
     public DbContext(IOptions<DbConfig> dbConfig)
     {
         DbConfig = dbConfig;
-        //_userProvider = userProvider;
     }
 
     public IMongoCollection<T> GetCollection<T>()

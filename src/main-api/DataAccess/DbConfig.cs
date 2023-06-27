@@ -7,7 +7,6 @@ using MongoDB.Driver;
 
 namespace DataAccess.Mongo;
 
-#pragma warning disable
 public class DbConfig
 {
     public string ConnectionString { get; set; }
