@@ -20,10 +20,12 @@ services:
   ports:
    - "5050:80"
   environment:
-   - ConnectionStrings__DefaultConnection=ConnectionString=Host=authDb;Username=${PostgresUser};Password=${PostgresPassword};Database=AuthDb
+   - ConnectionStrings__DefaultConnection=Host=authDb;Username=${PostgresUser};Password=${PostgresPassword};Database=AuthDb
    - JwtSettings__Issuer=${JwtSettingsIssuer}
    - JwtSettings__Audience=${JwtSettingsAudience}
    - JwtSettings__Key=${JwtSettingsKey}
+  depends_on:
+   - authDb
 
  mainDb:
   image: mongo
