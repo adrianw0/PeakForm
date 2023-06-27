@@ -7,6 +7,7 @@
     <RootNamespace>Auth_Api</RootNamespace>
     <UserSecretsId>9a2eba60-21a5-4c4a-9dc9-c9722825959c</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <ItemGroup>

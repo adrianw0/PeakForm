@@ -24,13 +24,13 @@ public class AuthController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost]
+    [HttpPost("CreateUser")]
     public async Task<IActionResult> CreateUser([FromBody] RegisterUser registerUser)
     {
         if (registerUser is null) return BadRequest();
 
         var existingUser = await  _userManager.FindByEmailAsync(registerUser.EmailAddress);
-        if (existingUser is null) return BadRequest(); //TODO: to change later
+        if (existingUser is not null) return BadRequest(); //TODO: to change later
 
         IdentityUser user = new()
         {
@@ -40,13 +40,13 @@ public class AuthController : ControllerBase
         };
         var result = await _userManager.CreateAsync(user, registerUser.Password);
 
-        if (!result.Succeeded) return BadRequest();
+        if (!result.Succeeded) return BadRequest(result.Errors);
 
         return Created("", null);
     }
 
     [AllowAnonymous]
-    [HttpPost]
+    [HttpPost("Login")]
     public async Task<IActionResult> Login([FromBody] LoginUser loginUser)
     {
         var user = await _userManager.FindByEmailAsync(loginUser.Email);
@@ -67,6 +67,12 @@ public class AuthController : ControllerBase
         });
     }
 
+    [AllowAnonymous]
+    [HttpGet("test")]
+    public async Task<IActionResult> test()
+    {
+        return Ok("test");
+    }
 
     private JwtSecurityToken GetToken(List<Claim> claims)
     {
