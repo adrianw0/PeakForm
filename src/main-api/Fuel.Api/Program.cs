@@ -17,26 +17,26 @@ public class Program
         var config = builder.Configuration;
 
         // Add services to the container.
-        //builder.Services.AddAuthentication(x =>
-        //{
-        //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        //}).AddJwtBearer(x =>
-        //{
-        //    x.TokenValidationParameters = new TokenValidationParameters
-        //    {
-        //        ValidIssuer = config["JwtSettings:Issuer"],
-        //        ValidAudience = config["JwtSettings:Audience"],
-        //        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
-        //        ValidateIssuer = true,
-        //        ValidateAudience = true,
-        //        ValidateLifetime = true,
-        //        ValidateIssuerSigningKey = true
-        //    };
-        //});
+        builder.Services.AddAuthentication(x =>
+        {
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(x =>
+        {
+            x.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = config["JwtSettings:Issuer"],
+                ValidAudience = config["JwtSettings:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtSettings:Key"]!)),
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true
+            };
+        });
 
-        //builder.Services.AddAuthorization();
+        builder.Services.AddAuthorization();
 
 
 
@@ -48,7 +48,7 @@ public class Program
         //builder.Services.AddTransient<IUserProvider, UserProvider>();
 
 
-
+ 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -66,8 +66,8 @@ public class Program
 
         app.UseHttpsRedirection();
 
-        //app.UseAuthentication();
-        //app.UseAuthorization();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
 
         app.MapControllers();

@@ -3,10 +3,12 @@ using Core.Models;
 using Fuel.Api.DTOs;
 using Fuel.Api.Mappers;
 using Fuel.Api.Params;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Fuel.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("Dishes")]
 public class DishesController : ControllerBase

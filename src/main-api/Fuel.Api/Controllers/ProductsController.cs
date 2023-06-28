@@ -4,9 +4,11 @@ using Fuel.Api.Params;
 using Microsoft.AspNetCore.Mvc;
 using Fuel.Api.Mappers;
 using Core.Interfaces.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Fuel.Api.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("Products")]
 public class ProductsController : ControllerBase
