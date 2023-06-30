@@ -16,10 +16,6 @@ public class AuthDbContext : IdentityDbContext<IdentityUser>
     {
         
     }
-    public AuthDbContext()
-    {
-        
-    }
 }
 
 
