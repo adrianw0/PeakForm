@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Core.Interfaces;
 using Core.Interfaces.Repositories;
 using DataAccess.Mongo.Interfaces;
+using Domain;
 using MongoDB.Bson;
 using MongoDB.Driver;
 

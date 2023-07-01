@@ -13,6 +13,8 @@ public class UserProvider : IUserProvider
 
     public Guid GetUserId()
     {
-        return _accessor.HttpContext.User.GetUserId();
+        
+        if (_accessor.HttpContext is null) return Guid.Empty;
+        return _accessor.HttpContext.User.GetUserId() ;
     }
 }

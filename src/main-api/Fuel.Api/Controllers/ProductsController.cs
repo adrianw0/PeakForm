@@ -1,79 +1,86 @@
-﻿using Core.Models;
-using Fuel.Api.DTOs;
-using Fuel.Api.Params;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Fuel.Api.Mappers;
 using Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Application.UseCases.Products.GetProducts.Request;
+using Application.UseCases.Products.AddProduct.Request;
+using Application.UseCases.Products.UpdateProduct.Request;
+using Application.UseCases.Products.DeleteProduct.Request;
+using Domain.Models;
+using Application.UseCases.Products.GetProducts;
+using Application.UseCases.Products.UpdateProduct;
+using Application.UseCases.Products.AddProduct;
+using Application.UseCases.Products.DeleteProduct;
+using Application.UseCases.Products.GetProducts.Response;
+using Application.UseCases.Products.AddProduct.Response;
+using Application.UseCases.Products.UpdateProduct.Response;
+using Application.UseCases.Products.DeleteProduct.Response;
+using Core.Common;
+using Amazon.Runtime.Internal;
 
 namespace Fuel.Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("Products")]
+[Route("[Controller]")]
 public class ProductsController : ControllerBase
 {
-    private readonly IReadRepository<Product> _productReadRepository;
-    private readonly IWriteRepository<Product> _productWriteRepository;
-    public ProductsController(IReadRepository<Product> productReadRepository, IWriteRepository<Product> productWriteRepository)
+    private readonly IGetProductsUseCase _getProductsUseCase;
+    private readonly IUpdateProductUseCase _updateProductUseCase;
+    private readonly IAddProductUseCase _addProductUseCase;
+    private readonly IDeleteProductuseCase _deleteProductUseCase;
+    public ProductsController(IGetProductsUseCase getProductsUseCase, IUpdateProductUseCase updateProductUseCase, IAddProductUseCase addProductUseCase, IDeleteProductuseCase deleteProductUseCase)
     {
-        _productReadRepository = productReadRepository;
-        _productWriteRepository = productWriteRepository;
+        _getProductsUseCase = getProductsUseCase;
+        _updateProductUseCase = updateProductUseCase;
+        _addProductUseCase = addProductUseCase;
+        _deleteProductUseCase = deleteProductUseCase;
     }
 
-    
-
-    [HttpGet("Products")]
-    public async Task<IActionResult> GetProducts([FromQuery] PagingParams pagingParams, string searchParam = "")
+    [HttpGet]
+    public async Task<IActionResult> GetProducts(GetProductsRequest request)
     {
-        var products = await _productReadRepository.FindAsync(p=>p.Name.Contains(searchParam) || p.Ean.Contains(searchParam), pagingParams.Page, pagingParams.PageSize);  ;
-        var productsDto = products.Select(p=>p.MapToDto()).ToList();
-        return Ok(productsDto);
+        var response = await _getProductsUseCase.Execute(request);
+
+        if (response is GetProductsSuccessResponse successResponse) return Ok(successResponse.Products.Select(p=>p.MapToDto()).ToList());
+
+        return BadRequest(); 
     }
 
-    [HttpPost("AddProduct")]
-    public async Task<IActionResult> AddProduct([FromBody] ProductDto productDto)
+    [HttpPost]
+    public async Task<IActionResult> AddProduct(AddProductRequest request)
     {
-        try 
-        {
-            var product = productDto.MapToDomain();
+        var response = await _addProductUseCase.Execute(request);
 
-            await _productWriteRepository.InsertOneAsync(product);
-            return Created(string.Empty, product.MapToDto() );
+        if (response is AddProductSuccessResponse success)
+            return Created("Created", success.Product.MapToDto());
 
-        } catch (Exception ex)
-        {
-            return BadRequest(ex.InnerException?.Message);
-        }
+        return BadRequest();
     }
 
-    [HttpPut("UpdateProduct")]
-    public async Task<IActionResult> UpdateProduct([FromBody] ProductDto productDto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateProduct(UpdateProductsRequest request)
     {
-        bool updated;
-        try
-        {
-            var product = productDto.MapToDomain();
-            updated = await _productWriteRepository.UpdateAsync(product);
+        var response = await _updateProductUseCase.Execute(request);
 
-        }catch (Exception ex)
+        return response switch
         {
-            return BadRequest(ex.InnerException?.Message);
-        }
-        return updated ? Ok() : NoContent();
+            UpdateProductSuccessResponse successResponse => Ok(successResponse.Product.MapToDto()),
+            UpdateProductErrorResponse errorResponse => BadRequest(errorResponse.Message),
+            _ => BadRequest()
+        };  
     }
 
-    [HttpDelete("DeleteProduct")]
-    public async Task<IActionResult> DeleteProduct(Guid id)
+    [HttpDelete]
+    public async Task<IActionResult> DeleteProduct(DeleteProductRequest request)
     { 
-        bool deleted;
-        try
+        var response = await _deleteProductUseCase.Execute(request);
+
+        return response switch
         {
-            deleted = await _productWriteRepository.DeleteByIdAsync(id);
-        }catch (Exception ex)
-        {
-            return BadRequest(ex?.InnerException?.Message);
-        }
-        return deleted ? Ok() : NotFound();
+            DeleteProductSuccessReposnse => Ok(),
+            DeleteProductErrorResponse errorResponse => BadRequest(errorResponse.Message),
+            _ => BadRequest()
+        };
     }
 }

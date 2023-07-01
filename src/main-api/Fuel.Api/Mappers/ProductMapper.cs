@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Domain.Models;
 using Fuel.Api.DTOs;
 using System.Runtime.CompilerServices;
 

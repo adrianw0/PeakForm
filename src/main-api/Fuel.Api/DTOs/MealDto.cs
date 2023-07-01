@@ -1,5 +1,6 @@
 ﻿using Core.Interfaces;
 using Core.Models;
+using Domain.Models;
 
 namespace Fuel.Api.DTOs;
 

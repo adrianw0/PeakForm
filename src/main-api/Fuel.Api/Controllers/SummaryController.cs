@@ -4,7 +4,7 @@ namespace Fuel.Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("Summary")]
+[Route("[Controller]")]
 public class SummaryController : ControllerBase
 {
 }

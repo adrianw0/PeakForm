@@ -1,3 +1,4 @@
+using Application.UseCases;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using DataAccess.Mongo;
@@ -17,6 +18,13 @@ public class Program
         var config = builder.Configuration;
 
         // Add services to the container.
+
+        builder.Services.Scan(scan => scan
+        .FromAssembliesOf(typeof(IUseCase<,>))
+        .AddClasses( classes => classes.AssignableTo(typeof(IUseCase<,>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
         builder.Services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
