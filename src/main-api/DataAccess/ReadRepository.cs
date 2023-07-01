@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces;
 using Core.Interfaces.Repositories;
 using DataAccess.Mongo.Interfaces;
+using Domain;
 using MongoDB.Driver;
 using System.Linq.Expressions;
 

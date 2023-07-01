@@ -1,6 +1,8 @@
+using Application.UseCases;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using DataAccess.Mongo;
+using Fuel.Api.Middleware;
 using Fuel.Api.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +19,13 @@ public class Program
         var config = builder.Configuration;
 
         // Add services to the container.
+
+        builder.Services.Scan(scan => scan
+        .FromAssembliesOf(typeof(IUseCase<,>))
+        .AddClasses( classes => classes.AssignableTo(typeof(IUseCase<,>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
         builder.Services.AddAuthentication(x =>
         {
             x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -41,6 +50,7 @@ public class Program
 
 
         builder.Services.Configure<DataAccess.Mongo.DbConfig>(builder.Configuration);
+        builder.Services.AddSingleton<IUserProvider, UserProvider>();
         builder.Services.AddSingleton<DataAccess.Mongo.Interfaces.IDbContext, DataAccess.Mongo.DbContext>();
         builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(DataAccess.Mongo.WriteRepository<>));
         builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DataAccess.Mongo.ReadRepository<>));
@@ -58,6 +68,9 @@ public class Program
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
+
+        app.UseMiddleware<ErrorHandlerMiddleware>();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

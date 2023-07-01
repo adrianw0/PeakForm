@@ -15,7 +15,7 @@ namespace Auth_Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("AuthController")]
+[Route("[Controller]")]
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;

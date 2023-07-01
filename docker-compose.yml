@@ -10,6 +10,9 @@ services:
   environment:
    - ConnectionString=mongodb://${MongoDbUser}:${MongoDbPassword}@mainDb:27017
    - DatabaseName=appData
+   - JwtSettings__Issuer=${JwtSettingsIssuer}
+   - JwtSettings__Audience=${JwtSettingsAudience}
+   - JwtSettings__Key=${JwtSettingsKey}
   depends_on:
    - mainDb
 

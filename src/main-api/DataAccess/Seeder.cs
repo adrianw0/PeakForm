@@ -1,6 +1,7 @@
 ﻿using Core.Models;
 using Core.Models.Constants;
 using DataAccess.Mongo.Interfaces;
+using Domain.Models;
 using MongoDB.Driver;
 using System.Diagnostics.CodeAnalysis;
 

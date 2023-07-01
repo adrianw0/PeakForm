@@ -1,8 +1,17 @@
-﻿using Core.Interfaces.Repositories;
-using Core.Models;
-using Fuel.Api.DTOs;
+﻿using Application.UseCases.MealHistory.AddMeal;
+using Application.UseCases.MealHistory.AddMeal.Request;
+using Application.UseCases.MealHistory.AddMeal.Response;
+using Application.UseCases.MealHistory.DeleteMeal;
+using Application.UseCases.MealHistory.DeleteMeal.Request;
+using Application.UseCases.MealHistory.DeleteMeal.Response;
+using Application.UseCases.MealHistory.GetMeals;
+using Application.UseCases.MealHistory.GetMeals.Request;
+using Application.UseCases.MealHistory.GetMeals.Response;
+using Application.UseCases.MealHistory.UpdateMeal;
+using Application.UseCases.MealHistory.UpdateMeal.Request;
+using Application.UseCases.MealHistory.UpdateMeal.Response;
+using Core.Common;
 using Fuel.Api.Mappers;
-using Fuel.Api.Params;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,73 +19,67 @@ namespace Fuel.Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("MealHistory")]
+[Route("[Controller]")]
 public class MealHistoryController : ControllerBase
 {
-    private readonly IReadRepository<Meal> _mealReadRepository;
-    private readonly IWriteRepository<Meal> _mealWriteRepository;
-    public MealHistoryController(IReadRepository<Meal> mealReadRepository, IWriteRepository<Meal> mealWriteRepository)
+    private readonly IAddMealUseCase _addMealUseCase;
+    private readonly IDeleteMealUseCase _deleteMealUseCase;
+    private readonly IGetMealsUseCase _getMealsUseCase;
+    private readonly IUpdateMealUseCase _updateMealUseCase;
+
+    public MealHistoryController(IAddMealUseCase addMealUseCase, IDeleteMealUseCase deleteMealUseCase, IGetMealsUseCase getMealsUseCase, IUpdateMealUseCase updateMealUseCase)
     {
-        _mealReadRepository = mealReadRepository;
-        _mealWriteRepository = mealWriteRepository;
+        _addMealUseCase = addMealUseCase;
+        _deleteMealUseCase = deleteMealUseCase;
+        _getMealsUseCase = getMealsUseCase;
+        _updateMealUseCase = updateMealUseCase;
     }
 
-
-
-    [HttpGet("GetMeals")]
-    public async Task<IActionResult> GetMeals([FromQuery] PagingParams pagingParams, DateTime DateFrom, DateTime DateTo)
+    [HttpGet()]
+    public async Task<IActionResult> GetMeals([FromQuery] GetMealsRequest request)
     {
-        var meals = await _mealReadRepository.FindAsync(m=> DateFrom <= m.Date && m.Date >= DateTo, pagingParams.Page, pagingParams.PageSize); ;
-        var MealDto = meals.Select(m => m.MapToDto()).ToList();
-        return Ok(MealDto);
+        var result = await _getMealsUseCase.Execute(request);
+
+        if (result is GetMealsSuccessResponse response) return Ok(response.Meals.Select(x => x.MapToDto()).ToList());
+
+        return BadRequest();
     }
 
-    [HttpPost("AddMeal")]
-    public async Task<IActionResult> AddMeal([FromBody] MealDto mealDto)
+    [HttpPost]
+    public async Task<IActionResult> AddMeal(AddMealRequest request)
     {
-        try
-        {
-            var meal = mealDto.MapToDomain();
+        var result = await _addMealUseCase.Execute(request);
+        if (result is AddMealSuccessReposnse success) return Ok(success.Meal.MapToDto());
 
-            await _mealWriteRepository.InsertOneAsync(meal);
-            return Created(string.Empty, meal.MapToDto());
-
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.InnerException?.Message);
-        }
+        return BadRequest();
     }
 
-    [HttpPut("UpdateMeal")]
-    public async Task<IActionResult> UpdateMeal([FromBody] MealDto mealDto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateMeal(UpdateMealRequest request)
     {
-        bool updated;
-        try
-        {
-            var meal = mealDto.MapToDomain();
-            updated = await _mealWriteRepository.UpdateAsync(meal);
+        var result = await _updateMealUseCase.Execute(request);
 
-        }
-        catch (Exception ex)
+        return result switch
         {
-            return BadRequest(ex.InnerException?.Message);
-        }
-        return updated ? Ok() : NoContent();
+            UpdateMealSuccessReposnse success => Ok(success.Meal.MapToDto()),
+            UpdateMealErrorReposnse error => BadRequest(error),
+            _ => BadRequest(ErrorCodes.SomethingWentWrong)
+        };
+        
+
+
     }
 
-    [HttpDelete("DeleteMeal")]
-    public async Task<IActionResult> DeleteMeal(Guid id)
+    [HttpDelete]
+    public async Task<IActionResult> DeleteMeal(DeleteMealRequest request)
     {
-        bool deleted;
-        try
+        var result = await _deleteMealUseCase.Execute(request);
+
+        return result switch
         {
-            deleted = await _mealWriteRepository.DeleteByIdAsync(id);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex?.InnerException?.Message);
-        }
-        return deleted ? Ok() : NotFound();
+            DeleteMealSuccessReposnse success => Ok(success.Message),
+            DeleteMealErrorReposnse error => BadRequest(error.Message),
+            _ => BadRequest()
+        };
     }
 }

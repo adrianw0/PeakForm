@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Core.Interfaces;
 using Core.Interfaces.Repositories;
 using DataAccess.Mongo.Interfaces;
+using Domain;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -41,7 +42,7 @@ public class WriteRepository<TDocument> : IWriteRepository<TDocument> where TDoc
         await _collection.DeleteManyAsync(filter);
     }
     
-    public async Task<bool> UpdateAsync(TDocument Document) //replace but will be update someday...
+    public async Task<bool> UpdateAsync(TDocument Document)
     {
         
         var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, Document.Id);

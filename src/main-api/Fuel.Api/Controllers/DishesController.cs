@@ -1,8 +1,18 @@
-﻿using Core.Interfaces.Repositories;
-using Core.Models;
-using Fuel.Api.DTOs;
+﻿using Application.UseCases;
+using Application.UseCases.Dishes.AddDish;
+using Application.UseCases.Dishes.AddDish.Request;
+using Application.UseCases.Dishes.AddDish.Response;
+using Application.UseCases.Dishes.DeleteDish;
+using Application.UseCases.Dishes.DeleteDish.Request;
+using Application.UseCases.Dishes.DeleteDish.Response;
+using Application.UseCases.Dishes.GetDishes;
+using Application.UseCases.Dishes.GetDishes.Request;
+using Application.UseCases.Dishes.GetDishes.Response;
+using Application.UseCases.Dishes.UpdateDish;
+using Application.UseCases.Dishes.UpdateDish.Request;
+using Application.UseCases.Dishes.UpdateDish.Response;
+
 using Fuel.Api.Mappers;
-using Fuel.Api.Params;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,75 +20,66 @@ namespace Fuel.Api.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("Dishes")]
+[Route("[Controller]")]
 public class DishesController : ControllerBase
 {
+    IGetDishesUseCase _getDishesUseCase;
+    IUpdateDishUseCase _updateDishUseCase;
+    IAddDishUseCase _addDishUseCase;
+    IDeleteDishUseCase _deleteDishUseCase;
 
-    private readonly IReadRepository<Dish> _dishReadRepository;
-    private readonly IWriteRepository<Dish> _dishWriteRepository;
-    public DishesController(IReadRepository<Dish> dishReadRepository, IWriteRepository<Dish> dishWriteRepository)
+    public DishesController(IGetDishesUseCase getDishesUseCase, IUpdateDishUseCase updateDishesUseCase, IAddDishUseCase addDishUseCase, IDeleteDishUseCase deleteDishUseCase)
     {
-        _dishReadRepository = dishReadRepository;
-        _dishWriteRepository = dishWriteRepository;
+        _getDishesUseCase = getDishesUseCase;
+        _updateDishUseCase = updateDishesUseCase;
+        _addDishUseCase = addDishUseCase;
+        _deleteDishUseCase = deleteDishUseCase;
     }
 
-
-
-    [HttpGet("Dishes")]
-    public async Task<IActionResult> GetDishes([FromQuery] PagingParams pagingParams, string searchParam = "")
+    [HttpGet]
+    public async Task<IActionResult> GetDishes([FromQuery] GetDishesRequest request)
     {
-        var dishes = await _dishReadRepository.FindAsync(p => p.Name.Contains(searchParam), pagingParams.Page, pagingParams.PageSize); ;
-        var dishesDto = dishes.Select(p => p.MapToDto()).ToList();
-        return Ok(dishesDto);
+        var result = await _getDishesUseCase.Execute(request);
+
+        if(result is GetDishesSuccessResponse success) return Ok(success.Dishes.Select(x=>x.MapToDto()).ToList());
+
+        return BadRequest();
     }
 
-    [HttpPost("AddDish")]
-    public async Task<IActionResult> AddDisha([FromBody] DishDto dishDto)
+    [HttpPost]
+    public async Task<IActionResult> AddDish(AddDishRequest request)
     {
-        try
-        {
-            var dish = dishDto.MapToDomain();
+        var result = await _addDishUseCase.Execute(request);
 
-            await _dishWriteRepository.InsertOneAsync(dish);
-            return Created(string.Empty, dish.MapToDto());
+        if (result is AddDishSuccessReposnse success) 
+            return Created("", success.Dish?.MapToDto());
 
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.InnerException?.Message);
-        }
+        return BadRequest();
     }
 
-    [HttpPut("updateDish")]
-    public async Task<IActionResult> UpdateDish([FromBody] DishDto dishDto)
+    [HttpPut]
+    public async Task<IActionResult> UpdateDish(UpdateDishRequest request)
     {
-        bool updated;
-        try
-        {
-            var dish = dishDto.MapToDomain();
-            updated = await _dishWriteRepository.UpdateAsync(dish);
+        var response = await _updateDishUseCase.Execute(request);
 
-        }
-        catch (Exception ex)
+        return response switch
         {
-            return BadRequest(ex.InnerException?.Message);
-        }
-        return updated ? Ok() : NoContent();
+            UpdateDishSuccessResponse successResponse => Ok(successResponse.Dish.MapToDto()),
+            UpdateDishErrorResponse errorResponse => BadRequest(errorResponse.Message),
+            _ => BadRequest()
+        };
     }
 
-    [HttpDelete("DeleteDish")]
-    public async Task<IActionResult> DeleteDish(Guid id)
+    [HttpDelete]
+    public async Task<IActionResult> DeleteDish(DeleteDishRequest request)
     {
-        bool deleted;
-        try
-        {
-            deleted = await _dishWriteRepository.DeleteByIdAsync(id);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex?.InnerException?.Message);
-        }
-        return deleted ? Ok() : NotFound();
+        var response = await _deleteDishUseCase.Execute(request);
 
+        return response switch
+        {
+            DeleteDishSuccessReposnse => Ok(),
+            DeleteDishErrorResponse errorResponse => BadRequest(errorResponse.Message),
+            _ => BadRequest()
+        };
     }
 }
