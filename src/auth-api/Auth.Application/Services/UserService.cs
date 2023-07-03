@@ -47,7 +47,7 @@ public class UserService : IUserService
         User user = new()
         {
             UserName = registerUser.UserName,
-            Email = registerUser.EmailAddress
+            Email = registerUser.Email
         };
 
         var CreationresulResult = await _userRepository.CreateUserAsync(user, registerUser.Password);
