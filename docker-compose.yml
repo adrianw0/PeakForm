@@ -13,6 +13,9 @@ services:
    - JwtSettings__Issuer=${JwtSettingsIssuer}
    - JwtSettings__Audience=${JwtSettingsAudience}
    - JwtSettings__Key=${JwtSettingsKey}
+   - RateLimitSettings__PermitLimit=4
+   - RateLimitSettings__Window=12
+   - RateLimitsettings__QueueLimit=2
   depends_on:
    - mainDb
 

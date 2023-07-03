@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace Core.Interfaces.Providers;
 public interface IUserProvider
 {
-    Guid GetUserId();
+    public string UserId { get; }
 }

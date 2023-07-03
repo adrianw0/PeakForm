@@ -8,6 +8,5 @@ using System.Threading.Tasks;
 namespace Domain;
 public interface IVisibilityControl
 {
-    public string OwnerId { get; set; }
     public bool IsGloballyVisible { get; set; }
 }

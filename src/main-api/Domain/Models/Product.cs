@@ -11,5 +11,5 @@ public class Product : IEntity, IFoodItem, IVisibilityControl
     public string Description { get; set; } = string.Empty;
     public List<NutrientValues> Nutrients { get; set; } = new();
     public string OwnerId { get; set; } = string.Empty;
-    public bool IsGloballyVisible { get; set; }
+    public bool IsGloballyVisible { get; set; } = false;
 }

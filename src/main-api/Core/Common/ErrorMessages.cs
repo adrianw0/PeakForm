@@ -10,6 +10,8 @@ public class ErrorCodes
     public const string UpdateFailed = "UpdateFailed";
     public const string DeleteFailed = "DeleteFailed";
 
+    public const string NotFound = "NotFound";
+
     public const string ProductsNotFound = "ProductsNotFound";
 
     public const string MealsNotFound = "MealsNotFound";

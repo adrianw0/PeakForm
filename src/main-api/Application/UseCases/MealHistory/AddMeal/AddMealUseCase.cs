@@ -1,48 +1,35 @@
 ﻿using Application.UseCases.MealHistory.AddMeal.Request;
 using Application.UseCases.MealHistory.AddMeal.Response;
-using Application.UseCases.Products.AddProduct;
+using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.UseCases.MealHistory.AddMeal;
 public class AddMealUseCase : IAddMealUseCase
 {
-    private readonly ILogger<AddMealUseCase> _logger;
-    private readonly IReadRepository<Meal> _mealReadRepository;
     private readonly IWriteRepository<Meal> _mealWriteRepository;
-    public AddMealUseCase(ILogger<AddMealUseCase> logger, IReadRepository<Meal> mealReadRepository, IWriteRepository<Meal> mealWriteRepository)
-    {
-        _logger = logger;
-        _mealReadRepository = mealReadRepository;
-        _mealWriteRepository = mealWriteRepository;
-    }
+    private readonly IUserProvider _userProvider;
 
-    
+    public AddMealUseCase(IWriteRepository<Meal> mealWriteRepository, IUserProvider userProvider)
+    {
+        _mealWriteRepository = mealWriteRepository;
+        _userProvider = userProvider;
+    }
 
     public async Task<AddMealReposnse> Execute(AddMealRequest request)
     {
         var meal = new Meal
         {
             Date = request.Date,
-            FoodItems = request.FoodItems
+            FoodItems = request.FoodItems,
+            OwnerId = _userProvider.UserId,
         };
 
-        try
-        {
-            await _mealWriteRepository.InsertOneAsync(meal); 
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.Message);
-            throw;
-        }
+        await _mealWriteRepository.InsertOneAsync(meal);
+
 
         return new AddMealSuccessReposnse { Meal = meal };
     }
+
 }
