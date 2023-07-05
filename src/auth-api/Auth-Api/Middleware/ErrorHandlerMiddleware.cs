@@ -8,6 +8,7 @@ public class ErrorHandlerMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger<ErrorHandlerMiddleware> _logger;
+
     public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
     {
         _next = next;
@@ -24,7 +25,7 @@ public class ErrorHandlerMiddleware
         {
             string logMessage = "An unhandled exception has occurred while executing the request.";
 
-            if(ex is UserCreationException userCreationException)
+            if (ex is UserCreationException userCreationException)
             {
                 logMessage += $"{userCreationException.Errors}";
             }
@@ -40,7 +41,6 @@ public class ErrorHandlerMiddleware
 
         if (exception is UserCreationException) code = HttpStatusCode.BadRequest;
 
-   
         var result = JsonConvert.SerializeObject(new { error = exception.Message });
 
         context.Response.ContentType = "application/json";
@@ -48,4 +48,3 @@ public class ErrorHandlerMiddleware
         return context.Response.WriteAsync(result);
     }
 }
-

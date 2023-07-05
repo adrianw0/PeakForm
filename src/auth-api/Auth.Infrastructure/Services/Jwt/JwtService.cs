@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Auth.Infrastructure.Models.DTOs;
+﻿using Auth.Infrastructure.Models.DTOs;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Auth.Infrastructure.Services.Jwt;
+
 public class JwtService : IAuthTokenService
 {
     private readonly IOptions<JwtSettings> _settings;
@@ -21,7 +18,6 @@ public class JwtService : IAuthTokenService
 
     public JwtSecurityToken GenerateToken(AuthUserDto userDto)
     {
-
         var authClaims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, userDto.UserId),
@@ -36,7 +32,7 @@ public class JwtService : IAuthTokenService
             audience: _settings.Value.Audience,
             expires: DateTime.Now.AddHours(2),
             claims: authClaims,
-            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256));;
+            signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)); ;
 
         return token;
     }

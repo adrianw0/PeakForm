@@ -7,4 +7,5 @@ using System.Threading.Tasks;
 namespace Infrastructure.Interfaces;
 public interface IExternalProductApiWrapper
 {
+    public Task<List<Domain.Models.Product>> GetProductsAsync(string searchParam);
 }

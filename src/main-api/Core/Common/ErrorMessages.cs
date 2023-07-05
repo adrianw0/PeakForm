@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Core.Common;
-public class ErrorCodes
+public static class ErrorCodes
 {
     public const string UpdateFailed = "UpdateFailed";
     public const string DeleteFailed = "DeleteFailed";

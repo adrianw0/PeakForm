@@ -1,4 +1,5 @@
-﻿using Application.UseCases.Products.GetProducts.Request;
+﻿using Application.Providers.Products;
+using Application.UseCases.Products.GetProducts.Request;
 using Application.UseCases.Products.GetProducts.Response;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
@@ -10,10 +11,12 @@ public class GetProductsUseCase : IGetProductsUseCase
 {
     private readonly IReadRepository<Product> _productReadRepository;
     private readonly IUserProvider _userProvider;
-    public GetProductsUseCase(IReadRepository<Product> productReadRepository, IUserProvider userProvider)
+    private readonly IExternalProductsProvider _externalProductProvider;
+    public GetProductsUseCase(IReadRepository<Product> productReadRepository, IUserProvider userProvider, IExternalProductsProvider productsProvider)
     {
         _productReadRepository = productReadRepository;
         _userProvider = userProvider;
+        _externalProductProvider = productsProvider;
 
     }
 
@@ -23,8 +26,16 @@ public class GetProductsUseCase : IGetProductsUseCase
         (p.Name.Contains(request.SearchParams) || p.Ean.Contains(request.SearchParams)) 
         && (p.OwnerId.Equals(_userProvider.UserId) || p.IsGloballyVisible);
 
-        var products = await _productReadRepository
+        var products = new List<Product>();
+
+        var dbProduct = await _productReadRepository
             .FindAsync(predicate, request.PagingParams.Page, request.PagingParams.PageSize);
+
+        var externalProduct = await _externalProductProvider.GetProductsAsync(request.SearchParams);
+
+        products.AddRange(dbProduct);
+        products.AddRange(externalProduct);
+
 
         return new GetProductsSuccessResponse { Products = products.ToList() };
     }

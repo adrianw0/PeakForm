@@ -9,16 +9,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Auth_Api;
 
+#pragma warning disable S1118 // Utility classes should not have public constructors
 public class Program
+#pragma warning restore S1118 // Utility classes should not have public constructors
 {
     public static void Main(string[] args)
     {
-
         var builder = WebApplication.CreateBuilder(args);
         var config = builder.Configuration;
         // Add services to the container.
-
-
 
         builder.Services.Configure<JwtSettings>(config.GetSection("JwtSettings"));
 
@@ -35,8 +34,6 @@ public class Program
         builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
         {
             options.User.RequireUniqueEmail = true;
-
-           
         })
             .AddEntityFrameworkStores<AuthDbContext>()
             .AddDefaultTokenProviders();
@@ -54,7 +51,6 @@ public class Program
         app.UseAuthorization();
 
         app.MapControllers();
-
 
         using (var scope = app.Services.CreateScope())
         {

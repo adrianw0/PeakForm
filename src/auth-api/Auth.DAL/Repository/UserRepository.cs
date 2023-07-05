@@ -1,19 +1,17 @@
-﻿using Auth.Domain.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Auth.DAL.Exceptions;
 using Auth.DAL.Extensions.Mappers;
-using System.Reflection.Metadata.Ecma335;
-using Auth.Domain.Common.Result;
 using Auth.Domain.Common;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Diagnostics.Contracts;
-using Auth.DAL.Exceptions;
+using Auth.Domain.Common.Result;
+using Auth.Domain.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Auth.DAL.Repository;
+
 public class UserRepository : IUserRepository
 {
     private readonly UserManager<IdentityUser> _userManager;
-    public UserRepository(UserManager<IdentityUser> userManager )
+
+    public UserRepository(UserManager<IdentityUser> userManager)
     {
         _userManager = userManager;
     }
@@ -48,14 +46,12 @@ public class UserRepository : IUserRepository
         };
 
         var result = await _userManager.CreateAsync(identity, password);
-        if(result.Succeeded) return Result.Ok(user);
+        if (result.Succeeded) return Result.Ok(user);
 
-        if(result.Errors.Any(x=>x.Code.Contains("Duplicate"))) return Result.Fail<User>(ErrorCodes.UserAlreadyExists);
-
+        if (result.Errors.Any(x => x.Code.Contains("Duplicate"))) return Result.Fail<User>(ErrorCodes.UserAlreadyExists);
 
         var errorCodes = string.Join(';', result.Errors.Select(x => x.Code).ToList());
 
         throw new UserCreationException(errorCodes);
-        
     }
 }

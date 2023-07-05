@@ -1,23 +1,19 @@
 ﻿using Core.Models.Constants;
 using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+using OpenFoodFactsProduct = Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Product;
 
 namespace Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Extensions;
-public static class ProductMapper
+internal static class ProductMapper
 {
-    internal static Product MapToDomain(this OpenFoodFactsProduct externalProduct)
+    internal static Domain.Models.Product MapToDomain(this OpenFoodFactsProduct externalProduct)
     {
-        return new Product
+        return new Domain.Models.Product
         {
-            Name = externalProduct.ProductName,
-            Ean = externalProduct.Code,
+            Name = externalProduct.product_name,
+            Ean = externalProduct.code,
             OwnerId = string.Empty,
-            Nutrients = externalProduct.Nutriments.MapToDomainNutrients()
+            Nutrients = externalProduct.nutriments.MapToDomainNutrients(),
+            IsGloballyVisible = true
         };
     }
 
@@ -28,10 +24,9 @@ public static class ProductMapper
         var values = new List<NutrientValues>
         {
             new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Proteins, Unit = gramUnit }, Value = externalNutriment.proteins_100g },
-            new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Carbohydrates, Unit = gramUnit }, Value = externalNutriment.carbohydrates_100g },
+            new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Carbohydrates, Unit = gramUnit }, Value = (decimal)externalNutriment.carbohydrates_100g },
             new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Fats, Unit = gramUnit }, Value = externalNutriment.fat_100g },
-            new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Sugar, Unit = gramUnit }, Value = externalNutriment.sugars_100g },
-            new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Fibre, Unit = gramUnit }, Value = externalNutriment.fiber_100g}
+            new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Sugar, Unit = gramUnit }, Value = (decimal)externalNutriment.sugars_100g }
         };
 
         return values;

@@ -1,9 +1,9 @@
 ﻿
-using Domain.Models;
 using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Extensions;
 using Infrastructure.Interfaces;
+using Microsoft.VisualBasic;
 using Newtonsoft.Json;
-using System.Runtime.CompilerServices;
+using OpenFoodFactsProduct = Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Product;
 
 namespace Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
 public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
@@ -15,25 +15,22 @@ public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
         _httpClient = httpClient;
     }
 
-
-
-    private async Task<List<OpenFoodFactsProduct>> GetProductByBarcode(string serachParam)
+    private async Task<List<OpenFoodFactsProduct>> GetProductsFromRequest(string request, string serachParam)
     {
-        var response = await _httpClient.GetStringAsync($"https://world.openfoodfacts.org/api/v0/product/{serachParam}.json=1");
+        var req = string.Format(request, serachParam);
 
-        return JsonConvert.DeserializeObject<List<OpenFoodFactsProduct>>(response) ?? new();
-    }
-    private async Task<List<OpenFoodFactsProduct>> GetProductByName(string serachParam)
-    {
-        var response = await _httpClient.GetStringAsync($"https://world.openfoodfacts.org/cgi/search.pl?search_terms={serachParam}&json=1");
+        var response = await _httpClient.GetAsync(req);
+        
+            var responseContent = await response.Content.ReadAsStringAsync();
 
-        return JsonConvert.DeserializeObject<List<OpenFoodFactsProduct>>(response) ?? new();
+            return JsonConvert.DeserializeObject<Root>(responseContent)?.products ?? new List<OpenFoodFactsProduct>();
+        
     }
 
-    public async Task<List<Product>> GetProducts(string searchParam)
+    public async Task<List<Domain.Models.Product>> GetProductsAsync(string searchParam)
     {
-        var byName = GetProductByName(searchParam);
-        var byBarcode = GetProductByBarcode(searchParam);
+        var byName = GetProductsFromRequest(Constants.SearchByNameRequest, searchParam);
+        var byBarcode = GetProductsFromRequest(Constants.SearchByCodeRequest, searchParam);
 
         
         await Task.WhenAll(byName, byBarcode);

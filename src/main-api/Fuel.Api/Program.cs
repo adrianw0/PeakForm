@@ -1,3 +1,4 @@
+using Application.Providers.Products;
 using Application.UseCases;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
@@ -5,6 +6,8 @@ using DataAccess.Mongo;
 using Fuel.Api.Middleware;
 using Fuel.Api.Providers;
 using Fuel.Api.Settings;
+using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
+using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
@@ -13,7 +16,7 @@ using System.Threading.RateLimiting;
 
 namespace Fuel.Api;
 
-public class Program
+public static class Program
 {
     public static void Main(string[] args)
     {
@@ -23,6 +26,8 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddHttpContextAccessor();
+        builder.Services.AddHttpClient();
+
 
         builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.Jwt));
         builder.Services.Configure<RateLimitSettings>(builder.Configuration.GetSection(RateLimitSettings.RateLimit));
@@ -36,7 +41,9 @@ public class Program
 
         SetupRateLimiter(builder, rateLimitSettings);
         SetupJwt(builder, jwtSettings);
-        
+
+   
+
         builder.Services.AddAuthorization();
 
         AddUseCases(builder);
@@ -46,16 +53,21 @@ public class Program
         builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(DataAccess.Mongo.WriteRepository<>));
         builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DataAccess.Mongo.ReadRepository<>));
 
+        builder.Services.AddScoped<IExternalProductApiWrapper, OpenFoodFactsApiWrapper>();
+        builder.Services.AddScoped<IExternalProductsProvider, ExternalProductsProvider>();
+
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        
 
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
+
         app.UseRateLimiter();
 
         app.UseMiddleware<ErrorHandlerMiddleware>();
@@ -128,3 +140,4 @@ public class Program
             .WithScopedLifetime());
     }
 }
+
