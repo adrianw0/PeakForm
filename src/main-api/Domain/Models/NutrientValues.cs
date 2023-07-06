@@ -11,5 +11,5 @@ public class NutrientValues
     [Required]
     public required Nutrient Nutrient { get; set; }
     [Required]
-    public required decimal Value { get; set; }
+    public required double Value { get; set; }
 }

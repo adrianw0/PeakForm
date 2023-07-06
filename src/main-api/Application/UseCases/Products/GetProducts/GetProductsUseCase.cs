@@ -22,20 +22,29 @@ public class GetProductsUseCase : IGetProductsUseCase
 
     public async Task<GetProductsResponse> Execute(GetProductsRequest request)
     {
+
+        var products = new List<Product>();
+
+
         Expression<Func<Product, bool>> predicate = p=>
         (p.Name.Contains(request.SearchParams) || p.Ean.Contains(request.SearchParams)) 
         && (p.OwnerId.Equals(_userProvider.UserId) || p.IsGloballyVisible);
 
-        var products = new List<Product>();
-
-        var dbProduct = await _productReadRepository
+        var dbProducts = await _productReadRepository
             .FindAsync(predicate, request.PagingParams.Page, request.PagingParams.PageSize);
 
-        var externalProduct = await _externalProductProvider.GetProductsAsync(request.SearchParams);
+        products.AddRange(dbProducts);
 
-        products.AddRange(dbProduct);
-        products.AddRange(externalProduct);
+        var getByCodeResult = await _externalProductProvider.GetProductByCodeAsync(request.SearchParams);
+        
+        if(getByCodeResult != null)
+        {
+            products.Add(getByCodeResult);
+            return new GetProductsSuccessResponse { Products = products.ToList() };
+        }
 
+        var getByNameResult = await _externalProductProvider.GetProductsByNameAsync(request.SearchParams, request.PagingParams);
+        products.AddRange(getByNameResult);
 
         return new GetProductsSuccessResponse { Products = products.ToList() };
     }

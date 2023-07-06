@@ -11,7 +11,7 @@ public class Ingredient
     [Required]
     public required Product Product { get; set; }
     [Required]
-    public required decimal Weight { get; set; }
+    public required double Weight { get; set; }
     [Required]
     public required Unit Unit { get; set; }
 }

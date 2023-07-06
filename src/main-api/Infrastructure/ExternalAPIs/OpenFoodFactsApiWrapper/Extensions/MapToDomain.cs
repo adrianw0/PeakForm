@@ -24,12 +24,12 @@ internal static class ProductMapper
         var values = new List<NutrientValues>
         {
             new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Proteins, Unit = gramUnit }, Value = externalNutriment.proteins_100g },
-            new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Carbohydrates, Unit = gramUnit }, Value = (decimal)externalNutriment.carbohydrates_100g },
+            new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Carbohydrates, Unit = gramUnit }, Value = externalNutriment.carbohydrates_100g },
             new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Fats, Unit = gramUnit }, Value = externalNutriment.fat_100g },
-            new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Sugar, Unit = gramUnit }, Value = (decimal)externalNutriment.sugars_100g }
+            new NutrientValues{ Nutrient =  new Nutrient { Name = NutrientNames.Sugar, Unit = gramUnit }, Value = externalNutriment.sugars_100g }
         };
 
         return values;
-    } //TODO: automate this...
+    } 
 }
 

@@ -1,45 +1,82 @@
 ﻿
 using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Extensions;
 using Infrastructure.Interfaces;
-using Microsoft.VisualBasic;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using OpenFoodFactsProduct = Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Product;
 
 namespace Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
 public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
 {
     private readonly HttpClient _httpClient;
+    private readonly ILogger<OpenFoodFactsApiWrapper> _logger;
 
-    public OpenFoodFactsApiWrapper(HttpClient httpClient)
+    public OpenFoodFactsApiWrapper(HttpClient httpClient, ILogger<OpenFoodFactsApiWrapper> logger)
     {
         _httpClient = httpClient;
+        _logger = logger;
     }
 
-    private async Task<List<OpenFoodFactsProduct>> GetProductsFromRequest(string request, string serachParam)
+    //split because those are returned differently...
+    private async Task<List<Product>> GetProductsFromResponseByName(string request, string serachParam)
     {
         var req = string.Format(request, serachParam);
+        HttpResponseMessage response;
 
-        var response = await _httpClient.GetAsync(req);
-        
-            var responseContent = await response.Content.ReadAsStringAsync();
+        try 
+        { 
+            response = await _httpClient.GetAsync(req);
+            response.EnsureSuccessStatusCode();
 
-            return JsonConvert.DeserializeObject<Root>(responseContent)?.products ?? new List<OpenFoodFactsProduct>();
-        
+        }catch(Exception ex)
+        {
+            _logger.LogError("Open food api call failed: ", ex);
+            return new();
+        }
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+
+        var result = JsonConvert.DeserializeObject<Root>(responseContent)?.Products;
+
+        return result ?? new();
     }
 
-    public async Task<List<Domain.Models.Product>> GetProductsAsync(string searchParam)
+    private async Task<Product?> GetProductFromResponseByCodeAync(string request, string serachParam)
     {
-        var byName = GetProductsFromRequest(Constants.SearchByNameRequest, searchParam);
-        var byBarcode = GetProductsFromRequest(Constants.SearchByCodeRequest, searchParam);
+        var req = string.Format(request, serachParam);
+        HttpResponseMessage response;
 
-        
-        await Task.WhenAll(byName, byBarcode);
+        try
+        {
+            response = await _httpClient.GetAsync(req);
+            response.EnsureSuccessStatusCode();
 
-        var byNameResult = byName.Result.Select(p=>p.MapToDomain()).ToList();
-        var byBarcodeResult = byBarcode.Result.Select(p=>p.MapToDomain()).ToList();
-        
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Open food api call failed: ", ex);
+            return null;
+        }
 
-        return byNameResult.Concat(byBarcodeResult).ToList();
+        var responseContent = await response.Content.ReadAsStringAsync();
 
+        var result = JsonConvert.DeserializeObject<Root>(responseContent);
+        if (result is null) return null;
+           
+        return result.product;
+
+    }
+
+    public async Task<List<Domain.Models.Product>> GetProductsByNameAsync(string searchParam)
+    {
+        var searchResult = await GetProductsFromResponseByName(Constants.SearchByNameRequest, searchParam);
+
+        if (searchResult is null || !searchResult.Any()) return new();
+        return searchResult.Select(p => p.MapToDomain()).ToList();
+    }
+    public async Task<Domain.Models.Product?> GetProductByCodeAsync(string searchParam)
+    {
+        var searchResult = await GetProductFromResponseByCodeAync(Constants.SearchByCodeRequest, searchParam);
+
+        return searchResult?.MapToDomain();
     }
 }

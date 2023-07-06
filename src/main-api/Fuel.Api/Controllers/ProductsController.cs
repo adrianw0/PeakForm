@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace Fuel.Api.Controllers;
 
-[Authorize]
+//[Authorize]
 [ApiController]
 [EnableRateLimiting("fixed")]
 [Route("[Controller]")]

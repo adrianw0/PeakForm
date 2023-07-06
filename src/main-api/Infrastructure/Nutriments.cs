@@ -1,4 +1,5 @@
 ﻿#nullable disable
+#pragma warning disable
 using Newtonsoft.Json;
 
 
@@ -6,36 +7,36 @@ namespace Infrastructure;
 internal class Nutriments
 {
 
-        public decimal carbohydrates { get; set; }
-        public decimal carbohydrates_100g { get; set; }
+        public double carbohydrates { get; set; }
+        public double carbohydrates_100g { get; set; }
         public string carbohydrates_serving { get; set; }
         public string carbohydrates_unit { get; set; }
-        public decimal carbohydrates_value { get; set; }
+        public double carbohydrates_value { get; set; }
 
         [JsonProperty("carbon-footprint-from-known-ingredients_product")]
-        public decimal carbonfootprintfromknowningredients_product { get; set; }
+        public double carbonfootprintfromknowningredients_product { get; set; }
 
         [JsonProperty("carbon-footprint-from-known-ingredients_serving")]
-        public decimal carbonfootprintfromknowningredients_serving { get; set; }
+        public double carbonfootprintfromknowningredients_serving { get; set; }
         public int energy { get; set; }
 
         [JsonProperty("energy-kcal")]
-        public decimal energykcal { get; set; }
+        public double energykcal { get; set; }
 
         [JsonProperty("energy-kcal_100g")]
-        public decimal energykcal_100g { get; set; }
+        public double energykcal_100g { get; set; }
 
         [JsonProperty("energy-kcal_serving")]
-        public decimal energykcal_serving { get; set; }
+        public double energykcal_serving { get; set; }
 
         [JsonProperty("energy-kcal_unit")]
         public string energykcal_unit { get; set; }
 
         [JsonProperty("energy-kcal_value")]
-        public decimal energykcal_value { get; set; }
+        public double energykcal_value { get; set; }
 
         [JsonProperty("energy-kcal_value_computed")]
-        public decimal energykcal_value_computed { get; set; }
+        public double energykcal_value_computed { get; set; }
 
         [JsonProperty("energy-kj")]
         public int energykj { get; set; }
@@ -53,27 +54,27 @@ internal class Nutriments
         public int energykj_value { get; set; }
 
         [JsonProperty("energy-kj_value_computed")]
-        public decimal energykj_value_computed { get; set; }
+        public double energykj_value_computed { get; set; }
         public int energy_100g { get; set; }
         public int energy_serving { get; set; }
         public string energy_unit { get; set; }
         public int energy_value { get; set; }
-        public decimal fat { get; set; }
-        public decimal fat_100g { get; set; }
-        public decimal fat_serving { get; set; }
+        public double fat { get; set; }
+        public double fat_100g { get; set; }
+        public double fat_serving { get; set; }
         public string fat_unit { get; set; }
-        public decimal fat_value { get; set; }
-        public decimal fiber { get; set; }
-        public decimal fiber_100g { get; set; }
-        public decimal fiber_serving { get; set; }
+        public double fat_value { get; set; }
+        public double fiber { get; set; }
+        public double fiber_100g { get; set; }
+        public double fiber_serving { get; set; }
         public string fiber_unit { get; set; }
-        public decimal fiber_value { get; set; }
+        public double fiber_value { get; set; }
 
         [JsonProperty("fruits-vegetables-nuts-estimate-from-ingredients_100g")]
-        public decimal fruitsvegetablesnutsestimatefromingredients_100g { get; set; }
+        public double fruitsvegetablesnutsestimatefromingredients_100g { get; set; }
 
         [JsonProperty("fruits-vegetables-nuts-estimate-from-ingredients_serving")]
-        public decimal fruitsvegetablesnutsestimatefromingredients_serving { get; set; }
+        public double fruitsvegetablesnutsestimatefromingredients_serving { get; set; }
 
         [JsonProperty("monounsaturated-fat")]
         public string monounsaturatedfat { get; set; }
@@ -106,10 +107,10 @@ internal class Nutriments
         public int nutritionscorefr_100g { get; set; }
 
         [JsonProperty("polyunsaturated-fat")]
-        public decimal polyunsaturatedfat { get; set; }
+        public double polyunsaturatedfat { get; set; }
 
         [JsonProperty("polyunsaturated-fat_100g")]
-        public decimal polyunsaturatedfat_100g { get; set; }
+        public double polyunsaturatedfat_100g { get; set; }
 
         [JsonProperty("polyunsaturated-fat_serving")]
         public string polyunsaturatedfat_serving { get; set; }
@@ -118,42 +119,42 @@ internal class Nutriments
         public string polyunsaturatedfat_unit { get; set; }
 
         [JsonProperty("polyunsaturated-fat_value")]
-        public decimal polyunsaturatedfat_value { get; set; }
-        public decimal proteins { get; set; }
-        public decimal proteins_100g { get; set; }
-        public decimal proteins_serving { get; set; }
+        public double polyunsaturatedfat_value { get; set; }
+        public double proteins { get; set; }
+        public double proteins_100g { get; set; }
+        public double proteins_serving { get; set; }
         public string proteins_unit { get; set; }
-        public decimal proteins_value { get; set; }
-        public decimal salt { get; set; }
-        public decimal salt_100g { get; set; }
-        public decimal salt_serving { get; set; }
+        public double proteins_value { get; set; }
+        public double salt { get; set; }
+        public double salt_100g { get; set; }
+        public double salt_serving { get; set; }
         public string salt_unit { get; set; }
-        public decimal salt_value { get; set; }
+        public double salt_value { get; set; }
 
         [JsonProperty("saturated-fat")]
-        public decimal saturatedfat { get; set; }
+        public double saturatedfat { get; set; }
 
         [JsonProperty("saturated-fat_100g")]
-        public decimal saturatedfat_100g { get; set; }
+        public double saturatedfat_100g { get; set; }
 
         [JsonProperty("saturated-fat_serving")]
-        public decimal saturatedfat_serving { get; set; }
+        public double saturatedfat_serving { get; set; }
 
         [JsonProperty("saturated-fat_unit")]
         public string saturatedfat_unit { get; set; }
 
         [JsonProperty("saturated-fat_value")]
-        public decimal saturatedfat_value { get; set; }
-        public decimal sodium { get; set; }
-        public decimal sodium_100g { get; set; }
+        public double saturatedfat_value { get; set; }
+        public double sodium { get; set; }
+        public double sodium_100g { get; set; }
         public string sodium_serving { get; set; }
         public string sodium_unit { get; set; }
-        public decimal sodium_value { get; set; }
-        public decimal sugars { get; set; }
-        public decimal sugars_100g { get; set; }
-        public decimal sugars_serving { get; set; }
+        public double sodium_value { get; set; }
+        public double sugars { get; set; }
+        public double sugars_100g { get; set; }
+        public double sugars_serving { get; set; }
         public string sugars_unit { get; set; }
-        public decimal sugars_value { get; set; }
+        public double sugars_value { get; set; }
 
         [JsonProperty("carbon-footprint-from-known-ingredients_100g")]
         public string carbonfootprintfromknowningredients_100g { get; set; }
@@ -189,3 +190,4 @@ internal class Nutriments
     
 }
 #nullable enable
+#pragma warning enable

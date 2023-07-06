@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,5 +8,6 @@ using System.Threading.Tasks;
 namespace Infrastructure.Interfaces;
 public interface IExternalProductApiWrapper
 {
-    public Task<List<Domain.Models.Product>> GetProductsAsync(string searchParam);
+    public Task<Product?> GetProductByCodeAsync(string searchParam);
+    public Task<List<Product>> GetProductsByNameAsync(string searchParam);
 }

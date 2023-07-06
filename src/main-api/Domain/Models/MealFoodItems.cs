@@ -12,7 +12,7 @@ public class MealFoodItems
     [Required]
     public required IFoodItem FoodItem { get; set; }
     [Required]
-    public required decimal Weight { get; set; }
+    public required double Weight { get; set; }
     [Required]
     public required Unit WeightUnit { get; set; }
 
