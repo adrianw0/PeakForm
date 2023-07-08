@@ -16,8 +16,8 @@ public class ExternalProductsProvider : IExternalProductsProvider
         return await _externalProductApiWrapper.GetProductByCodeAsync(searchParams);
     }
 
-    public async Task<List<Product>> GetProductsByNameAsync(string searchParams, PagingParams pagingParams)
+    public async Task<List<Product>> GetProductsByNameAsync(string searchParams, int page, int pageSize)
     {
-        return await _externalProductApiWrapper.GetProductsByNameAsync(searchParams);
+        return await _externalProductApiWrapper.GetProductsByNameAsync(searchParams , page, pageSize);
     }
 }

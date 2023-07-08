@@ -4,6 +4,8 @@ using Infrastructure.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
+
+
 namespace Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
 public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
 {
@@ -17,9 +19,9 @@ public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
     }
 
     //split because those are returned differently...
-    private async Task<List<Product>> GetProductsFromResponseByName(string request, string searchParam)
+    private async Task<List<Product>> GetProductsFromResponseByName(string request, string searchParam, int pageNumber, int pageSize)
     {
-        var req = string.Format(request, searchParam);
+        var req = string.Format(request, searchParam, pageNumber, pageSize);
         HttpResponseMessage response;
 
         try 
@@ -63,9 +65,9 @@ public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
         return result?.product;
     }
 
-    public async Task<List<Domain.Models.Product>> GetProductsByNameAsync(string searchParam)
+    public async Task<List<Domain.Models.Product>> GetProductsByNameAsync(string searchParam, int pageNumber, int pageSize)
     {
-        var searchResult = await GetProductsFromResponseByName(Constants.SearchByNameRequest, searchParam);
+        var searchResult = await GetProductsFromResponseByName(Constants.SearchByNameRequest, searchParam, pageNumber, pageSize);
 
         return !searchResult.Any() ? new List<Domain.Models.Product>() : searchResult.Select(p => p.MapToDomain()).ToList();
     }

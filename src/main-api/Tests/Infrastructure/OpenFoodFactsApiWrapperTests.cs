@@ -60,7 +60,7 @@ public class OpenFoodFactsApiWrapperTests
 
 
         var apiWrapper = new OpenFoodFactsApiWrapper(httpClient, loggerMock);
-        var product  = (await apiWrapper.GetProductsByNameAsync("Berlinki")).FirstOrDefault();
+        var product  = (await apiWrapper.GetProductsByNameAsync("Berlinki", 1, 5)).FirstOrDefault();
 
         Assert.IsType<Domain.Models.Product>(product);
 

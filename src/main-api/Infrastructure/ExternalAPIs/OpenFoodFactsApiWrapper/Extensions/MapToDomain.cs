@@ -17,7 +17,7 @@ internal static class ProductMapper
         };
     }
 
-    internal static List<NutrientValues> MapToDomainNutrients(this Nutriments externalNutriment)
+    private static List<NutrientValues> MapToDomainNutrients(this Nutriments externalNutriment)
     {
         var gramUnit = new Unit { Code = UnitsConstants.GramCode, Name = UnitsConstants.GramName };
 
