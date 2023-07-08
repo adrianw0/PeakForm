@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost("CreateUser")]
+    [HttpPost(nameof(CreateUser))]
     public async Task<IActionResult> CreateUser([FromBody] RegisterUser registerUser)
     {
         var result = await _userService.RegisterUserAsync(registerUser);
@@ -34,7 +34,7 @@ public class AuthController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost("Login")]
+    [HttpPost(nameof(Login))]
     public async Task<IActionResult> Login([FromBody] LoginUser loginUser)
     {
         var result = await _userService.LoginAsync(loginUser);

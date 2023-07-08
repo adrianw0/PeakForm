@@ -1,5 +1,4 @@
-﻿using Core.Models;
-using Domain.Models;
+﻿using Domain.Models;
 using Fuel.Api.DTOs;
 
 namespace Fuel.Api.Mappers;

@@ -17,7 +17,7 @@ public class AddProductUseCase : IAddProductUseCase
         _productWriteRepository = productWriteRepository;
     }
 
-    public async Task<AddProductResposnse> Execute(AddProductRequest request)
+    public async Task<AddProductResponse> Execute(AddProductRequest request)
     {
 
         var product = new Product

@@ -7,6 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.UseCases.Dishes.UpdateDish;
-public interface IUpdateDishUseCase : IUseCase<UpdateDishRequest, UpdateDishReposnse>
+public interface IUpdateDishUseCase : IUseCase<UpdateDishRequest, UpdateDishResponse>
 {
 }

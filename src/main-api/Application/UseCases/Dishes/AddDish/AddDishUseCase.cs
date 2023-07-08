@@ -17,7 +17,7 @@ public class AddDishUseCase : IAddDishUseCase
         _userProvider = userProvider;
     }
 
-    public async Task<AddDishReposnse> Execute(AddDishRequest request)
+    public async Task<AddDishResponse> Execute(AddDishRequest request)
     {
         var dish = new Dish
         {
@@ -29,7 +29,7 @@ public class AddDishUseCase : IAddDishUseCase
 
         await _dishWriteRepository.InsertOneAsync(dish);
 
-        return new AddDishSuccessReposnse { Dish = dish };
+        return new AddDishSuccessResponse { Dish = dish };
 
     }
 }

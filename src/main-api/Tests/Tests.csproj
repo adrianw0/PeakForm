@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="TestData\OpenFoodFactsApiGetProductReponse.json">
+    <None Update="TestData\OpenFoodFactsApiGetProductResponse.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

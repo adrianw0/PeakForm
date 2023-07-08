@@ -6,5 +6,5 @@ namespace Application.Providers.Products;
 public interface IExternalProductsProvider
 {
     public Task<List<Product>> GetProductsByNameAsync(string searchParams, PagingParams pagingParams);
-    public Task<Product> GetProductByCodeAsync(string searchParams);
+    public Task<Product?> GetProductByCodeAsync(string searchParams);
 }

@@ -24,7 +24,7 @@ public class GetMealsUseCase : IGetMealsUseCase
         _userProvider = userProvider;
     }
 
-    public async Task<GetMealsReposnse> Execute(GetMealsRequest request)
+    public async Task<GetMealsResponse> Execute(GetMealsRequest request)
     {
         Expression<Func<Meal, bool>> predicate = m =>
         (request.DateFrom <= m.Date && m.Date <= request.DateTo 

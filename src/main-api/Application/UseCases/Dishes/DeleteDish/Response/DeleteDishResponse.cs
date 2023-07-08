@@ -1,4 +1,4 @@
 ﻿namespace Application.UseCases.Dishes.DeleteDish.Response;
-public class DeleteDishReposnse : UseCases.Response
+public class DeleteDishResponse : UseCases.Response
 {
 }

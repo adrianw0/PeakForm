@@ -25,10 +25,10 @@ namespace Fuel.Api.Controllers;
 [Route("[Controller]")]
 public class DishesController : ControllerBase
 {
-    IGetDishesUseCase _getDishesUseCase;
-    IUpdateDishUseCase _updateDishUseCase;
-    IAddDishUseCase _addDishUseCase;
-    IDeleteDishUseCase _deleteDishUseCase;
+    readonly IGetDishesUseCase _getDishesUseCase;
+    readonly IUpdateDishUseCase _updateDishUseCase;
+    readonly IAddDishUseCase _addDishUseCase;
+    readonly IDeleteDishUseCase _deleteDishUseCase;
 
     public DishesController(IGetDishesUseCase getDishesUseCase, IUpdateDishUseCase updateDishesUseCase, IAddDishUseCase addDishUseCase, IDeleteDishUseCase deleteDishUseCase)
     {
@@ -49,18 +49,18 @@ public class DishesController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddDish(AddDishRequest request)
+    public async Task<IActionResult> AddDish([FromQuery] AddDishRequest request)
     {
         var result = await _addDishUseCase.Execute(request);
 
-        if (result is AddDishSuccessReposnse success) 
+        if (result is AddDishSuccessResponse success) 
             return Created("", success.Dish?.MapToDto());
 
         return BadRequest();
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateDish(UpdateDishRequest request)
+    public async Task<IActionResult> UpdateDish([FromQuery] UpdateDishRequest request)
     {
         var response = await _updateDishUseCase.Execute(request);
 
@@ -73,13 +73,13 @@ public class DishesController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteDish(DeleteDishRequest request)
+    public async Task<IActionResult> DeleteDish([FromQuery] DeleteDishRequest request)
     {
         var response = await _deleteDishUseCase.Execute(request);
 
         return response switch
         {
-            DeleteDishSuccessReposnse => Ok(),
+            DeleteDishSuccessResponse => Ok(),
             DeleteDishErrorResponse errorResponse => BadRequest(errorResponse.Message),
             _ => BadRequest()
         };

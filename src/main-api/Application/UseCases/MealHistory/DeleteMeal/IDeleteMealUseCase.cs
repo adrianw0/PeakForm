@@ -7,6 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.UseCases.MealHistory.DeleteMeal;
-public interface IDeleteMealUseCase : IUseCase<DeleteMealRequest, DeleteMealReposnse>
+public interface IDeleteMealUseCase : IUseCase<DeleteMealRequest, DeleteMealResponse>
 {
 }

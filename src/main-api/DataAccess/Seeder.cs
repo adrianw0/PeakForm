@@ -1,9 +1,7 @@
-﻿using Core.Models;
-using Core.Models.Constants;
-using DataAccess.Mongo.Interfaces;
+﻿using DataAccess.Mongo.Interfaces;
 using Domain.Models;
 using MongoDB.Driver;
-using System.Diagnostics.CodeAnalysis;
+using Domain.Models.Constants;
 
 namespace DataAccess.Mongo;
 public class Seeder
@@ -21,29 +19,30 @@ public class Seeder
         
         if (await HasData<Unit>(db)) return;
 
-        List<Unit> Units = new List<Unit>
+        var units = new List<Unit>
         {
-            new Unit{ Name = UnitsContants.GramName, Code = UnitsContants.GramCode },
-            new Unit{ Name = UnitsContants.KilogramName, Code = UnitsContants.KilogramCode },
-            new Unit{ Name = UnitsContants.LiterName, Code = UnitsContants.LiterCode },
-            new Unit{ Name = UnitsContants.MiliLiterName, Code = UnitsContants.MililiterCode }
+            new() { Name = UnitsConstants.GramName, Code = UnitsConstants.GramCode },
+            new() { Name = UnitsConstants.KilogramName, Code = UnitsConstants.KilogramCode },
+            new() { Name = UnitsConstants.LiterName, Code = UnitsConstants.LiterCode },
+            new() { Name = UnitsConstants.MilliliterName, Code = UnitsConstants.MilliliterCode }
         };
 
-        await db.GetCollection<Unit>().InsertManyAsync(Units);
+        await db.GetCollection<Unit>().InsertManyAsync(units);
     }
     private static async Task SeedNutrients(IDbContext db)
     {
         if (await HasData<Nutrient>(db)) return;
 
-        List<Nutrient> Nutrients = new List<Nutrient>
+        var nutrients = new List<Nutrient>
         {
-            new Nutrient { Name = NutrientNames.Carbohydrates, Unit = new Unit{ Name = UnitsContants.GramName, Code = UnitsContants.GramCode }  },
-            new Nutrient { Name = NutrientNames.Fats, Unit = new Unit{ Name = UnitsContants.GramName, Code = UnitsContants.GramCode }  },
-            new Nutrient { Name = NutrientNames.Fibre, Unit = new Unit { Name = UnitsContants.GramName, Code = UnitsContants.GramCode } },
-            new Nutrient { Name = NutrientNames.Proteins, Unit = new Unit { Name = UnitsContants.GramName, Code = UnitsContants.GramCode } },
-            new Nutrient { Name = NutrientNames.Sugar, Unit = new Unit { Name = UnitsContants.GramName, Code = UnitsContants.GramCode } }
+            new() { Name = NutrientNames.Carbohydrates, Unit = new Unit{ Name = UnitsConstants.GramName, Code = UnitsConstants.GramCode }  },
+            new() { Name = NutrientNames.Fats, Unit = new Unit{ Name = UnitsConstants.GramName, Code = UnitsConstants.GramCode }  },
+            new() { Name = NutrientNames.Fibre, Unit = new Unit { Name = UnitsConstants.GramName, Code = UnitsConstants.GramCode } },
+            new() { Name = NutrientNames.Proteins, Unit = new Unit { Name = UnitsConstants.GramName, Code = UnitsConstants.GramCode } },
+            new() { Name = NutrientNames.Sugar, Unit = new Unit { Name = UnitsConstants.GramName, Code = UnitsConstants.GramCode } }
         };
-        await db.GetCollection<Nutrient>().InsertManyAsync(Nutrients);
+
+        await db.GetCollection<Nutrient>().InsertManyAsync(nutrients);
     }
 
 

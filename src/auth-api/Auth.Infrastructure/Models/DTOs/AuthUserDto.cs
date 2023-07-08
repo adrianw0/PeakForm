@@ -1,7 +1,12 @@
-﻿namespace Auth.Infrastructure.Models.DTOs;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Auth.Infrastructure.Models.DTOs;
 
 public class AuthUserDto
 {
-    public string Email { get; set; }
-    public string UserId { get; set; }
+    [Required]
+    [EmailAddress]
+    public required string Email { get; set; }
+    [Required]
+    public required string UserId { get; set; }
 }

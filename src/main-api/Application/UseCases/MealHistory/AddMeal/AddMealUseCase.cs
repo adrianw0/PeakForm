@@ -17,7 +17,7 @@ public class AddMealUseCase : IAddMealUseCase
         _userProvider = userProvider;
     }
 
-    public async Task<AddMealReposnse> Execute(AddMealRequest request)
+    public async Task<AddMealResponse> Execute(AddMealRequest request)
     {
         var meal = new Meal
         {
@@ -29,7 +29,7 @@ public class AddMealUseCase : IAddMealUseCase
         await _mealWriteRepository.InsertOneAsync(meal);
 
 
-        return new AddMealSuccessReposnse { Meal = meal };
+        return new AddMealSuccessResponse { Meal = meal };
     }
 
 }

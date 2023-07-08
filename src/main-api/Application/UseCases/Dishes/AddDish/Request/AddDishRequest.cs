@@ -12,5 +12,5 @@ public class AddDishRequest : UseCases.Request
     [Required]
     public required string Name { get; set; }
     public string Description { get; set; } = string.Empty;
-    public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+    public List<Ingredient> Ingredients { get; set; } = new();
 }

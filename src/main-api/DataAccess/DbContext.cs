@@ -7,17 +7,17 @@ using System.Data.Common;
 namespace DataAccess.Mongo;
 public class DbContext : IDbContext
 {
-    private readonly IOptions<DbConfig> DbConfig;
+    private readonly IOptions<DbConfig> _dbConfig;
 
     public DbContext(IOptions<DbConfig> dbConfig)
     {
-        DbConfig = dbConfig;
+        _dbConfig = dbConfig;
     }
 
     public IMongoCollection<T> GetCollection<T>()
     {
-        var client = new MongoClient(DbConfig.Value.ConnectionString);
-        var database = client.GetDatabase(DbConfig.Value.DatabaseName);
+        var client = new MongoClient(_dbConfig.Value.ConnectionString);
+        var database = client.GetDatabase(_dbConfig.Value.DatabaseName);
 
         var collection = database.GetCollection<T>(typeof(T).Name);
         

@@ -18,7 +18,7 @@ public class UserService : IUserService
 
     public UserService(IUserRepository userRepository, IAuthTokenService authService, ILogger<UserService> logger)
     {
-        this._userRepository = userRepository;
+        _userRepository = userRepository;
         _authService = authService;
         _logger = logger;
     }
@@ -47,14 +47,12 @@ public class UserService : IUserService
             Email = registerUser.Email
         };
 
-        var CreationresulResult = await _userRepository.CreateUserAsync(user, registerUser.Password);
+        var creationResult = await _userRepository.CreateUserAsync(user, registerUser.Password);
 
-        if (!CreationresulResult.Success)
-        {
-            _logger.LogError(CreationresulResult.ErrorMessage);
-            return Result.Fail<string>(CreationresulResult.ErrorMessage);
-        }
+        if (creationResult.Success) return Result.Ok("Ok");
 
-        return Result.Ok("Ok");
+        _logger.LogError(creationResult.ErrorMessage);
+        return Result.Fail<string>(creationResult.ErrorMessage);
+
     }
 }

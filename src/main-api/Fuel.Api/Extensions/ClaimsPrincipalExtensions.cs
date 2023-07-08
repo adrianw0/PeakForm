@@ -9,8 +9,6 @@ public static class ClaimsPrincipalExtensions
         if (!principal.Claims.Any()) return Guid.Empty;
 
         var value = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (value == null) return Guid.Empty;
-
-        return Guid.Parse(value);
+        return value == null ? Guid.Empty : Guid.Parse(value);
     }
 }

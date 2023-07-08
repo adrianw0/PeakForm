@@ -23,7 +23,7 @@ public class ErrorHandlerMiddleware
         }
         catch (Exception ex)
         {
-            string logMessage = "An unhandled exception has occurred while executing the request.";
+            var logMessage = "An unhandled exception has occurred while executing the request.";
 
             if (ex is UserCreationException userCreationException)
             {

@@ -20,16 +20,16 @@ public class DeleteDishUseCase : IDeleteDishUseCase
         _userProvider = userProvider;
     }
 
-    public async Task<DeleteDishReposnse> Execute(DeleteDishRequest request)
+    public async Task<DeleteDishResponse> Execute(DeleteDishRequest request)
     {
         var dish = await _dishReadRepository.FindByIdAsync(request.Id);
         
-        if(dish == null || !dish.OwnerId.Equals(_userProvider.UserId))
+        if(!dish.OwnerId.Equals(_userProvider.UserId))
             return new DeleteDishErrorResponse { Code = ErrorCodes.NotFound };
 
         var deleted = await _dishWriteRepository.DeleteByIdAsync(request.Id);
 
-        if (deleted) return new DeleteDishSuccessReposnse();
+        if (deleted) return new DeleteDishSuccessResponse();
 
         return new DeleteDishErrorResponse { Code = ErrorCodes.DeleteFailed };
     }

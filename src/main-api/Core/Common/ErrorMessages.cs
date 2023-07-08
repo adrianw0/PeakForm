@@ -15,7 +15,7 @@ public static class ErrorCodes
     public const string ProductsNotFound = "ProductsNotFound";
 
     public const string MealsNotFound = "MealsNotFound";
-    public const string MealupdateFailed = "MealUpdateFailed";
+    public const string MealUpdateFailed = "MealUpdateFailed";
 
 
     public const string SomethingWentWrong = "SomethingWentWront";

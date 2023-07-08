@@ -20,9 +20,9 @@ public class JwtService : IAuthTokenService
     {
         var authClaims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, userDto.UserId),
-            new Claim(ClaimTypes.Email, userDto.Email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new(ClaimTypes.NameIdentifier, userDto.UserId),
+            new(ClaimTypes.Email, userDto.Email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.Value.Key));

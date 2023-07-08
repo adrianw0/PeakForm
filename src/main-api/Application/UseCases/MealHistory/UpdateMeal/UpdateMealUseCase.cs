@@ -20,12 +20,12 @@ public class UpdateMealUseCase : IUpdateMealUseCase
         _userProvider = userProvider;
     }
 
-    public async Task<UpdateMealReposnse> Execute(UpdateMealRequest request)
+    public async Task<UpdateMealResponse> Execute(UpdateMealRequest request)
     {
 
         var meal = await  _mealReadRepository.FindByIdAsync(request.Id);
-        if (meal is null || !meal.OwnerId.Equals(_userProvider.UserId))
-            return new UpdateMealErrorReposnse { Code = ErrorCodes.NotFound };
+        if (!meal.OwnerId.Equals(_userProvider.UserId))
+            return new UpdateMealErrorResponse { Code = ErrorCodes.NotFound };
 
         var updateMeal = new Meal
         {
@@ -36,8 +36,8 @@ public class UpdateMealUseCase : IUpdateMealUseCase
 
         var updated = await _mealWriteRepository.UpdateAsync(updateMeal);
 
-        if (updated) return new UpdateMealSuccessReposnse { Meal = updateMeal };
+        if (updated) return new UpdateMealSuccessResponse { Meal = updateMeal };
 
-        return new UpdateMealErrorReposnse { Code = ErrorCodes.MealupdateFailed };
+        return new UpdateMealErrorResponse { Code = ErrorCodes.MealUpdateFailed };
     }
 }

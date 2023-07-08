@@ -1,4 +1,4 @@
-﻿using Core.Models;
+﻿using System.ComponentModel.DataAnnotations;
 using Domain.Models;
 
 namespace Fuel.Api.DTOs;
@@ -6,7 +6,8 @@ namespace Fuel.Api.DTOs;
 public class DishDto
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = null!;
+    [Required]
+    public required string Name { get; set; }
     public string Description { get; set; } = string.Empty;
-    public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+    public List<Ingredient> Ingredients { get; set; } = new();
 }

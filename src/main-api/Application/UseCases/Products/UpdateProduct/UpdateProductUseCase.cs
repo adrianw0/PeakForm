@@ -28,11 +28,9 @@ public class UpdateProductUseCase : IUpdateProductUseCase
 
     public async Task<UpdateProductResponse> Execute(UpdateProductsRequest request)
     {
-        bool updated;
-
         var product = await _productReadRepository.FindByIdAsync(request.Id);
 
-        if (product is null || !product.OwnerId.Equals(_userProvider.UserId))
+        if (!product.OwnerId.Equals(_userProvider.UserId))
             return new UpdateProductErrorResponse { Code = ErrorCodes.UpdateFailed };
 
         var updateProduct = new Product
@@ -45,7 +43,7 @@ public class UpdateProductUseCase : IUpdateProductUseCase
             OwnerId = _userProvider.UserId
         };
 
-        updated = await _productWriteRepository.UpdateAsync(updateProduct);
+        var updated = await _productWriteRepository.UpdateAsync(updateProduct);
 
         if (updated)
             return new UpdateProductSuccessResponse { Product = updateProduct };

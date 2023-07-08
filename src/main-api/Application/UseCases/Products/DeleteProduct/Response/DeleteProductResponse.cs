@@ -1,4 +1,4 @@
 ﻿namespace Application.UseCases.Products.DeleteProduct.Response;
-public class DeleteProductReposnse : UseCases.Response
+public class DeleteProductResponse : UseCases.Response
 {
 }

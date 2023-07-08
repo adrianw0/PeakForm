@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Core.Interfaces.Repositories;
 public interface IReadRepository<TDocument> where TDocument : IEntity
 {
-    Task<TDocument> FindByIdAsync(Guid Id);
+    Task<TDocument> FindByIdAsync(Guid id);
     Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filter);
     Task<IEnumerable<TDocument>> FindAsync(Expression<Func<TDocument, bool>> filter, int pageNumber, int pageSize);
 }

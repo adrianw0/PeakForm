@@ -25,16 +25,16 @@ public class DeleteMealUseCase : IDeleteMealUseCase
 
 
 
-    public async Task<DeleteMealReposnse> Execute(DeleteMealRequest request)
+    public async Task<DeleteMealResponse> Execute(DeleteMealRequest request)
     {
         var meal = await _mealReadRepository.FindByIdAsync(request.Id);
-        if (meal == null || !meal.OwnerId.Equals(_userProvider.UserId))
-            return new DeleteMealErrorReposnse { Code = ErrorCodes.NotFound };
+        if (!meal.OwnerId.Equals(_userProvider.UserId))
+            return new DeleteMealErrorResponse { Code = ErrorCodes.NotFound };
 
         var deleted = await _mealWriteRepository.DeleteByIdAsync(request.Id);
 
-        if (deleted) return new DeleteMealSuccessReposnse();
+        if (deleted) return new DeleteMealSuccessResponse();
 
-        return new DeleteMealErrorReposnse { Code = ErrorCodes.DeleteFailed };
+        return new DeleteMealErrorResponse { Code = ErrorCodes.DeleteFailed };
     }
 }

@@ -5,7 +5,7 @@ namespace Auth.DAL.Repository;
 
 public interface IUserRepository
 {
-    public Task<Result<User>> FindByEmailAsync(string Email);
+    public Task<Result<User>> FindByEmailAsync(string email);
 
     public Task<Result<User>> AuthenticateUser(string email, string password);
 

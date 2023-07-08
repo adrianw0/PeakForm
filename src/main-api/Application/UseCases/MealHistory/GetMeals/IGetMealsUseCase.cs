@@ -7,6 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.UseCases.MealHistory.GetMeals;
-public interface IGetMealsUseCase : IUseCase<GetMealsRequest, GetMealsReposnse>
+public interface IGetMealsUseCase : IUseCase<GetMealsRequest, GetMealsResponse>
 {
 }

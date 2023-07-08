@@ -17,9 +17,9 @@ public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
     }
 
     //split because those are returned differently...
-    private async Task<List<Product>> GetProductsFromResponseByName(string request, string serachParam)
+    private async Task<List<Product>> GetProductsFromResponseByName(string request, string searchParam)
     {
-        var req = string.Format(request, serachParam);
+        var req = string.Format(request, searchParam);
         HttpResponseMessage response;
 
         try 
@@ -30,19 +30,19 @@ public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
         }catch(Exception ex)
         {
             _logger.LogError("Open food api call failed: ", ex);
-            return new();
+            return new List<Product>();
         }
 
         var responseContent = await response.Content.ReadAsStringAsync();
 
         var result = JsonConvert.DeserializeObject<Root>(responseContent)?.Products;
 
-        return result ?? new();
+        return result ?? new List<Product>();
     }
 
-    private async Task<Product?> GetProductFromResponseByCodeAync(string request, string serachParam)
+    private async Task<Product?> GetProductFromResponseByCodeAsync(string request, string searchParam)
     {
-        var req = string.Format(request, serachParam);
+        var req = string.Format(request, searchParam);
         HttpResponseMessage response;
 
         try
@@ -60,22 +60,18 @@ public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
         var responseContent = await response.Content.ReadAsStringAsync();
 
         var result = JsonConvert.DeserializeObject<Root>(responseContent);
-        if (result is null) return null;
-           
-        return result.product;
-
+        return result?.product;
     }
 
     public async Task<List<Domain.Models.Product>> GetProductsByNameAsync(string searchParam)
     {
         var searchResult = await GetProductsFromResponseByName(Constants.SearchByNameRequest, searchParam);
 
-        if (searchResult is null || !searchResult.Any()) return new();
-        return searchResult.Select(p => p.MapToDomain()).ToList();
+        return !searchResult.Any() ? new List<Domain.Models.Product>() : searchResult.Select(p => p.MapToDomain()).ToList();
     }
     public async Task<Domain.Models.Product?> GetProductByCodeAsync(string searchParam)
     {
-        var searchResult = await GetProductFromResponseByCodeAync(Constants.SearchByCodeRequest, searchParam);
+        var searchResult = await GetProductFromResponseByCodeAsync(Constants.SearchByCodeRequest, searchParam);
 
         return searchResult?.MapToDomain();
     }

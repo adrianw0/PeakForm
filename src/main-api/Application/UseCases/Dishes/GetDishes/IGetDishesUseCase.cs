@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.UseCases.Dishes.GetDishes;
-public interface IGetDishesUseCase : IUseCase<GetDishesRequest, GetDishesReposnse>
+public interface IGetDishesUseCase : IUseCase<GetDishesRequest, GetDishesResponse>
 {
 
 }

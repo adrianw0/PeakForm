@@ -1,7 +1,7 @@
 ﻿using Core.Common;
 
-namespace Application.UseCases.MealHistory.UpdateMeal.Response;
-public class UpdateMealErrorReposnse : UpdateMealReposnse
+namespace Application.UseCases.Dishes.GetDishes.Response;
+public class GetDishesErrorResponse : GetDishesResponse
 {
     public string Message { get; internal set; } = string.Empty;
     public string Code { get; internal set; } = ErrorCodes.SomethingWentWrong;

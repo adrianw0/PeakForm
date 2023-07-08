@@ -14,9 +14,9 @@ public class ReadRepository<TDocument> : IReadRepository<TDocument> where TDocum
         _collection = dbContext.GetCollection<TDocument>();
     }
 
-    public async Task<TDocument> FindByIdAsync(Guid Id)
+    public async Task<TDocument> FindByIdAsync(Guid id)
     {
-        var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, Id);
+        var filter = Builders<TDocument>.Filter.Eq(doc => doc.Id, id);
         return await (await _collection.FindAsync(filter)).SingleOrDefaultAsync();
     }
 

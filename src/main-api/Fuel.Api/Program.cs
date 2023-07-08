@@ -120,7 +120,7 @@ public static class Program
     
     private static void SetupRateLimiter(WebApplicationBuilder builder, RateLimitSettings settings)
     {
-        var fixedPolicy = "fixed";
+        const string fixedPolicy = "fixed";
         builder.Services.AddRateLimiter(_ => _
             .AddFixedWindowLimiter(policyName: fixedPolicy, options =>
             {

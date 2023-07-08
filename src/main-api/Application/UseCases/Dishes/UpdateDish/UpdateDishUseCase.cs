@@ -26,11 +26,11 @@ public class UpdateDishUseCase : IUpdateDishUseCase
 
 
 
-    public async Task<UpdateDishReposnse> Execute(UpdateDishRequest request)
+    public async Task<UpdateDishResponse> Execute(UpdateDishRequest request)
     {
 
         var dish = await _dishReadRepository.FindByIdAsync(request.Id);
-        if (dish is null || !dish.OwnerId.Equals(_userProvider.UserId))
+        if (!dish.OwnerId.Equals(_userProvider.UserId))
             return new UpdateDishErrorResponse { Code = ErrorCodes.NotFound }; 
 
         var updateDish = new Dish

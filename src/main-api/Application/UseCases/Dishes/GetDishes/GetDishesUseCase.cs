@@ -15,18 +15,16 @@ namespace Application.UseCases.Dishes.GetDishes;
 public class GetDishesUseCase : IGetDishesUseCase
 {
     private readonly IReadRepository<Dish> _dishReadRepository;
-    private readonly IWriteRepository<Dish> _dishWriteRepository;
     private readonly IUserProvider _userProvider;
-    public GetDishesUseCase(IReadRepository<Dish> dishReadRepository, IWriteRepository<Dish> dishWriteRepository, IUserProvider userProvider)
+    public GetDishesUseCase(IReadRepository<Dish> dishReadRepository, IUserProvider userProvider)
     {
         _dishReadRepository = dishReadRepository;
-        _dishWriteRepository = dishWriteRepository;
         _userProvider = userProvider;
     }
 
 
 
-    public async Task<GetDishesReposnse> Execute(GetDishesRequest request)
+    public async Task<GetDishesResponse> Execute(GetDishesRequest request)
     {
 
         Expression<Func<Dish, bool>> predicate = d =>

@@ -21,7 +21,7 @@ public class ErrorHandlerMiddleware
         }
         catch (Exception ex)
         {
-            string logMessage = "An unhandled exception has occurred while executing the request.";
+            const string logMessage = "An unhandled exception has occurred while executing the request.";
 
             _logger.LogCritical(ex, logMessage);
             await HandleExceptionAsync(context, ex);
@@ -30,10 +30,7 @@ public class ErrorHandlerMiddleware
 
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        var code = HttpStatusCode.InternalServerError;
-
-
-
+        const HttpStatusCode code = HttpStatusCode.InternalServerError;
 
         var result = JsonConvert.SerializeObject(new { error = exception.Message });
 

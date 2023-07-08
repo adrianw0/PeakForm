@@ -8,7 +8,7 @@ public class Dish : IEntity, IFoodItem, IVisibilityControl
     [Required]
     public required string Name { get; set; }
     public string Description { get; set; } = string.Empty;
-    public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
+    public List<Ingredient> Ingredients { get; set; } = new();
     public string OwnerId { get; set; } = string.Empty;
     public bool IsGloballyVisible { get; set; } = false;
 }

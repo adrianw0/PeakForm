@@ -7,6 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.UseCases.Products.DeleteProduct;
-public interface IDeleteProductuseCase : IUseCase<DeleteProductRequest, DeleteProductReposnse>
+public interface IDeleteProductUseCase : IUseCase<DeleteProductRequest, DeleteProductResponse>
 {
 }

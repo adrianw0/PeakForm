@@ -21,7 +21,7 @@ using Microsoft.AspNetCore.RateLimiting;
 
 namespace Fuel.Api.Controllers;
 
-//[Authorize]
+[Authorize]
 [ApiController]
 [EnableRateLimiting("fixed")]
 [Route("[Controller]")]
@@ -30,8 +30,8 @@ public class ProductsController : ControllerBase
     private readonly IGetProductsUseCase _getProductsUseCase;
     private readonly IUpdateProductUseCase _updateProductUseCase;
     private readonly IAddProductUseCase _addProductUseCase;
-    private readonly IDeleteProductuseCase _deleteProductUseCase;
-    public ProductsController(IGetProductsUseCase getProductsUseCase, IUpdateProductUseCase updateProductUseCase, IAddProductUseCase addProductUseCase, IDeleteProductuseCase deleteProductUseCase)
+    private readonly IDeleteProductUseCase _deleteProductUseCase;
+    public ProductsController(IGetProductsUseCase getProductsUseCase, IUpdateProductUseCase updateProductUseCase, IAddProductUseCase addProductUseCase, IDeleteProductUseCase deleteProductUseCase)
     {
         _getProductsUseCase = getProductsUseCase;
         _updateProductUseCase = updateProductUseCase;
@@ -50,7 +50,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddProduct(AddProductRequest request)
+    public async Task<IActionResult> AddProduct([FromBody] AddProductRequest request)
     {
         var response = await _addProductUseCase.Execute(request);
 
@@ -61,7 +61,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateProduct(UpdateProductsRequest request)
+    public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductsRequest request)
     {
         var response = await _updateProductUseCase.Execute(request);
 
@@ -74,13 +74,13 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteProduct(DeleteProductRequest request)
+    public async Task<IActionResult> DeleteProduct([FromQuery] DeleteProductRequest request)
     { 
         var response = await _deleteProductUseCase.Execute(request);
 
         return response switch
         {
-            DeleteProductSuccessReposnse => Ok(),
+            DeleteProductSuccessResponse => Ok(),
             DeleteProductErrorResponse errorResponse => BadRequest(errorResponse.Message),
             _ => BadRequest()
         };

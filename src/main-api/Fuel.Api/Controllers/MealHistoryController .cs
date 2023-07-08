@@ -48,23 +48,23 @@ public class MealHistoryController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddMeal(AddMealRequest request)
+    public async Task<IActionResult> AddMeal([FromBody] AddMealRequest request)
     {
         var result = await _addMealUseCase.Execute(request);
-        if (result is AddMealSuccessReposnse success) return Ok(success.Meal.MapToDto());
+        if (result is AddMealSuccessResponse success) return Ok(success.Meal.MapToDto());
 
         return BadRequest();
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateMeal(UpdateMealRequest request)
+    public async Task<IActionResult> UpdateMeal([FromBody] UpdateMealRequest request)
     {
         var result = await _updateMealUseCase.Execute(request);
 
         return result switch
         {
-            UpdateMealSuccessReposnse success => Ok(success.Meal.MapToDto()),
-            UpdateMealErrorReposnse error => BadRequest(error),
+            UpdateMealSuccessResponse success => Ok(success.Meal.MapToDto()),
+            UpdateMealErrorResponse error => BadRequest(error),
             _ => BadRequest(ErrorCodes.SomethingWentWrong)
         };
         
@@ -73,14 +73,14 @@ public class MealHistoryController : ControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteMeal(DeleteMealRequest request)
+    public async Task<IActionResult> DeleteMeal([FromQuery] DeleteMealRequest request)
     {
         var result = await _deleteMealUseCase.Execute(request);
 
         return result switch
         {
-            DeleteMealSuccessReposnse success => Ok(success.Message),
-            DeleteMealErrorReposnse error => BadRequest(error.Message),
+            DeleteMealSuccessResponse success => Ok(success.Message),
+            DeleteMealErrorResponse error => BadRequest(error.Message),
             _ => BadRequest()
         };
     }

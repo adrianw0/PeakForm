@@ -16,13 +16,11 @@ public class UserRepository : IUserRepository
         _userManager = userManager;
     }
 
-    public async Task<Result<User>> FindByEmailAsync(string Email)
+    public async Task<Result<User>> FindByEmailAsync(string email)
     {
-        var identityUser = await _userManager.FindByEmailAsync(Email);
+        var identityUser = await _userManager.FindByEmailAsync(email);
 
-        if (identityUser is null) return Result.Fail<User>(ErrorCodes.UserNotFound);
-
-        return Result.Ok(identityUser.MapToUser());
+        return identityUser is null ? Result.Fail<User>(ErrorCodes.UserNotFound) : Result.Ok(identityUser.MapToUser());
     }
 
     public async Task<Result<User>> AuthenticateUser(string email, string password)
@@ -31,9 +29,7 @@ public class UserRepository : IUserRepository
         if (identityUser is null) return Result.Fail<User>(ErrorCodes.InvalidCredentials);
 
         var success = await _userManager.CheckPasswordAsync(identityUser, password);
-        if (!success) return Result.Fail<User>(ErrorCodes.InvalidCredentials);
-
-        return Result.Ok(identityUser.MapToUser());
+        return !success ? Result.Fail<User>(ErrorCodes.InvalidCredentials) : Result.Ok(identityUser.MapToUser());
     }
 
     public async Task<Result<User>> CreateUserAsync(User user, string password)

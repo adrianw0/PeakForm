@@ -7,6 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.UseCases.Products.AddProduct;
-public interface IAddProductUseCase : IUseCase<AddProductRequest, AddProductResposnse>
+public interface IAddProductUseCase : IUseCase<AddProductRequest, AddProductResponse>
 {
 }

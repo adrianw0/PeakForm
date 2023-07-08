@@ -1,7 +1,7 @@
 ﻿using Core.Common;
 
-namespace Application.UseCases.Dishes.UpdateDish.Response;
-public class UpdateDishErrorResponse : UpdateDishReposnse
+namespace Application.UseCases.Dishes.DeleteDish.Response;
+public class DeleteDishSuccessResponse : DeleteDishResponse
 {
     public string Message { get; internal set; } = string.Empty;
     public string Code { get; internal set; } = ErrorCodes.SomethingWentWrong;

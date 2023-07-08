@@ -11,12 +11,10 @@ public class UserProvider : IUserProvider
         _accessor = accessor;
     }
 
-    public string UserId { get=> GetUserId(); }
+    public string UserId => GetUserId();
+
     private string GetUserId()
     {
-        
-        if (_accessor.HttpContext is null) return Guid.Empty.ToString();
-
-        return _accessor.HttpContext.User.GetUserId().ToString() ;
+        return _accessor.HttpContext is null ? Guid.Empty.ToString() : _accessor.HttpContext.User.GetUserId().ToString();
     }
 }

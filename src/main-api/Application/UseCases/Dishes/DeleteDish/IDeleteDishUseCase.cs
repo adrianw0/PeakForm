@@ -7,6 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Application.UseCases.Dishes.DeleteDish;
-public interface IDeleteDishUseCase : IUseCase<DeleteDishRequest, DeleteDishReposnse>
+public interface IDeleteDishUseCase : IUseCase<DeleteDishRequest, DeleteDishResponse>
 {
 }

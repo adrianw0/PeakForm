@@ -1,4 +1,4 @@
 ﻿namespace Application.UseCases.MealHistory.UpdateMeal.Response;
-public class UpdateMealReposnse : UseCases.Response
+public class UpdateMealResponse : UseCases.Response
 {
 }
