@@ -39,7 +39,7 @@ public class UpdateProductUseCase : IUpdateProductUseCase
             Name = request.Name,
             Ean = request.Ean,
             Description = request.Description,
-            Nutrients = request.Nutrients,
+            NutrientsPer1G = request.Nutrients,
             OwnerId = _userProvider.UserId
         };
 

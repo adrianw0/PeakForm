@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Domain.Models;
-public class NutrientValues
+public class NutrientValue
 {
     [Required]
     public required Nutrient Nutrient { get; set; }

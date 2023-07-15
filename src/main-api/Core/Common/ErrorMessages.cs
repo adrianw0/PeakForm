@@ -19,4 +19,10 @@ public static class ErrorCodes
 
 
     public const string SomethingWentWrong = "SomethingWentWront";
+
+    public const string UnitDoesNotExist = "UnitDoesNotExist";
+    public const string DuplicateUnitInProduct = "DuplicateUnitInProduct";
+    public const string BaseUnitDoesNotExistInProductUnits = "BaseUnitDoesNotExistInProductUnits";
+
+
 }

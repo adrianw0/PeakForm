@@ -15,7 +15,7 @@ public class OpenFoodFactsApiWrapperTests
     {
         var gramUnit = new Unit { Code = UnitsConstants.GramCode, Name = UnitsConstants.GramName };
 
-        var values = new List<NutrientValues>
+        var values = new List<NutrientValue>
         {
             new() { Nutrient =  new Nutrient { Name = NutrientNames.Proteins, Unit = gramUnit }, Value = 13 },
             new() { Nutrient =  new Nutrient { Name = NutrientNames.Carbohydrates, Unit = gramUnit }, Value = 2.7 },
@@ -29,7 +29,7 @@ public class OpenFoodFactsApiWrapperTests
             Name = "Berlinki Classic",
             Ean = "5900567001746",
             Description = string.Empty,
-            Nutrients = values,
+            NutrientsPer1G = values,
             IsGloballyVisible = true,
             OwnerId = string.Empty
         };

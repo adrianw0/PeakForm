@@ -4,7 +4,7 @@ using MongoDB.Driver;
 using Domain.Models.Constants;
 
 namespace DataAccess.Mongo;
-public class Seeder
+public static class Seeder
 {
     public static async Task SeedAsync(IDbContext db)
     {

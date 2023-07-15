@@ -7,5 +7,5 @@ using System.Threading.Tasks;
 namespace Domain;
 public interface IEntity
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 }

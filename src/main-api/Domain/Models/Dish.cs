@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Domain.Models;
 public class Dish : IEntity, IFoodItem, IVisibilityControl
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
     [Required]
     public required string Name { get; set; }
     public string Description { get; set; } = string.Empty;

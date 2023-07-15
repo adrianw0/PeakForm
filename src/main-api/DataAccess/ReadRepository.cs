@@ -22,7 +22,8 @@ public class ReadRepository<TDocument> : IReadRepository<TDocument> where TDocum
 
     public async Task<TDocument> FindOneAsync(Expression<Func<TDocument, bool>> filter)
     {
-        return await (await _collection.FindAsync(filter)).SingleOrDefaultAsync();
+        var resultCursor = await _collection.FindAsync(filter);
+        return await resultCursor.SingleOrDefaultAsync();
     }
 
     public async Task<IEnumerable<TDocument>> FindAsync(Expression<Func<TDocument, bool>> filter, int pageNumber, int pageSize)
@@ -33,5 +34,11 @@ public class ReadRepository<TDocument> : IReadRepository<TDocument> where TDocum
             .Limit(pageSize)
             .ToListAsync();
         return result;
+    }
+
+    public async Task<bool> ExistsAsync(Expression<Func<TDocument, bool>> predicate)
+    {
+        var resultCursor = await _collection.FindAsync(predicate);
+        return await resultCursor.AnyAsync();
     }
 }

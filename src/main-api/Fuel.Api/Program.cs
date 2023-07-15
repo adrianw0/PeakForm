@@ -1,3 +1,4 @@
+using System.Reflection;
 using Application.Providers.Products;
 using Application.UseCases;
 using Core.Interfaces.Providers;
@@ -12,7 +13,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
+using FluentValidation;
 
 namespace Fuel.Api;
 
@@ -42,7 +45,9 @@ public static class Program
         SetupRateLimiter(builder, rateLimitSettings);
         SetupJwt(builder, jwtSettings);
 
-   
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         builder.Services.AddAuthorization();
 
@@ -53,6 +58,8 @@ public static class Program
         builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(DataAccess.Mongo.WriteRepository<>));
         builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DataAccess.Mongo.ReadRepository<>));
 
+        builder.Services.AddValidatorsFromAssembly(AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("Application")), ServiceLifetime.Transient);
+
         builder.Services.AddScoped<IExternalProductApiWrapper, OpenFoodFactsApiWrapper>();
         builder.Services.AddScoped<IExternalProductsProvider, ExternalProductsProvider>();
 
@@ -60,7 +67,10 @@ public static class Program
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(c =>
+        {
+    
+        });
 
         
 

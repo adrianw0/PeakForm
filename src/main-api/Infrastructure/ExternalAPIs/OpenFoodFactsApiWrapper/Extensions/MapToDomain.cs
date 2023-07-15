@@ -12,16 +12,16 @@ internal static class ProductMapper
             Name = externalProduct.product_name,
             Ean = externalProduct.code,
             OwnerId = string.Empty,
-            Nutrients = externalProduct.nutriments.MapToDomainNutrients(),
+            NutrientsPer1G = externalProduct.nutriments.MapToDomainNutrients(),
             IsGloballyVisible = true
         };
     }
 
-    private static List<NutrientValues> MapToDomainNutrients(this Nutriments externalNutriment)
+    private static List<NutrientValue> MapToDomainNutrients(this Nutriments externalNutriment)
     {
         var gramUnit = new Unit { Code = UnitsConstants.GramCode, Name = UnitsConstants.GramName };
 
-        var values = new List<NutrientValues>
+        var values = new List<NutrientValue>
         {
             new() { Nutrient =  new Nutrient { Name = NutrientNames.Proteins, Unit = gramUnit }, Value = externalNutriment.proteins_100g },
             new() { Nutrient =  new Nutrient { Name = NutrientNames.Carbohydrates, Unit = gramUnit }, Value = externalNutriment.carbohydrates_100g },

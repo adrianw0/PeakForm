@@ -13,7 +13,7 @@ public static class ProductMapper
             Name = dto.Name,
             Ean = dto.Ean,
             Description = dto.Description,
-            Nutrients = dto.Nutrients
+            NutrientsPer1G = dto.Nutrients
         };
     }
 
@@ -25,7 +25,7 @@ public static class ProductMapper
             Name = product.Name,
             Ean = product.Ean,
             Description = product.Description,
-            Nutrients = product.Nutrients
+            Nutrients = product.NutrientsPer1G
         };
     }
 }
