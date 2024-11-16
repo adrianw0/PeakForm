@@ -6,7 +6,7 @@ services:
    context: ./src/main-api/
    dockerfile: Dockerfile
   ports:
-   - "5000:80" 
+   - "5000:8080" 
   environment:
    - ConnectionString=mongodb://${MongoDbUser}:${MongoDbPassword}@mainDb:27017
    - DatabaseName=appData
@@ -24,7 +24,7 @@ services:
    context: ./src/auth-api/
    dockerfile: Dockerfile
   ports:
-   - "5050:80"
+   - "5050:8080"
   environment:
    - ConnectionStrings__DefaultConnection=Host=authDb;Username=${PostgresUser};Password=${PostgresPassword};Database=AuthDb
    - JwtSettings__Issuer=${JwtSettingsIssuer}
@@ -48,9 +48,6 @@ services:
   environment:
    - POSTGRES_USER=${PostgresUser}
    - POSTGRES_PASSWORD=${PostgresPassword}
-   - JwtSettings__Issuer=${JwtSettingsIssuer}
-   - JwtSettings__Audience=${JwtSettingsAudience}
-   - JwtSettings__Key=${JwtSettingsKey}
 
 
 volumes:
