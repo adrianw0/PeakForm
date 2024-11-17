@@ -16,7 +16,6 @@ using Application.UseCases.Products.AddProduct.Response;
 using Application.UseCases.Products.UpdateProduct.Response;
 using Application.UseCases.Products.DeleteProduct.Response;
 using Core.Common;
-using Amazon.Runtime.Internal;
 using Microsoft.AspNetCore.RateLimiting;
 
 namespace Fuel.Api.Controllers;
