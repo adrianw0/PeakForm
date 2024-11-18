@@ -1,12 +1,8 @@
 ﻿using Application.UseCases.MealHistory.AddMeal.Request;
-using Application.UseCases.MealHistory.AddMeal.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.UseCases.Responses.Add;
+using Domain.Models;
 
 namespace Application.UseCases.MealHistory.AddMeal;
-public interface IAddMealUseCase : IUseCase<AddMealRequest, AddMealResponse>
+public interface IAddMealUseCase : IUseCase<AddMealRequest, AddReponse<Meal>>
 {
 }

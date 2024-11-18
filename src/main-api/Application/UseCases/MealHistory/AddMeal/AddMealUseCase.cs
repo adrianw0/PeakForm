@@ -1,9 +1,8 @@
 ﻿using Application.UseCases.MealHistory.AddMeal.Request;
-using Application.UseCases.MealHistory.AddMeal.Response;
+using Application.UseCases.Responses.Add;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
-using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.MealHistory.AddMeal;
 public class AddMealUseCase : IAddMealUseCase
@@ -17,7 +16,7 @@ public class AddMealUseCase : IAddMealUseCase
         _userProvider = userProvider;
     }
 
-    public async Task<AddMealResponse> Execute(AddMealRequest request)
+    public async Task<AddReponse<Meal>> Execute(AddMealRequest request)
     {
         var meal = new Meal
         {
@@ -29,7 +28,7 @@ public class AddMealUseCase : IAddMealUseCase
         await _mealWriteRepository.InsertOneAsync(meal);
 
 
-        return new AddMealSuccessResponse { Meal = meal };
+        return new AddSuccessResponse<Meal> { Entity = meal };
     }
 
 }

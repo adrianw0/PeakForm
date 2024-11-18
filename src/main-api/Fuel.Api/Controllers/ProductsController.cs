@@ -1,22 +1,20 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Fuel.Api.Mappers;
-using Core.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Application.UseCases.Products.GetProducts.Request;
 using Application.UseCases.Products.AddProduct.Request;
 using Application.UseCases.Products.UpdateProduct.Request;
 using Application.UseCases.Products.DeleteProduct.Request;
-using Domain.Models;
 using Application.UseCases.Products.GetProducts;
 using Application.UseCases.Products.UpdateProduct;
 using Application.UseCases.Products.AddProduct;
 using Application.UseCases.Products.DeleteProduct;
-using Application.UseCases.Products.GetProducts.Response;
-using Application.UseCases.Products.AddProduct.Response;
-using Application.UseCases.Products.UpdateProduct.Response;
-using Application.UseCases.Products.DeleteProduct.Response;
-using Core.Common;
 using Microsoft.AspNetCore.RateLimiting;
+using Application.UseCases.Responses.Get;
+using Domain.Models;
+using Application.UseCases.Responses.Add;
+using Application.UseCases.Responses.Update;
+using Application.UseCases.Responses.Delete;
 
 namespace Fuel.Api.Controllers;
 
@@ -43,7 +41,7 @@ public class ProductsController : ControllerBase
     {
         var response = await _getProductsUseCase.Execute(request);
 
-        if (response is GetProductsSuccessResponse successResponse) return Ok(successResponse.Products.Select(p=>p.MapToDto()).ToList());
+        if (response is GetSuccessReponse<Product> successResponse) return Ok(successResponse.Entity.Select(p=>p.MapToDto()).ToList());
 
         return BadRequest(); 
     }
@@ -53,8 +51,8 @@ public class ProductsController : ControllerBase
     {
         var response = await _addProductUseCase.Execute(request);
 
-        if (response is AddProductSuccessResponse success)
-            return Created("Created", success.Product.MapToDto());
+        if (response is AddSuccessResponse<Product> success)
+            return Created("Created", success.Entity?.MapToDto());
 
         return BadRequest();
     }
@@ -66,8 +64,8 @@ public class ProductsController : ControllerBase
 
         return response switch
         {
-            UpdateProductSuccessResponse successResponse => Ok(successResponse.Product.MapToDto()),
-            UpdateProductErrorResponse errorResponse => BadRequest(errorResponse.Message),
+            UpdateSuccessResponse<Product> successResponse => Ok(successResponse.Entity?.MapToDto()),
+            UpdateErrorResponse<Product> errorResponse => BadRequest(errorResponse.Message),
             _ => BadRequest()
         };  
     }
@@ -79,8 +77,8 @@ public class ProductsController : ControllerBase
 
         return response switch
         {
-            DeleteProductSuccessResponse => Ok(),
-            DeleteProductErrorResponse errorResponse => BadRequest(errorResponse.Message),
+            DeleteSuccessResponse<Product> => Ok(),
+            DeleteErrorResponse<Product> errorResponse => BadRequest(errorResponse.Message),
             _ => BadRequest()
         };
     }

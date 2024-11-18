@@ -1,17 +1,16 @@
-﻿using Application.UseCases;
-using Application.UseCases.Dishes.AddDish;
+﻿using Application.UseCases.Dishes.AddDish;
 using Application.UseCases.Dishes.AddDish.Request;
-using Application.UseCases.Dishes.AddDish.Response;
 using Application.UseCases.Dishes.DeleteDish;
 using Application.UseCases.Dishes.DeleteDish.Request;
-using Application.UseCases.Dishes.DeleteDish.Response;
 using Application.UseCases.Dishes.GetDishes;
 using Application.UseCases.Dishes.GetDishes.Request;
-using Application.UseCases.Dishes.GetDishes.Response;
 using Application.UseCases.Dishes.UpdateDish;
 using Application.UseCases.Dishes.UpdateDish.Request;
-using Application.UseCases.Dishes.UpdateDish.Response;
-
+using Application.UseCases.Responses.Add;
+using Application.UseCases.Responses.Delete;
+using Application.UseCases.Responses.Get;
+using Application.UseCases.Responses.Update;
+using Domain.Models;
 using Fuel.Api.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -43,7 +42,7 @@ public class DishesController : ControllerBase
     {
         var result = await _getDishesUseCase.Execute(request);
 
-        if(result is GetDishesSuccessResponse success) return Ok(success.Dishes.Select(x=>x.MapToDto()).ToList());
+        if(result is GetSuccessReponse<Dish> success) return Ok(success.Entity.Select(x=>x.MapToDto()).ToList());
 
         return BadRequest();
     }
@@ -53,8 +52,8 @@ public class DishesController : ControllerBase
     {
         var result = await _addDishUseCase.Execute(request);
 
-        if (result is AddDishSuccessResponse success) 
-            return Created("", success.Dish?.MapToDto());
+        if (result is AddSuccessResponse<Dish> success) 
+            return Created("", success.Entity?.MapToDto());
 
         return BadRequest();
     }
@@ -66,8 +65,8 @@ public class DishesController : ControllerBase
 
         return response switch
         {
-            UpdateDishSuccessResponse successResponse => Ok(successResponse.Dish.MapToDto()),
-            UpdateDishErrorResponse errorResponse => BadRequest(errorResponse.Message),
+            UpdateSuccessResponse<Dish> successResponse => Ok(successResponse.Entity?.MapToDto()),
+            UpdateErrorResponse<Dish> errorResponse => BadRequest(errorResponse.Message),
             _ => BadRequest()
         };
     }
@@ -79,8 +78,8 @@ public class DishesController : ControllerBase
 
         return response switch
         {
-            DeleteDishSuccessResponse => Ok(),
-            DeleteDishErrorResponse errorResponse => BadRequest(errorResponse.Message),
+            DeleteSuccessResponse<Dish> => Ok(),
+            DeleteErrorResponse<Dish> errorResponse => BadRequest(errorResponse.Message),
             _ => BadRequest()
         };
     }

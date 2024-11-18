@@ -1,12 +1,8 @@
 ﻿using Application.UseCases.Dishes.UpdateDish.Request;
-using Application.UseCases.Dishes.UpdateDish.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.UseCases.Responses.Update;
+using Domain.Models;
 
 namespace Application.UseCases.Dishes.UpdateDish;
-public interface IUpdateDishUseCase : IUseCase<UpdateDishRequest, UpdateDishResponse>
+public interface IUpdateDishUseCase : IUseCase<UpdateDishRequest, UpdateResponse<Dish>>
 {
 }

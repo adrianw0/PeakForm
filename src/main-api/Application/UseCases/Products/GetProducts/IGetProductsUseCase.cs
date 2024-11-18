@@ -1,8 +1,9 @@
 ﻿using Application.UseCases.Products.GetProducts.Request;
-using Application.UseCases.Products.GetProducts.Response;
+using Application.UseCases.Responses.Get;
+using Domain.Models;
 
 
 namespace Application.UseCases.Products.GetProducts;
-public interface IGetProductsUseCase : IUseCase<GetProductsRequest, GetProductsResponse>
+public interface IGetProductsUseCase : IUseCase<GetProductsRequest, GetReponse<Product>>
 {
 }

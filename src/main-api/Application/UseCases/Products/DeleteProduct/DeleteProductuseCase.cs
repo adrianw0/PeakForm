@@ -1,5 +1,5 @@
 ﻿using Application.UseCases.Products.DeleteProduct.Request;
-using Application.UseCases.Products.DeleteProduct.Response;
+using Application.UseCases.Responses.Delete;
 using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
@@ -15,20 +15,20 @@ public class DeleteProductUseCase : IDeleteProductUseCase
     {
         _productWriteRepository = productWriteRepository;
         _productReadRepository = readRepository;
-        _userProvider = userProvider;
+        _userProvider = userProvider; 
     }
 
-    public async Task<DeleteProductResponse> Execute(DeleteProductRequest request)
+    public async Task<DeleteResponse<Product>> Execute(DeleteProductRequest request)
     {
 
         var product = await _productReadRepository.FindByIdAsync(request.Id);
         if (product is null || !product.OwnerId.Equals(_userProvider.UserId))
-            return new DeleteProductErrorResponse { Code = ErrorCodes.NotFound };
+            return new DeleteErrorResponse<Product> { Code = ErrorCodes.NotFound };
 
         var deleted = await _productWriteRepository.DeleteByIdAsync(request.Id);
 
-        if (deleted) return new DeleteProductSuccessResponse();
+        if (deleted) return new DeleteSuccessResponse<Product>();
         
-        return new DeleteProductErrorResponse { Code = ErrorCodes.DeleteFailed };
+        return new DeleteErrorResponse<Product> { Code = ErrorCodes.DeleteFailed };
     }
 }

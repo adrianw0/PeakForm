@@ -1,5 +1,5 @@
 ﻿using Application.UseCases.Dishes.AddDish.Request;
-using Application.UseCases.Dishes.AddDish.Response;
+using Application.UseCases.Responses.Add;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
@@ -17,7 +17,7 @@ public class AddDishUseCase : IAddDishUseCase
         _userProvider = userProvider;
     }
 
-    public async Task<AddDishResponse> Execute(AddDishRequest request)
+    public async Task<AddReponse<Dish>> Execute(AddDishRequest request)
     {
         var dish = new Dish
         {
@@ -29,7 +29,7 @@ public class AddDishUseCase : IAddDishUseCase
 
         await _dishWriteRepository.InsertOneAsync(dish);
 
-        return new AddDishSuccessResponse { Dish = dish };
+        return new AddSuccessResponse<Dish> { Entity = dish };
 
     }
 }

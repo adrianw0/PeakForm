@@ -1,6 +1,6 @@
 ﻿using Application.Providers.Products;
 using Application.UseCases.Products.GetProducts.Request;
-using Application.UseCases.Products.GetProducts.Response;
+using Application.UseCases.Responses.Get;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
@@ -24,7 +24,7 @@ public class GetProductsUseCase : IGetProductsUseCase
 
     }
 
-    public async Task<GetProductsResponse> Execute(GetProductsRequest request)
+    public async Task<GetReponse<Product>> Execute(GetProductsRequest request)
     {
         List<Product> products = new();
         
@@ -35,12 +35,12 @@ public class GetProductsUseCase : IGetProductsUseCase
         if (externalProduct is not null)
         {
             products.Add(externalProduct);
-            return new GetProductsSuccessResponse { Products = products };
+            return new GetSuccessReponse<Product> { Entity = products };
         }
 
         products.AddRange(await GetExternalProductsByName(request));
 
-        return new GetProductsSuccessResponse { Products = products };
+        return new GetSuccessReponse<Product> { Entity = products };
     }
 
 

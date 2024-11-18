@@ -1,6 +1,5 @@
 ﻿using Application.UseCases.Dishes.DeleteDish.Request;
-using Application.UseCases.Dishes.DeleteDish.Response;
-using Application.UseCases.Products.DeleteProduct.Response;
+using Application.UseCases.Responses.Delete;
 using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
@@ -20,17 +19,17 @@ public class DeleteDishUseCase : IDeleteDishUseCase
         _userProvider = userProvider;
     }
 
-    public async Task<DeleteDishResponse> Execute(DeleteDishRequest request)
+    public async Task<DeleteResponse<Dish>> Execute(DeleteDishRequest request)
     {
         var dish = await _dishReadRepository.FindByIdAsync(request.Id);
         
         if(!dish.OwnerId.Equals(_userProvider.UserId))
-            return new DeleteDishErrorResponse { Code = ErrorCodes.NotFound };
+            return new DeleteErrorResponse<Dish> { Code = ErrorCodes.NotFound };
 
         var deleted = await _dishWriteRepository.DeleteByIdAsync(request.Id);
 
-        if (deleted) return new DeleteDishSuccessResponse();
+        if (deleted) return new DeleteSuccessResponse<Dish>();
 
-        return new DeleteDishErrorResponse { Code = ErrorCodes.DeleteFailed };
+        return new DeleteErrorResponse<Dish> { Code = ErrorCodes.DeleteFailed };
     }
 }

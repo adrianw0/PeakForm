@@ -1,5 +1,5 @@
 ﻿using Application.UseCases.MealHistory.UpdateMeal.Request;
-using Application.UseCases.MealHistory.UpdateMeal.Response;
+using Application.UseCases.Responses.Update;
 using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
@@ -20,12 +20,12 @@ public class UpdateMealUseCase : IUpdateMealUseCase
         _userProvider = userProvider;
     }
 
-    public async Task<UpdateMealResponse> Execute(UpdateMealRequest request)
+    public async Task<UpdateResponse<Meal>> Execute(UpdateMealRequest request)
     {
 
         var meal = await  _mealReadRepository.FindByIdAsync(request.Id);
         if (!meal.OwnerId.Equals(_userProvider.UserId))
-            return new UpdateMealErrorResponse { Code = ErrorCodes.NotFound };
+            return new UpdateErrorResponse<Meal> { Code = ErrorCodes.NotFound };
 
         var updateMeal = new Meal
         {
@@ -36,8 +36,8 @@ public class UpdateMealUseCase : IUpdateMealUseCase
 
         var updated = await _mealWriteRepository.UpdateAsync(updateMeal);
 
-        if (updated) return new UpdateMealSuccessResponse { Meal = updateMeal };
+        if (updated) return new UpdateSuccessResponse<Meal> { Entity = updateMeal };
 
-        return new UpdateMealErrorResponse { Code = ErrorCodes.MealUpdateFailed };
+        return new UpdateErrorResponse<Meal> { Code = ErrorCodes.MealUpdateFailed };
     }
 }

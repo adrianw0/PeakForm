@@ -1,12 +1,9 @@
 ﻿using Application.UseCases.Products.AddProduct.Request;
-using Application.UseCases.Products.AddProduct.Response;
-using Core.Common;
+using Application.UseCases.Responses.Add;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
 using FluentValidation;
-using FluentValidation.Results;
-using Newtonsoft.Json.Linq;
 
 
 namespace Application.UseCases.Products.AddProduct;
@@ -24,18 +21,18 @@ public class AddProductUseCase : IAddProductUseCase
         _productWriteRepository = productWriteRepository;
     }
 
-    public async Task<AddProductResponse> Execute(AddProductRequest request)
+    public async Task<AddReponse<Product>> Execute(AddProductRequest request)
     {
 
         var validationResult = await _requestValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
-            return new AddProductErrorResponse
+            return new AddErrorResponse<Product>
                 { Code = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage))};
 
         var product = CreateProductFromRequest(request);
         await _productWriteRepository.InsertOneAsync(product);
 
-        return new AddProductSuccessResponse { Product = product };
+        return new AddSuccessResponse<Product> { Entity = product };
     }
 
 
