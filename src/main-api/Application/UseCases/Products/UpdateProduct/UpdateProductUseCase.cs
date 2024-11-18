@@ -1,16 +1,9 @@
-﻿using Application.UseCases.Products.AddProduct;
-using Application.UseCases.Products.UpdateProduct.Request;
-using Application.UseCases.Products.UpdateProduct.Response;
+﻿using Application.UseCases.Products.UpdateProduct.Request;
+using Application.UseCases.Responses.Update;
 using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.UseCases.Products.UpdateProduct;
 public class UpdateProductUseCase : IUpdateProductUseCase
@@ -26,12 +19,12 @@ public class UpdateProductUseCase : IUpdateProductUseCase
     }
 
 
-    public async Task<UpdateProductResponse> Execute(UpdateProductsRequest request)
+    public async Task<UpdateResponse<Product>> Execute(UpdateProductsRequest request)
     {
         var product = await _productReadRepository.FindByIdAsync(request.Id);
 
         if (!product.OwnerId.Equals(_userProvider.UserId))
-            return new UpdateProductErrorResponse { Code = ErrorCodes.UpdateFailed };
+            return new UpdateErrorResponse<Product> { Code = ErrorCodes.UpdateFailed };
 
         var updateProduct = new Product
         {
@@ -46,9 +39,9 @@ public class UpdateProductUseCase : IUpdateProductUseCase
         var updated = await _productWriteRepository.UpdateAsync(updateProduct);
 
         if (updated)
-            return new UpdateProductSuccessResponse { Product = updateProduct };
+            return new UpdateSuccessResponse<Product>{ Entity = updateProduct };
 
-        return new UpdateProductErrorResponse { Message = ErrorCodes.UpdateFailed };
+        return new UpdateErrorResponse<Product> { Message = ErrorCodes.UpdateFailed };
        
     }
 }

@@ -1,12 +1,8 @@
 ﻿using Application.UseCases.Products.UpdateProduct.Request;
-using Application.UseCases.Products.UpdateProduct.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.UseCases.Responses.Update;
+using Domain.Models;
 
 namespace Application.UseCases.Products.UpdateProduct;
-public interface IUpdateProductUseCase : IUseCase<UpdateProductsRequest, UpdateProductResponse>
+public interface IUpdateProductUseCase : IUseCase<UpdateProductsRequest, UpdateResponse<Product>>
 {
 }

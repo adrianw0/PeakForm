@@ -1,15 +1,9 @@
 ﻿using Application.UseCases.Dishes.GetDishes.Request;
-using Application.UseCases.Dishes.GetDishes.Response;
+using Application.UseCases.Responses.Get;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
-using Core.Params;
 using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.UseCases.Dishes.GetDishes;
 public class GetDishesUseCase : IGetDishesUseCase
@@ -24,7 +18,7 @@ public class GetDishesUseCase : IGetDishesUseCase
 
 
 
-    public async Task<GetDishesResponse> Execute(GetDishesRequest request)
+    public async Task<GetReponse<Dish>> Execute(GetDishesRequest request)
     {
 
         Expression<Func<Dish, bool>> predicate = d =>
@@ -33,7 +27,7 @@ public class GetDishesUseCase : IGetDishesUseCase
         var dishes = await _dishReadRepository
             .FindAsync(predicate, request.PagingParams.Page, request.PagingParams.PageSize);
 
-        return new GetDishesSuccessResponse { Dishes = dishes.ToList() };
+        return new GetSuccessReponse<Dish> { Entity = dishes.ToList() };
 
 
     }

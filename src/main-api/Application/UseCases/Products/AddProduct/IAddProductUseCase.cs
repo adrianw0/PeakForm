@@ -1,12 +1,8 @@
 ﻿using Application.UseCases.Products.AddProduct.Request;
-using Application.UseCases.Products.AddProduct.Response;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Application.UseCases.Responses.Add;
+using Domain.Models;
 
 namespace Application.UseCases.Products.AddProduct;
-public interface IAddProductUseCase : IUseCase<AddProductRequest, AddProductResponse>
+public interface IAddProductUseCase : IUseCase<AddProductRequest, AddReponse<Product>>
 {
 }

@@ -1,16 +1,9 @@
 ﻿using Application.UseCases.MealHistory.GetMeals.Request;
-using Application.UseCases.MealHistory.GetMeals.Response;
-using Core.Common;
+using Application.UseCases.Responses.Get;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
-using Core.Params;
 using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.UseCases.MealHistory.GetMeals;
 public class GetMealsUseCase : IGetMealsUseCase
@@ -24,7 +17,7 @@ public class GetMealsUseCase : IGetMealsUseCase
         _userProvider = userProvider;
     }
 
-    public async Task<GetMealsResponse> Execute(GetMealsRequest request)
+    public async Task<GetReponse<Meal>> Execute(GetMealsRequest request)
     {
         Expression<Func<Meal, bool>> predicate = m =>
         (request.DateFrom <= m.Date && m.Date <= request.DateTo 
@@ -33,6 +26,6 @@ public class GetMealsUseCase : IGetMealsUseCase
 
         var meals = await _mealReadRepository.FindAsync(predicate, request.PagingParams.Page, request.PagingParams.PageSize);
         
-        return new GetMealsSuccessResponse { Meals = meals.ToList() };
+        return new GetSuccessReponse<Meal> { Entity = meals.ToList() };
     }
 }

@@ -1,14 +1,9 @@
 ﻿using Application.UseCases.MealHistory.DeleteMeal.Request;
-using Application.UseCases.MealHistory.DeleteMeal.Response;
+using Application.UseCases.Responses.Delete;
 using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.UseCases.MealHistory.DeleteMeal;
 public class DeleteMealUseCase : IDeleteMealUseCase
@@ -25,16 +20,16 @@ public class DeleteMealUseCase : IDeleteMealUseCase
 
 
 
-    public async Task<DeleteMealResponse> Execute(DeleteMealRequest request)
+    public async Task<DeleteResponse<Meal>> Execute(DeleteMealRequest request)
     {
         var meal = await _mealReadRepository.FindByIdAsync(request.Id);
         if (!meal.OwnerId.Equals(_userProvider.UserId))
-            return new DeleteMealErrorResponse { Code = ErrorCodes.NotFound };
+            return new DeleteErrorResponse<Meal> { Code = ErrorCodes.NotFound };
 
         var deleted = await _mealWriteRepository.DeleteByIdAsync(request.Id);
 
-        if (deleted) return new DeleteMealSuccessResponse();
+        if (deleted) return new DeleteSuccessResponse<Meal>();
 
-        return new DeleteMealErrorResponse { Code = ErrorCodes.DeleteFailed };
+        return new DeleteErrorResponse<Meal> { Code = ErrorCodes.DeleteFailed };
     }
 }
