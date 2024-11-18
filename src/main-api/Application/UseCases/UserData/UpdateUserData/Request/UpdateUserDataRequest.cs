@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain.Models;
+﻿using System.ComponentModel.DataAnnotations;
 using Domain.Models.Enums;
 
 namespace Application.UseCases.UserData.UpdateUserData.Request;
-public class UpdateUserDataRequest
+public class UpdateUserDataRequest : UseCases.Request
 {
     [Required]
     public Guid Id { get; init; }

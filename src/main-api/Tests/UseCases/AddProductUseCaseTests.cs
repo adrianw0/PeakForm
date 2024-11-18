@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Application.Validators;
 using Application.UseCases.Products.AddProduct;
 using Application.UseCases.Products.AddProduct.Request;
-using Application.UseCases.Products.AddProduct.Response;
 using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
 using Domain.Models.Constants;
 using Moq;
+using Application.UseCases.Responses.Add;
 
 namespace Tests.UseCases;
 public class AddProductUseCaseTests
@@ -75,14 +70,14 @@ public class AddProductUseCaseTests
         };
 
         var result = await _useCase.Execute(request);
-        var successResult = result as AddProductSuccessResponse;
+        var successResult = result as AddSuccessResponse<Product>;
 
         Assert.NotNull(successResult);
-        Assert.Equal(request.Name, successResult.Product.Name);
-        Assert.Equal(userId, successResult.Product.OwnerId);
-        Assert.Single(successResult.Product.NutrientsPer1G);
+        Assert.Equal(request.Name, successResult.Entity?.Name);
+        Assert.Equal(userId, successResult.Entity?.OwnerId);
+        Assert.Single(successResult.Entity.NutrientsPer1G);
 
-        var nutrientPer1G = successResult.Product.NutrientsPer1G.Single();
+        var nutrientPer1G = successResult.Entity.NutrientsPer1G.Single();
         Assert.Equal(nutrientValuePer1G, nutrientPer1G.Value);
         Assert.Equal(NutrientNames.Proteins, nutrientPer1G.Nutrient.Name);
         Assert.Equal(baseUnitCode, nutrientPer1G.Nutrient.Unit.Code);
@@ -104,8 +99,8 @@ public class AddProductUseCaseTests
 
         var result = await _useCase.Execute(request);
 
-        Assert.IsType<AddProductErrorResponse>(result);
-        Assert.Equal($"{ErrorCodes.UnitDoesNotExist}; {ErrorCodes.BaseUnitDoesNotExistInProductUnits}", ((AddProductErrorResponse)result).Code);
+        Assert.IsType<AddErrorResponse<Product>>(result);
+        Assert.Equal($"{ErrorCodes.UnitDoesNotExist}; {ErrorCodes.BaseUnitDoesNotExistInProductUnits}", ((AddErrorResponse<Product>)result).Code);
     }
 
 }
