@@ -9,6 +9,8 @@ using Application.UseCases.UserData.UpdateUserData.Request;
 using Application.UseCases.Responses.Update;
 using Application.UseCases.UserData.DeleteUserData.Request;
 using Application.UseCases.Responses.Delete;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Fuel.Api.Controllers;
