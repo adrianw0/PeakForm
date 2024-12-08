@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Application.UseCases.UserData.DeleteUserData;
 using Application.UseCases.UserData.GetUserData;
 using Application.UseCases.UserData.UpdateUserData;
@@ -12,6 +10,7 @@ using Application.UseCases.Responses.Update;
 using Application.UseCases.UserData.DeleteUserData.Request;
 using Application.UseCases.Responses.Delete;
 
+
 namespace Fuel.Api.Controllers;
 
 [Authorize]
@@ -19,6 +18,7 @@ namespace Fuel.Api.Controllers;
 [Route("[Controller]")]
 public class UserDataController : ControllerBase
 {
+
     readonly IDeleteUserDataUseCase _deleteUserDataUseCase;
     readonly IGetUserDataUseCase _getUserDataUseCase;
     readonly IUpdateUserDataUseCase _updateUserDataUseCase;
@@ -64,3 +64,4 @@ public class UserDataController : ControllerBase
     }
 
 } 
+

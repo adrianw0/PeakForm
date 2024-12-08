@@ -1,4 +1,4 @@
-﻿using Application.UseCases.Responses.Update;
+using Application.UseCases.Responses.Update;
 using Application.UseCases.UserData.UpdateUserData.Request;
 using Core.Common;
 using Core.Interfaces.Providers;
@@ -89,11 +89,4 @@ public class UpdateUserDataUseCase : IUpdateUserDataUseCase
             GoalMuscleMassPercentage = request.GoalMuscleMassPercentage ?? default,
         };
     }
-
-
-
-
-
-
-
 }
