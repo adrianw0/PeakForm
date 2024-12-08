@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        solution: [ "src/auth-api/auth-api.sln", "src/main-api/Fuel.sln" ]
+        solution: [ "src/auth-api/Auth-Api.sln", "src/main-api/Fuel.sln" ]
 
     steps:
     - uses: actions/checkout@v4
