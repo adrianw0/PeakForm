@@ -13,16 +13,19 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        solution: [ "src/auth-api/auth-api.sln", "src/main-api/Fuel.sln" ]
 
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET
+    - name: Setup .NET 9
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ${{ matrix.solution }}
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ${{ matrix.solution }} --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ${{ matrix.solution }} --no-build --verbosity normal
