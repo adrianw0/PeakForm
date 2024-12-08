@@ -16,6 +16,10 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 using FluentValidation;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using FluentValidation;
+using FluentAssertions.Common;
 
 namespace Fuel.Api;
 
@@ -46,12 +50,14 @@ public static class Program
         SetupJwt(builder, jwtSettings);
 
         builder.Services.AddControllers()
+
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
         builder.Services.AddAuthorization();
 
         AddUseCases(builder);
+
         builder.Services.Configure<DataAccess.Mongo.DbConfig>(builder.Configuration);
         builder.Services.AddSingleton<IUserProvider, UserProvider>();
         builder.Services.AddSingleton<DataAccess.Mongo.Interfaces.IDbContext, DataAccess.Mongo.DbContext>();
@@ -64,14 +70,13 @@ public static class Program
         builder.Services.AddScoped<IExternalProductsProvider, ExternalProductsProvider>();
 
 
-        builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
     
         });
-
+        BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
         
 
         var app = builder.Build();

@@ -3,6 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using Application.UseCases.UserData.DeleteUserData;
 using Application.UseCases.UserData.GetUserData;
 using Application.UseCases.UserData.UpdateUserData;
+using Application.UseCases.Responses.Get;
+using Application.UseCases.UserData.GetUserData.Request;
+using Domain.Models;
+using Fuel.Api.Mappers;
+using Application.UseCases.UserData.UpdateUserData.Request;
+using Application.UseCases.Responses.Update;
+using Application.UseCases.UserData.DeleteUserData.Request;
+using Application.UseCases.Responses.Delete;
 
 namespace Fuel.Api.Controllers;
 
@@ -21,4 +29,38 @@ public class UserDataController : ControllerBase
         _getUserDataUseCase = getUserDataUseCase;
         _deleteUserDataUseCase = deleteUserDataUseCase;
     }
-}
+
+    [HttpGet]
+    public async Task<IActionResult> GetUserData([FromQuery] GetUserDataReuqest request)
+    {
+        var response = await _getUserDataUseCase.Execute(request);
+
+        if (response is GetSuccessReponse<UserData> successResponse) return Ok(successResponse.Entity.Select(u => u.MapToDto()));
+
+        return BadRequest();
+    }
+    [HttpPut]
+    public async Task<IActionResult> UpdateUserData([FromBody] UpdateUserDataRequest request)
+    {
+        var response = await  _updateUserDataUseCase.Execute(request);
+        return response switch
+        {
+            UpdateSuccessResponse<UserData> successResponse => Ok(successResponse.Entity?.MapToDto()),
+            UpdateErrorResponse<UserData> errorResponse => BadRequest(errorResponse.Message),
+            _ => BadRequest()
+        };
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUserData([FromQuery] DeleteuserDataRequest request)
+    {
+        var response = await _deleteUserDataUseCase.Execute(request);
+        return response switch
+        {
+            DeleteSuccessResponse<UserData> successResponse => Ok(),
+            DeleteErrorResponse<UserData> errorResponse => BadRequest(errorResponse.Message),
+            _ => BadRequest()
+        };
+    }
+
+} 
