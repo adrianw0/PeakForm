@@ -20,6 +20,10 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using FluentValidation;
 using FluentAssertions.Common;
+using Infrastructure.ExternalAPIs.LLMAssistants;
+using Fuel.Api.AiAssistantChat;
+using Application.UseCases.AiAssistant;
+using Application.UseCases.AiAssistant.QueryAiAssistantStream;
 
 namespace Fuel.Api;
 
@@ -56,13 +60,18 @@ public static class Program
 
         builder.Services.AddAuthorization();
 
-        AddUseCases(builder);
 
         builder.Services.Configure<DataAccess.Mongo.DbConfig>(builder.Configuration);
         builder.Services.AddSingleton<IUserProvider, UserProvider>();
+        builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         builder.Services.AddSingleton<DataAccess.Mongo.Interfaces.IDbContext, DataAccess.Mongo.DbContext>();
         builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(DataAccess.Mongo.WriteRepository<>));
         builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DataAccess.Mongo.ReadRepository<>));
+
+        builder.Services.AddScoped(typeof(IPromptBuilder), typeof(PromptBuilder));
+        builder.Services.AddScoped(typeof(ISessionManager), typeof(SessionManager));
+        builder.Services.AddScoped(typeof(ILLMAssistantService), typeof(OpenAiAssistant));
+
 
         builder.Services.AddValidatorsFromAssembly(AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("Application")), ServiceLifetime.Transient);
 
@@ -77,7 +86,14 @@ public static class Program
     
         });
         BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
-        
+
+
+        AddUseCases(builder);
+
+        builder.Services.AddSignalR(o =>
+        {
+            o.EnableDetailedErrors = true;
+        });
 
         var app = builder.Build();
 
@@ -100,6 +116,7 @@ public static class Program
 
 
         app.MapControllers();
+        app.MapHub<ChatHub>("/chatHub");
 
         //seed
         var dbContext = app.Services.GetService<DataAccess.Mongo.Interfaces.IDbContext>();
@@ -153,6 +170,8 @@ public static class Program
         .AddClasses(classes => classes.AssignableTo(typeof(IUseCase<,>)))
             .AsImplementedInterfaces()
             .WithScopedLifetime());
+
+        builder.Services.AddScoped<IQueryAiAssistantStreamUseCase, QueryAiAssistantStreamUseCase>();
     }
 }
 
