@@ -12,15 +12,17 @@ public class PromptBuilder : IPromptBuilder
     {
         _dateTimeProvider = dateTimeProvider;
     }
-    public Message BuildPrompt(string prompt, IEnumerable<Message> history, string AiContext, Guid sessionId)
-    {
-        
+    public Message BuildPrompt(string prompt, string AiContext, Guid sessionId, IEnumerable<Message>? initialMessages = null)
+    { 
         StringBuilder builder = new();
 
         builder.AppendLine(AiContext);
-        foreach (Message msg in history)
+        if (initialMessages != null)
         {
-            builder.AppendLine($"role : {msg.Sender}, content: {msg.Content}");
+            foreach (Message msg in initialMessages)
+            {
+                builder.AppendLine($"role : {msg.Sender}, content: {msg.Content}");
+            }
         }
         builder.AppendLine(prompt);
 

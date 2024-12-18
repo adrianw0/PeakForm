@@ -16,6 +16,7 @@ services:
    - RateLimitSettings__PermitLimit=4
    - RateLimitSettings__Window=12
    - RateLimitsettings__QueueLimit=2
+   - OPENAI_API_KEY=${OPENAI_API_KEY}
   depends_on:
    - mainDb
 

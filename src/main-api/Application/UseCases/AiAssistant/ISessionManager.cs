@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 namespace Application.UseCases.AiAssistant;
 public interface ISessionManager
 {
-    Task<ChatSession> GetActiveSessionForCurrentUser();
-    Task<ChatSession> OpenNewChatSession();
-    Task CloseChatSession(Guid sessionId);
+    Task CloseActiveChatSession(Guid userId);
+    Task DumpMessagesToDatabase(ChatSession session, List<Message> messages);
+    Task<ChatSession> GetActiveSessionForUser(Guid userId);
+    Task<ChatSession> OpenNewChatSessionForUser(Guid userId);
 }

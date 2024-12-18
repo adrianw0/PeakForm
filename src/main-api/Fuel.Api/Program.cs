@@ -24,6 +24,7 @@ using Infrastructure.ExternalAPIs.LLMAssistants;
 using Fuel.Api.AiAssistantChat;
 using Application.UseCases.AiAssistant;
 using Application.UseCases.AiAssistant.QueryAiAssistantStream;
+using OpenAI;
 
 namespace Fuel.Api;
 
@@ -94,6 +95,8 @@ public static class Program
         {
             o.EnableDetailedErrors = true;
         });
+
+        builder.Services.AddSingleton(new OpenAIClient(apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
 
         var app = builder.Build();
 
@@ -171,7 +174,7 @@ public static class Program
             .AsImplementedInterfaces()
             .WithScopedLifetime());
 
-        builder.Services.AddScoped<IQueryAiAssistantStreamUseCase, QueryAiAssistantStreamUseCase>();
+        builder.Services.AddScoped<IAiAssistantService, AiAssistantService>();
     }
 }
 

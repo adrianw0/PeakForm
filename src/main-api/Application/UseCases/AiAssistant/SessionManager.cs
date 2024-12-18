@@ -3,45 +3,49 @@ using Core.Interfaces.Repositories;
 using Domain.Models.AiAssistanc;
 using Domain.Models.AiAssistanc.Enums;
 using System.Data;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Application.UseCases.AiAssistant;
 public class SessionManager : ISessionManager
 {
     private static readonly SemaphoreSlim _semaphore = new(1, 1);
 
-    private readonly IReadRepository<ChatSession> _readRepository;
-    private readonly IWriteRepository<ChatSession> _writeRepository;
+    private readonly IReadRepository<ChatSession> _sessionReadRepository;
+    private readonly IWriteRepository<ChatSession> _sessionWriteRepository;
+    private readonly IWriteRepository<Message> _messagesWriteRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IUserProvider _userProvider;
-    public SessionManager(IWriteRepository<ChatSession> writeRepository, IReadRepository<ChatSession> readRepository, IUserProvider userProvider, IDateTimeProvider dateTimeProvider)
+    public SessionManager(IWriteRepository<ChatSession> writeRepository, IReadRepository<ChatSession> readRepository, IDateTimeProvider dateTimeProvider, IWriteRepository<Message> messagesWriteRepository)
     {
-        _writeRepository = writeRepository;
-        _readRepository = readRepository;
-        _userProvider = userProvider;
+        _sessionWriteRepository = writeRepository;
+        _sessionReadRepository = readRepository;
         _dateTimeProvider = dateTimeProvider;
+        _messagesWriteRepository = messagesWriteRepository;
     }
 
-    public async Task CloseChatSession(Guid sessionId)
+    public async Task CloseActiveChatSession(Guid userId)
     {
-        var session = await _readRepository.FindOneAsync(s=>s.Id.Equals(sessionId) && s.status == SessionStatus.Active);
+        var session = await _sessionReadRepository.FindOneAsync(s => s.UserId.Equals(userId) && s.status == SessionStatus.Active);
         if (session is null)
             throw new ArgumentException("No session was found or session is not active");
 
-        session.status = SessionStatus.Closed;
-        await _writeRepository.UpdateAsync(session);
+        await CloseActiveSession(session);
     }
-
-    public async Task<ChatSession> GetActiveSessionForCurrentUser()
+    public async Task DumpMessagesToDatabase(ChatSession session, List<Message> messages)
     {
-        return await _readRepository.FindOneAsync(x => x.status == SessionStatus.Active && x.UserId.Equals(_userProvider.UserId));
+        await _messagesWriteRepository.InsertManyAsync(messages);
     }
 
-    public async Task<ChatSession> OpenNewChatSession()
+    public async Task<ChatSession> GetActiveSessionForUser(Guid userId)
+    {
+        return await _sessionReadRepository.FindOneAsync(x => x.status == SessionStatus.Active && x.UserId.Equals(userId));
+    }
+
+    public async Task<ChatSession> OpenNewChatSessionForUser(Guid userId)
     {
         await _semaphore.WaitAsync();
         try
         {
-            var activeSessions = await _readRepository.FindOneAsync(n => n.status == SessionStatus.Active && n.UserId.Equals(_userProvider.UserId));
+            var activeSessions = GetActiveSessionForUser(userId);
             if (activeSessions is not null)
                 throw new InvalidOperationException("Another session is still active. New one cannot be opened");
 
@@ -49,10 +53,10 @@ public class SessionManager : ISessionManager
             {
                 CreationDate = _dateTimeProvider.Now,
                 status = SessionStatus.Active,
-                UserId = new Guid(_userProvider.UserId),
+                UserId = userId,
                 Id = Guid.NewGuid(),
             };
-            await _writeRepository.InsertOneAsync(session);
+            await _sessionWriteRepository.InsertOneAsync(session);
             return session;
         }
         finally {
@@ -61,6 +65,11 @@ public class SessionManager : ISessionManager
 
     }
 
+    private async Task CloseActiveSession(ChatSession session)
+    {       
+        session.status = SessionStatus.Closed;
+        await _sessionWriteRepository.UpdateAsync(session);
+    }
 
 }
 
