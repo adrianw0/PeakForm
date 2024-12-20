@@ -11,9 +11,9 @@ public class OpenAiAssistant : ILLMAssistantService
     {
             _openAiClient = openAIClient;
     }
-    public async IAsyncEnumerable<string> GenerateResponseStreamAsync(Message prompt)
+    public async IAsyncEnumerable<string> GenerateResponseStreamAsync(string prompt)
     {
-        await foreach (var chunk in _openAiClient.GetChatClient("gpt-4o-mini").CompleteChatStreamingAsync(prompt.Content))
+        await foreach (var chunk in _openAiClient.GetChatClient("gpt-4o-mini").CompleteChatStreamingAsync(prompt))
         {
                 yield return $"{chunk.ContentUpdate[0].Text}";   
         }

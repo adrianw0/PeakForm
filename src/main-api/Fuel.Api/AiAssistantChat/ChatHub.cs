@@ -1,12 +1,11 @@
-﻿using Application.UseCases.AiAssistant;
-using Application.UseCases.AiAssistant.QueryAiAssistant.Request;
-using Application.UseCases.AiAssistant.QueryAiAssistantStream;
-using Core.Interfaces.Providers;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.SignalR;
 using Domain.Models.AiAssistanc;
+using Application.Services.AiAssistant.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Fuel.Api.AiAssistantChat;
 
+[Authorize]
 public class ChatHub : Hub
 {
     private readonly IAiAssistantService _aiAssistantService;
@@ -20,10 +19,8 @@ public class ChatHub : Hub
 
     public async Task SendMessage(string prompt)
     {
-        var request = new QueryAiAssistantRequest { prompt = prompt };
-
         int chunkId = 0;
-        await foreach (var chunk in _aiAssistantService.GetAiResponse(request))
+        await foreach (var chunk in _aiAssistantService.GetAiResponse(prompt))
         {
             var payload = new
             {

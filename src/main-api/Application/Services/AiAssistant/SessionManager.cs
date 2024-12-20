@@ -1,11 +1,12 @@
-﻿using Core.Interfaces.Providers;
+﻿using Application.Services.AiAssistant.Interfaces;
+using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models.AiAssistanc;
 using Domain.Models.AiAssistanc.Enums;
 using System.Data;
 using System.Security.Cryptography.X509Certificates;
 
-namespace Application.UseCases.AiAssistant;
+namespace Application.Services.AiAssistant;
 public class SessionManager : ISessionManager
 {
     private static readonly SemaphoreSlim _semaphore = new(1, 1);
@@ -30,7 +31,7 @@ public class SessionManager : ISessionManager
 
         await CloseActiveSession(session);
     }
-    public async Task DumpMessagesToDatabase(ChatSession session, List<Message> messages)
+    public async Task DumpMessagesToDatabase(List<Message> messages)
     {
         await _messagesWriteRepository.InsertManyAsync(messages);
     }
@@ -45,7 +46,7 @@ public class SessionManager : ISessionManager
         await _semaphore.WaitAsync();
         try
         {
-            var activeSessions = GetActiveSessionForUser(userId);
+            var activeSessions = await GetActiveSessionForUser(userId);
             if (activeSessions is not null)
                 throw new InvalidOperationException("Another session is still active. New one cannot be opened");
 
@@ -59,14 +60,21 @@ public class SessionManager : ISessionManager
             await _sessionWriteRepository.InsertOneAsync(session);
             return session;
         }
-        finally {
+        finally
+        {
             _semaphore.Release();
         }
 
     }
 
+    public async void UpdateSessionLastActivityDate(ChatSession session)
+    {
+        session.LastActivityDate = _dateTimeProvider.Now;
+        await _sessionWriteRepository.UpdateAsync(session);
+    }
+
     private async Task CloseActiveSession(ChatSession session)
-    {       
+    {
         session.status = SessionStatus.Closed;
         await _sessionWriteRepository.UpdateAsync(session);
     }

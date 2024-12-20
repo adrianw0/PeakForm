@@ -22,9 +22,10 @@ using FluentValidation;
 using FluentAssertions.Common;
 using Infrastructure.ExternalAPIs.LLMAssistants;
 using Fuel.Api.AiAssistantChat;
-using Application.UseCases.AiAssistant;
-using Application.UseCases.AiAssistant.QueryAiAssistantStream;
 using OpenAI;
+using Application.Services.AiAssistant;
+using Application.Services.AiAssistant.Interfaces;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Fuel.Api;
 
@@ -34,7 +35,7 @@ public static class Program
     {
 
         var builder = WebApplication.CreateBuilder(args);
-        
+
 
         // Add services to the container.
         builder.Services.AddHttpContextAccessor();
@@ -62,17 +63,14 @@ public static class Program
         builder.Services.AddAuthorization();
 
 
+        builder.Services.AddMemoryCache();
         builder.Services.Configure<DataAccess.Mongo.DbConfig>(builder.Configuration);
         builder.Services.AddSingleton<IUserProvider, UserProvider>();
         builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         builder.Services.AddSingleton<DataAccess.Mongo.Interfaces.IDbContext, DataAccess.Mongo.DbContext>();
         builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(DataAccess.Mongo.WriteRepository<>));
         builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DataAccess.Mongo.ReadRepository<>));
-
-        builder.Services.AddScoped(typeof(IPromptBuilder), typeof(PromptBuilder));
-        builder.Services.AddScoped(typeof(ISessionManager), typeof(SessionManager));
-        builder.Services.AddScoped(typeof(ILLMAssistantService), typeof(OpenAiAssistant));
-
+        
 
         builder.Services.AddValidatorsFromAssembly(AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("Application")), ServiceLifetime.Transient);
 
@@ -84,12 +82,13 @@ public static class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
-    
+
         });
         BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
 
 
         AddUseCases(builder);
+        AddAiServices(builder);
 
         builder.Services.AddSignalR(o =>
         {
@@ -128,7 +127,15 @@ public static class Program
 #pragma warning restore CS8604 // Possible null reference argument.
 
         app.Run();
-    
+
+    }
+
+    private static void AddAiServices(WebApplicationBuilder builder)
+    {
+        builder.Services.AddTransient<IAiAssistantService, AiAssistantService>();
+        builder.Services.AddScoped(typeof(IPromptBuilder), typeof(PromptBuilder));
+        builder.Services.AddScoped(typeof(ISessionManager), typeof(SessionManager));
+        builder.Services.AddScoped(typeof(ILLMAssistantService), typeof(OpenAiAssistant));
     }
 
     private static void SetupJwt(WebApplicationBuilder builder, JwtSettings settings)
@@ -150,6 +157,22 @@ public static class Program
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true
             };
+
+            x.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+
+                    var path = context.HttpContext.Request.Path;
+                    if (!string.IsNullOrEmpty(accessToken)&&(path.StartsWithSegments("/chatHub")))
+                    {
+                        context.Token = accessToken;
+                    }
+                    return Task.CompletedTask;
+                }
+            };
+
         });
     }
     
@@ -173,8 +196,6 @@ public static class Program
         .AddClasses(classes => classes.AssignableTo(typeof(IUseCase<,>)))
             .AsImplementedInterfaces()
             .WithScopedLifetime());
-
-        builder.Services.AddScoped<IAiAssistantService, AiAssistantService>();
     }
 }
 
