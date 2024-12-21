@@ -82,16 +82,19 @@ public static class Program
         });
         BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
 
-
+        var openAiApiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+        
         AddUseCases(builder);
-        AddAiServices(builder);
 
-        builder.Services.AddSignalR(o =>
-        {
-            o.EnableDetailedErrors = true;
-        });
+        if (!string.IsNullOrEmpty(openAiApiKey))
+        { 
+            AddAiServices(builder, openAiApiKey);
+            builder.Services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
+        }
 
-        builder.Services.AddSingleton(new OpenAIClient(apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
 
         var app = builder.Build();
 
@@ -114,7 +117,12 @@ public static class Program
 
 
         app.MapControllers();
-        app.MapHub<ChatHub>("/chatHub");
+
+        if (!string.IsNullOrEmpty(openAiApiKey))
+        {
+            app.MapHub<ChatHub>("/chatHub");
+        }
+       
 
         //seed
         var dbContext = app.Services.GetService<DataAccess.Mongo.Interfaces.IDbContext>();
@@ -126,8 +134,9 @@ public static class Program
 
     }
 
-    private static void AddAiServices(WebApplicationBuilder builder)
+    private static void AddAiServices(WebApplicationBuilder builder, string openAiApiKey)
     {
+        builder.Services.AddSingleton(new OpenAIClient(apiKey: openAiApiKey));
         builder.Services.AddTransient<IAiAssistantService, AiAssistantService>();
         builder.Services.AddScoped(typeof(IPromptBuilder), typeof(PromptBuilder));
         builder.Services.AddScoped(typeof(ISessionManager), typeof(SessionManager));
