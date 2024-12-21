@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.Responses.Delete;
-using Application.UseCases.Responses.Update;
 using Application.UseCases.UserData.DeleteUserData.Request;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;

@@ -1,8 +1,6 @@
-﻿using Core.Interfaces.Providers;
-using DataAccess.Mongo.Interfaces;
+﻿using DataAccess.Mongo.Interfaces;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using System.Data.Common;
 
 namespace DataAccess.Mongo;
 public class DbContext : IDbContext
@@ -20,7 +18,7 @@ public class DbContext : IDbContext
         var database = client.GetDatabase(_dbConfig.Value.DatabaseName);
 
         var collection = database.GetCollection<T>(typeof(T).Name);
-        
+
         return collection;
 
     }

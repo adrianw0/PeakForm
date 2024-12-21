@@ -20,12 +20,12 @@ public class GetMealsUseCase : IGetMealsUseCase
     public async Task<GetReponse<Meal>> Execute(GetMealsRequest request)
     {
         Expression<Func<Meal, bool>> predicate = m =>
-        (request.DateFrom <= m.Date && m.Date <= request.DateTo 
+        (request.DateFrom <= m.Date && m.Date <= request.DateTo
         && m.OwnerId.Equals(_userProvider.UserId));
-            
+
 
         var meals = await _mealReadRepository.FindAsync(predicate, request.PagingParams.Page, request.PagingParams.PageSize);
-        
+
         return new GetSuccessReponse<Meal> { Entity = meals.ToList() };
     }
 }

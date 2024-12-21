@@ -1,14 +1,14 @@
-﻿using System.Linq.Expressions;
-using Application.Validators;
-using Application.UseCases.Products.AddProduct;
+﻿using Application.UseCases.Products.AddProduct;
 using Application.UseCases.Products.AddProduct.Request;
+using Application.UseCases.Responses.Add;
+using Application.Validators;
 using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
 using Domain.Models.Constants;
 using Moq;
-using Application.UseCases.Responses.Add;
+using System.Linq.Expressions;
 
 namespace Tests.UseCases;
 public class AddProductUseCaseTests

@@ -30,6 +30,6 @@ internal static class ProductMapper
         };
 
         return values;
-    } 
+    }
 }
 

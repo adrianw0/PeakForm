@@ -1,16 +1,16 @@
-using Application.UseCases.UserData.DeleteUserData;
-using Application.UseCases.UserData.GetUserData;
-using Application.UseCases.UserData.UpdateUserData;
+using Application.UseCases.Responses.Delete;
 using Application.UseCases.Responses.Get;
+using Application.UseCases.Responses.Update;
+using Application.UseCases.UserData.DeleteUserData;
+using Application.UseCases.UserData.DeleteUserData.Request;
+using Application.UseCases.UserData.GetUserData;
 using Application.UseCases.UserData.GetUserData.Request;
+using Application.UseCases.UserData.UpdateUserData;
+using Application.UseCases.UserData.UpdateUserData.Request;
 using Domain.Models;
 using Fuel.Api.Mappers;
-using Application.UseCases.UserData.UpdateUserData.Request;
-using Application.UseCases.Responses.Update;
-using Application.UseCases.UserData.DeleteUserData.Request;
-using Application.UseCases.Responses.Delete;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 
 namespace Fuel.Api.Controllers;
@@ -44,7 +44,7 @@ public class UserDataController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateUserData([FromBody] UpdateUserDataRequest request)
     {
-        var response = await  _updateUserDataUseCase.Execute(request);
+        var response = await _updateUserDataUseCase.Execute(request);
         return response switch
         {
             UpdateSuccessResponse<UserData> successResponse => Ok(successResponse.Entity?.MapToDto()),
@@ -65,5 +65,5 @@ public class UserDataController : ControllerBase
         };
     }
 
-} 
+}
 

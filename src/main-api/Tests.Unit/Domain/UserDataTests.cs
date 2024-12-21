@@ -39,9 +39,9 @@ public class UserDataTests
 
         user.Bmr.Should().Be(0);
     }
-   
+
     [Test]
-    public void BmiShouldReturncorrectvalueWhenUserDataCorrect() 
+    public void BmiShouldReturncorrectvalueWhenUserDataCorrect()
     {
         UserData user = new()
         {

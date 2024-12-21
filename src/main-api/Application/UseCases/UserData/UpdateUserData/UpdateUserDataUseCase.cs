@@ -3,12 +3,7 @@ using Application.UseCases.UserData.UpdateUserData.Request;
 using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
-using Domain.Models;
-using Domain.Models.Enums;
 using FluentValidation;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Linq.Expressions;
 
 namespace Application.UseCases.UserData.UpdateUserData;
 public class UpdateUserDataUseCase : IUpdateUserDataUseCase
@@ -28,12 +23,12 @@ public class UpdateUserDataUseCase : IUpdateUserDataUseCase
 
     public async Task<UpdateResponse<Domain.Models.UserData>> Execute(UpdateUserDataRequest request)
     {
-        var validationResult =await _validator.ValidateAsync(request);
+        var validationResult = await _validator.ValidateAsync(request);
         if (!validationResult.IsValid)
         {
-            return new UpdateErrorResponse<Domain.Models.UserData> {Code=ErrorCodes.UpdateFailed, Message = string.Join(';', validationResult.Errors) };
+            return new UpdateErrorResponse<Domain.Models.UserData> { Code = ErrorCodes.UpdateFailed, Message = string.Join(';', validationResult.Errors) };
         }
-        
+
         var userGuid = new Guid(_userProvider.UserId);
 
         var userData = await _readRepository.FindByIdAsync(userGuid);
@@ -48,7 +43,7 @@ public class UpdateUserDataUseCase : IUpdateUserDataUseCase
         {
             MapRequestToUserData(request, userData);
             await _writeRepository.UpdateAsync(userData);
-            return new UpdateSuccessResponse<Domain.Models.UserData> { Entity = userData};
+            return new UpdateSuccessResponse<Domain.Models.UserData> { Entity = userData };
         }
 
     }
@@ -72,7 +67,8 @@ public class UpdateUserDataUseCase : IUpdateUserDataUseCase
 
     private Domain.Models.UserData CreateNewUser(UpdateUserDataRequest request)
     {
-        return new Domain.Models.UserData { 
+        return new Domain.Models.UserData
+        {
             Id = new Guid(_userProvider.UserId),
             Weight = request.Weight ?? default,
             Height = request.Height ?? default,

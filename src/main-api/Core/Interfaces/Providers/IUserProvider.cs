@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.Interfaces.Providers;
+﻿namespace Core.Interfaces.Providers;
 public interface IUserProvider
 {
     public string UserId { get; }

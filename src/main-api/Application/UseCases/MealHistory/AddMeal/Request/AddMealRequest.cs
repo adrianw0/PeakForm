@@ -1,14 +1,8 @@
-﻿using Core.Params;
-using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Models;
 
 namespace Application.UseCases.MealHistory.AddMeal.Request;
 public class AddMealRequest : UseCases.Request
 {
     public List<MealFoodItems> FoodItems { get; set; } = new();
     public DateTime Date { get; set; }
-}  
+}

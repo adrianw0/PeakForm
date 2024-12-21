@@ -16,7 +16,7 @@ public class UserDataDto
     public decimal WaistCircumference { get; set; }
     public decimal HipCircumference { get; set; }
     public decimal NeckCircumference { get; set; }
-        
+
     public decimal GoalBodyFatPercentage { get; set; }
     public decimal GoalWeight { get; set; }
     public decimal GoalMuscleMassPercentage { get; set; }

@@ -1,5 +1,4 @@
-﻿using Core.Interfaces;
-using Core.Interfaces.Repositories;
+﻿using Core.Interfaces.Repositories;
 using DataAccess.Mongo.Interfaces;
 using Domain;
 using MongoDB.Driver;

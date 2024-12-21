@@ -1,14 +1,14 @@
 ﻿using DataAccess.Mongo.Interfaces;
 using Domain.Models;
-using MongoDB.Driver;
 using Domain.Models.Constants;
+using MongoDB.Driver;
 
 namespace DataAccess.Mongo;
 public static class Seeder
 {
     public static async Task SeedAsync(IDbContext db)
     {
-       if (db is null) throw new ArgumentNullException(nameof(db));
+        if (db is null) throw new ArgumentNullException(nameof(db));
 
         await SeedUnits(db);
         await SeedNutrients(db);
@@ -16,7 +16,7 @@ public static class Seeder
 
     private static async Task SeedUnits(IDbContext db)
     {
-        
+
         if (await HasData<Unit>(db)) return;
 
         var units = new List<Unit>
@@ -48,6 +48,6 @@ public static class Seeder
 
     private static async Task<bool> HasData<T>(IDbContext db)
     {
-        return await db.GetCollection<T>().Find(_=>true).AnyAsync();
+        return await db.GetCollection<T>().Find(_ => true).AnyAsync();
     }
 }

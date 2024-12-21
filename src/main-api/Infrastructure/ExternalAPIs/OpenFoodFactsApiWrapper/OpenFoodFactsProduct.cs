@@ -56,7 +56,7 @@ public class Product
     public string product_name { get; set; }
     public string product_name_en { get; set; }
     public string product_name_pl { get; set; }
- 
+
 }
 
 #pragma warning enable

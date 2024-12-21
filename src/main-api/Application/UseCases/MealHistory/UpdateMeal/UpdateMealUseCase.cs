@@ -23,7 +23,7 @@ public class UpdateMealUseCase : IUpdateMealUseCase
     public async Task<UpdateResponse<Meal>> Execute(UpdateMealRequest request)
     {
 
-        var meal = await  _mealReadRepository.FindByIdAsync(request.Id);
+        var meal = await _mealReadRepository.FindByIdAsync(request.Id);
         if (!meal.OwnerId.Equals(_userProvider.UserId))
             return new UpdateErrorResponse<Meal> { Code = ErrorCodes.NotFound };
 

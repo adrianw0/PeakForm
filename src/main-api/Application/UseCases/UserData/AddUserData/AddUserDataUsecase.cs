@@ -2,7 +2,6 @@
 using Application.UseCases.UserData.AddUserData.Request;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
-using Domain.Models;
 
 namespace Application.UseCases.UserData.AddUserData;
 public class AddUserDataUsecase : IAddUserDataUseCase

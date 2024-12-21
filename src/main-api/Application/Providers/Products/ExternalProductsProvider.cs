@@ -1,5 +1,4 @@
-﻿using Core.Params;
-using Domain.Models;
+﻿using Domain.Models;
 using Infrastructure.Interfaces;
 
 namespace Application.Providers.Products;
@@ -18,6 +17,6 @@ public class ExternalProductsProvider : IExternalProductsProvider
 
     public async Task<List<Product>> GetProductsByNameAsync(string searchParams, int page, int pageSize)
     {
-        return await _externalProductApiWrapper.GetProductsByNameAsync(searchParams , page, pageSize);
+        return await _externalProductApiWrapper.GetProductsByNameAsync(searchParams, page, pageSize);
     }
 }

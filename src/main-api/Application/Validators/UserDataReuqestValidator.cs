@@ -1,11 +1,6 @@
 ﻿using Application.UseCases.UserData.UpdateUserData.Request;
 using Application.Validators.Consts;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Validators;
 public class UserDataReuqestValidator : AbstractValidator<UpdateUserDataRequest>
@@ -77,5 +72,5 @@ public class UserDataReuqestValidator : AbstractValidator<UpdateUserDataRequest>
             .IsInEnum()
             .WithMessage(ValidationMessages.ActivityLevelRequired);
     }
-  
+
 }

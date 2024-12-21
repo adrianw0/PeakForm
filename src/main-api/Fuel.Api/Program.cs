@@ -1,25 +1,27 @@
-using System.Reflection;
 using Application.Providers.Products;
+using Application.Services.AiAssistant;
+using Application.Services.AiAssistant.Interfaces;
 using Application.UseCases;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using DataAccess.Mongo;
+using FluentValidation;
+using Fuel.Api.AiAssistantChat;
 using Fuel.Api.Middleware;
 using Fuel.Api.Providers;
 using Fuel.Api.Settings;
+using Infrastructure.ExternalAPIs.LLMAssistants;
 using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.IdentityModel.Tokens;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using OpenAI;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
-using FluentValidation;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
-using FluentValidation;
-using FluentAssertions.Common;
 
 namespace Fuel.Api;
 
@@ -29,7 +31,7 @@ public static class Program
     {
 
         var builder = WebApplication.CreateBuilder(args);
-        
+
 
         // Add services to the container.
         builder.Services.AddHttpContextAccessor();
@@ -56,13 +58,15 @@ public static class Program
 
         builder.Services.AddAuthorization();
 
-        AddUseCases(builder);
 
+        builder.Services.AddMemoryCache();
         builder.Services.Configure<DataAccess.Mongo.DbConfig>(builder.Configuration);
         builder.Services.AddSingleton<IUserProvider, UserProvider>();
+        builder.Services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         builder.Services.AddSingleton<DataAccess.Mongo.Interfaces.IDbContext, DataAccess.Mongo.DbContext>();
         builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(DataAccess.Mongo.WriteRepository<>));
         builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DataAccess.Mongo.ReadRepository<>));
+
 
         builder.Services.AddValidatorsFromAssembly(AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("Application")), ServiceLifetime.Transient);
 
@@ -74,10 +78,20 @@ public static class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(c =>
         {
-    
+
         });
         BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
-        
+
+
+        AddUseCases(builder);
+        AddAiServices(builder);
+
+        builder.Services.AddSignalR(o =>
+        {
+            o.EnableDetailedErrors = true;
+        });
+
+        builder.Services.AddSingleton(new OpenAIClient(apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")));
 
         var app = builder.Build();
 
@@ -100,6 +114,7 @@ public static class Program
 
 
         app.MapControllers();
+        app.MapHub<ChatHub>("/chatHub");
 
         //seed
         var dbContext = app.Services.GetService<DataAccess.Mongo.Interfaces.IDbContext>();
@@ -108,7 +123,15 @@ public static class Program
 #pragma warning restore CS8604 // Possible null reference argument.
 
         app.Run();
-    
+
+    }
+
+    private static void AddAiServices(WebApplicationBuilder builder)
+    {
+        builder.Services.AddTransient<IAiAssistantService, AiAssistantService>();
+        builder.Services.AddScoped(typeof(IPromptBuilder), typeof(PromptBuilder));
+        builder.Services.AddScoped(typeof(ISessionManager), typeof(SessionManager));
+        builder.Services.AddScoped(typeof(ILLMAssistantService), typeof(OpenAiAssistant));
     }
 
     private static void SetupJwt(WebApplicationBuilder builder, JwtSettings settings)
@@ -130,19 +153,35 @@ public static class Program
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true
             };
+
+            x.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
+                {
+                    var accessToken = context.Request.Query["access_token"];
+
+                    var path = context.HttpContext.Request.Path;
+                    if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chatHub")))
+                    {
+                        context.Token = accessToken;
+                    }
+                    return Task.CompletedTask;
+                }
+            };
+
         });
     }
-    
+
     private static void SetupRateLimiter(WebApplicationBuilder builder, RateLimitSettings settings)
     {
         const string fixedPolicy = "fixed";
         builder.Services.AddRateLimiter(_ => _
             .AddFixedWindowLimiter(policyName: fixedPolicy, options =>
             {
-            options.PermitLimit = settings.PermitLimit;
-            options.Window = TimeSpan.FromSeconds(settings.Window);
-            options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-            options.QueueLimit = settings.QueueLimit;
+                options.PermitLimit = settings.PermitLimit;
+                options.Window = TimeSpan.FromSeconds(settings.Window);
+                options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                options.QueueLimit = settings.QueueLimit;
             }));
     }
 

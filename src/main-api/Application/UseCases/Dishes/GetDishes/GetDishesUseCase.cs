@@ -23,7 +23,7 @@ public class GetDishesUseCase : IGetDishesUseCase
 
         Expression<Func<Dish, bool>> predicate = d =>
         d.Name.Contains(request.SearchParams) && (d.OwnerId.Equals(_userProvider.UserId) || d.IsGloballyVisible);
-        
+
         var dishes = await _dishReadRepository
             .FindAsync(predicate, request.PagingParams.Page, request.PagingParams.PageSize);
 
