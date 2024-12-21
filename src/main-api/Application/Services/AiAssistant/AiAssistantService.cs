@@ -1,13 +1,12 @@
-﻿using Domain.Models.AiAssistanc;
-using Infrastructure.ExternalAPIs.LLMAssistants;
-using Domain.Models.AiAssistanc.Enums;
-using System.Text;
+﻿using Application.Services.AiAssistant.Interfaces;
 using Core.Interfaces.Providers;
-using Microsoft.Extensions.Caching.Memory;
-using Application.Services.AiAssistant.Interfaces;
-using System.Linq.Expressions;
 using Core.Interfaces.Repositories;
 using Domain.Models;
+using Domain.Models.AiAssistanc;
+using Domain.Models.AiAssistanc.Enums;
+using Infrastructure.ExternalAPIs.LLMAssistants;
+using Microsoft.Extensions.Caching.Memory;
+using System.Text;
 
 namespace Application.Services.AiAssistant;
 public class AiAssistantService : IAiAssistantService
@@ -34,63 +33,57 @@ public class AiAssistantService : IAiAssistantService
 
     public async Task<ChatSession> OpenSessionForCurrentUser()
     {
-        Guid userId = new(_userProvider.UserId);
+        Guid userId = GetUserId();
         var activeSession = await _sessionManager.GetActiveSessionForUser(userId);
 
-        if (activeSession is not null && _dateTimeProvider.Now - activeSession.LastActivityDate <= TimeSpan.FromMinutes(30))
+        if (activeSession is not null && !IsSessionExpired(activeSession))
             return activeSession;
 
-        if (activeSession is not null && _dateTimeProvider.Now - activeSession.LastActivityDate > TimeSpan.FromMinutes(30))
+        if (activeSession is not null && IsSessionExpired(activeSession))
             await _sessionManager.CloseActiveChatSession(userId);
 
         return await _sessionManager.OpenNewChatSessionForUser(userId);
     }
+
+
+
     public async Task CloseSessionForCurrentuser()
     {
-        Guid userId = new(_userProvider.UserId);
-        Guid sessionId = (await _sessionManager.GetActiveSessionForUser(userId)).Id;
+        Guid userId = GetUserId();
+        var session = await _sessionManager.GetActiveSessionForUser(userId);
+        if (session is null)
+        {
+            throw new InvalidOperationException(Constants.NoSessionToClose);
+        }
 
-        var key = GetCacheKey(userId, sessionId); 
+        var key = GetCacheKey(userId, session.Id);
 
         if (_memoryCache.TryGetValue(key, out List<Message> messages))
         {
             await _sessionManager.DumpMessagesToDatabase(messages);
+            _memoryCache.Remove(key);
         }
 
         await _sessionManager.CloseActiveChatSession(userId);
-        
+
     }
     public async IAsyncEnumerable<string> GetAiResponse(string prompt)
     {
-        List<Message> messageHistory;
-        Guid userId = new(_userProvider.UserId);
-        var session = await _sessionManager.GetActiveSessionForUser(userId);
+        if (string.IsNullOrEmpty(prompt))
+            throw new ArgumentException(Constants.EmptyPromptError, nameof(prompt));
 
-        if (session is null)
-        {
-            throw new Exception("Something went wrong, please try again later");
-        }
+        Guid userId = GetUserId();
+        var session = await _sessionManager.GetActiveSessionForUser(userId)
+            ?? throw new Exception(Constants.SessionManagerError);
 
-        _sessionManager.UpdateSessionLastActivityDate(session);
+        await _sessionManager.UpdateSessionLastActivityDate(session);
 
-        if (_memoryCache.TryGetValue(GetCacheKey(userId, session.Id), out List<Message> messages))
-        {
-            messageHistory = messages;
-        }
+        var messageHistory = GetMessageHistory(userId, session);
 
-        else messageHistory = new();
+        Message message = CreateMessage(session.Id, MessageSender.User, prompt);
 
-
-        var promptDateTime = _dateTimeProvider.Now;
-        Message message = new()
-        {
-            Content = prompt,
-            Id = Guid.NewGuid(),
-            Sender = MessageSender.User,
-            SessionId = session.Id,
-            timestamp = promptDateTime,
-        };
         AddMessageToCache(userId, session.Id, message);
+
         var userData = await _UserDataReadRepo.FindByIdAsync(userId);
 
         var response = new StringBuilder();
@@ -100,28 +93,29 @@ public class AiAssistantService : IAiAssistantService
             await foreach (var chunk in _assistantService.GenerateResponseStreamAsync(composedPrompt))
             {
                 response.Append(chunk);
-                    yield return chunk;
+                yield return chunk;
             }
         }
         finally
         {
-            var responseMesage = new Message
-            {
-                Id = Guid.NewGuid(),
-                Content = response.ToString(),
-                Sender = MessageSender.Assistant,
-                SessionId = session.Id,
-                timestamp = _dateTimeProvider.Now,
-            };
-
-            AddMessageToCache(userId, session.Id, responseMesage); 
+            Message responseMessage = CreateMessage(session.Id, MessageSender.Assistant, response.ToString());
+            AddMessageToCache(userId, session.Id, responseMessage);
         }
-        
+
 
     }
 
+    private List<Message> GetMessageHistory(Guid userId, ChatSession session)
+    {
+        if (_memoryCache.TryGetValue(GetCacheKey(userId, session.Id), out List<Message> messages))
+        {
+            return messages;
+        }
 
-    private void AddMessageToCache(Guid usertId, Guid sessionId, Message message) 
+        return [];
+    }
+
+    private void AddMessageToCache(Guid usertId, Guid sessionId, Message message)
     {
         var cacheKey = GetCacheKey(usertId, sessionId);
         if (!_memoryCache.TryGetValue(cacheKey, out List<Message> messages))
@@ -139,5 +133,29 @@ public class AiAssistantService : IAiAssistantService
         return $"{userId}_{sessionId}";
     }
 
+    private Guid GetUserId()
+    {
+        var userId = _userProvider.UserId;
+
+        if (string.IsNullOrEmpty(userId))
+            throw new InvalidOperationException(Constants.InvalidUserId);
+        return new Guid(userId);
+    }
+
+    private Message CreateMessage(Guid sessionId, MessageSender sender, string content)
+    {
+        return new Message
+        {
+            Id = Guid.NewGuid(),
+            SessionId = sessionId,
+            Sender = sender,
+            Content = content,
+            Timestamp = _dateTimeProvider.Now
+        };
+    }
+    private bool IsSessionExpired(ChatSession? activeSession)
+    {
+        return activeSession is not null && _dateTimeProvider.Now - activeSession.LastActivityDate <= TimeSpan.FromMinutes(Constants.SessionValidityMinutes);
+    }
 }
 

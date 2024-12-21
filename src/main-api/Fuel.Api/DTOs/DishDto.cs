@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Domain.Models;
+﻿using Domain.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Fuel.Api.DTOs;
 

@@ -24,12 +24,13 @@ public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
         var req = string.Format(request, searchParam, pageNumber, pageSize);
         HttpResponseMessage response;
 
-        try 
-        { 
+        try
+        {
             response = await _httpClient.GetAsync(req);
             response.EnsureSuccessStatusCode();
 
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             _logger.LogError("Open food api call failed: ", ex);
             return new List<Product>();

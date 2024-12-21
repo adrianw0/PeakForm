@@ -1,9 +1,7 @@
-﻿using Domain.Models.AiAssistanc.Enums;
+﻿using Application.Services.AiAssistant.Interfaces;
+using Domain.Models;
 using Domain.Models.AiAssistanc;
 using System.Text;
-using Core.Interfaces.Providers;
-using Application.Services.AiAssistant.Interfaces;
-using Domain.Models;
 
 namespace Application.Services.AiAssistant;
 public class PromptBuilder : IPromptBuilder
@@ -12,13 +10,13 @@ public class PromptBuilder : IPromptBuilder
     public PromptBuilder()
     {
     }
-    private static string UserDataString(UserData userData)
+    private static string FormatUserData(UserData userData)
     {
         var parameters = new List<string>();
         if (userData.Age > 0)
             parameters.Add($"Age: {userData.Age}");
-            parameters.Add($"Gender: {userData.Gender}");
-            parameters.Add($"Activity: {userData.ActivityLevel}");
+        parameters.Add($"Gender: {userData.Gender}");
+        parameters.Add($"Activity: {userData.ActivityLevel}");
         if (userData.Weight > 0)
             parameters.Add($"Weight: {userData.Weight}kg");
         if (userData.Height > 0)
@@ -34,7 +32,7 @@ public class PromptBuilder : IPromptBuilder
 
         return $"Params: {string.Join(", ", parameters)}";
     }
-    
+
     public string BuildPrompt(string prompt, string AiContext, Guid sessionId, IEnumerable<Message>? initialMessages = null, UserData? userData = null)
     {
         StringBuilder builder = new();
@@ -43,7 +41,7 @@ public class PromptBuilder : IPromptBuilder
 
         if (userData is not null)
         {
-            builder.Append(UserDataString(userData));
+            builder.Append(FormatUserData(userData));
         }
 
         if (initialMessages is not null)

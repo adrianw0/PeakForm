@@ -3,12 +3,11 @@ using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models.AiAssistanc;
 using Domain.Models.AiAssistanc.Enums;
-using System.Data;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Application.Services.AiAssistant;
 public class SessionManager : ISessionManager
 {
+
     private static readonly SemaphoreSlim _semaphore = new(1, 1);
 
     private readonly IReadRepository<ChatSession> _sessionReadRepository;
@@ -27,12 +26,16 @@ public class SessionManager : ISessionManager
     {
         var session = await _sessionReadRepository.FindOneAsync(s => s.UserId.Equals(userId) && s.status == SessionStatus.Active);
         if (session is null)
-            throw new ArgumentException("No session was found or session is not active");
+            throw new InvalidOperationException(Constants.NoActiveSessionFound);
 
         await CloseActiveSession(session);
     }
     public async Task DumpMessagesToDatabase(List<Message> messages)
     {
+        if (messages is null || !messages.Any())
+        {
+            new ArgumentException(Constants.NullMessagesError);
+        }
         await _messagesWriteRepository.InsertManyAsync(messages);
     }
 
@@ -48,7 +51,7 @@ public class SessionManager : ISessionManager
         {
             var activeSessions = await GetActiveSessionForUser(userId);
             if (activeSessions is not null)
-                throw new InvalidOperationException("Another session is still active. New one cannot be opened");
+                throw new InvalidOperationException(Constants.OtherSessionStillActive);
 
             var session = new ChatSession
             {
@@ -67,7 +70,7 @@ public class SessionManager : ISessionManager
 
     }
 
-    public async void UpdateSessionLastActivityDate(ChatSession session)
+    public async Task UpdateSessionLastActivityDate(ChatSession session)
     {
         session.LastActivityDate = _dateTimeProvider.Now;
         await _sessionWriteRepository.UpdateAsync(session);

@@ -27,7 +27,7 @@ public class AddProductUseCase : IAddProductUseCase
         var validationResult = await _requestValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
             return new AddErrorResponse<Product>
-                { Code = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage))};
+            { Code = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)) };
 
         var product = CreateProductFromRequest(request);
         await _productWriteRepository.InsertOneAsync(product);
@@ -48,7 +48,7 @@ public class AddProductUseCase : IAddProductUseCase
             Ean = request.Ean,
             Description = request.Description,
             NutrientsPer1G = nutrientsPer1G,
-            OwnerId = _userProvider.UserId, 
+            OwnerId = _userProvider.UserId,
             UnitWeights = request.UnitWeights
         };
 

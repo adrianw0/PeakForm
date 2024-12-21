@@ -68,7 +68,7 @@ public class MealHistoryController : ControllerBase
             UpdateErrorResponse<Meal> error => BadRequest(error),
             _ => BadRequest(ErrorCodes.SomethingWentWrong)
         };
-        
+
 
 
     }

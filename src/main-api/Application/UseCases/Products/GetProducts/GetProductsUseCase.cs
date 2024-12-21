@@ -5,8 +5,6 @@ using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
 using System.Linq.Expressions;
-using System.Numerics;
-using System.Text.RegularExpressions;
 
 namespace Application.UseCases.Products.GetProducts;
 
@@ -27,7 +25,7 @@ public class GetProductsUseCase : IGetProductsUseCase
     public async Task<GetReponse<Product>> Execute(GetProductsRequest request)
     {
         List<Product> products = new();
-        
+
         products.AddRange(await GetProductsFromDatabase(request));
 
         var externalProduct = await GetExternalProductByCode(request);

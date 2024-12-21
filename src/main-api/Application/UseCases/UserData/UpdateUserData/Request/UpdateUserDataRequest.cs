@@ -1,5 +1,3 @@
-
-﻿using System.ComponentModel.DataAnnotations;
 using Domain.Models.Enums;
 
 namespace Application.UseCases.UserData.UpdateUserData.Request;

@@ -25,7 +25,7 @@ public class UpdateDishUseCase : IUpdateDishUseCase
 
         var dish = await _dishReadRepository.FindByIdAsync(request.Id);
         if (!dish.OwnerId.Equals(_userProvider.UserId))
-            return new UpdateErrorResponse<Dish> { Code = ErrorCodes.NotFound }; 
+            return new UpdateErrorResponse<Dish> { Code = ErrorCodes.NotFound };
 
         var updateDish = new Dish
         {

@@ -42,7 +42,7 @@ public class DishesController : ControllerBase
     {
         var result = await _getDishesUseCase.Execute(request);
 
-        if(result is GetSuccessReponse<Dish> success) return Ok(success.Entity.Select(x=>x.MapToDto()).ToList());
+        if (result is GetSuccessReponse<Dish> success) return Ok(success.Entity.Select(x => x.MapToDto()).ToList());
 
         return BadRequest();
     }
@@ -52,7 +52,7 @@ public class DishesController : ControllerBase
     {
         var result = await _addDishUseCase.Execute(request);
 
-        if (result is AddSuccessResponse<Dish> success) 
+        if (result is AddSuccessResponse<Dish> success)
             return Created("", success.Entity?.MapToDto());
 
         return BadRequest();

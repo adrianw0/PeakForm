@@ -1,5 +1,4 @@
 ﻿using Application.UseCases.Responses.Get;
-using Application.UseCases.Responses.Update;
 using Application.UseCases.UserData.GetUserData.Request;
 
 namespace Application.UseCases.UserData.GetUserData;

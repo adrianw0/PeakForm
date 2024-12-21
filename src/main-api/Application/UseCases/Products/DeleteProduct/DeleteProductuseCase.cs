@@ -15,7 +15,7 @@ public class DeleteProductUseCase : IDeleteProductUseCase
     {
         _productWriteRepository = productWriteRepository;
         _productReadRepository = readRepository;
-        _userProvider = userProvider; 
+        _userProvider = userProvider;
     }
 
     public async Task<DeleteResponse<Product>> Execute(DeleteProductRequest request)
@@ -28,7 +28,7 @@ public class DeleteProductUseCase : IDeleteProductUseCase
         var deleted = await _productWriteRepository.DeleteByIdAsync(request.Id);
 
         if (deleted) return new DeleteSuccessResponse<Product>();
-        
+
         return new DeleteErrorResponse<Product> { Code = ErrorCodes.DeleteFailed };
     }
 }

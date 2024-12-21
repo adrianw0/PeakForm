@@ -22,8 +22,8 @@ public class DeleteDishUseCase : IDeleteDishUseCase
     public async Task<DeleteResponse<Dish>> Execute(DeleteDishRequest request)
     {
         var dish = await _dishReadRepository.FindByIdAsync(request.Id);
-        
-        if(!dish.OwnerId.Equals(_userProvider.UserId))
+
+        if (!dish.OwnerId.Equals(_userProvider.UserId))
             return new DeleteErrorResponse<Dish> { Code = ErrorCodes.NotFound };
 
         var deleted = await _dishWriteRepository.DeleteByIdAsync(request.Id);

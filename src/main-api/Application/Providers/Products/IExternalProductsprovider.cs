@@ -1,7 +1,4 @@
-﻿using Core.Params;
-using Domain.Models;
-using System;
-using System.Collections.Generic;
+﻿using Domain.Models;
 namespace Application.Providers.Products;
 public interface IExternalProductsProvider
 {

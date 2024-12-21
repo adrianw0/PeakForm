@@ -9,7 +9,7 @@ namespace Application.UseCases.Products.UpdateProduct;
 public class UpdateProductUseCase : IUpdateProductUseCase
 {
     private readonly IWriteRepository<Product> _productWriteRepository;
-    private readonly IReadRepository<Product> _productReadRepository;   
+    private readonly IReadRepository<Product> _productReadRepository;
     private readonly IUserProvider _userProvider;
     public UpdateProductUseCase(IWriteRepository<Product> productWriteRepository, IReadRepository<Product> productReadRepository, IUserProvider userProvider)
     {
@@ -39,9 +39,9 @@ public class UpdateProductUseCase : IUpdateProductUseCase
         var updated = await _productWriteRepository.UpdateAsync(updateProduct);
 
         if (updated)
-            return new UpdateSuccessResponse<Product>{ Entity = updateProduct };
+            return new UpdateSuccessResponse<Product> { Entity = updateProduct };
 
         return new UpdateErrorResponse<Product> { Message = ErrorCodes.UpdateFailed };
-       
+
     }
 }

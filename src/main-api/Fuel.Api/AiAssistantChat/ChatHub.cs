@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Application.Services.AiAssistant.Interfaces;
 using Domain.Models.AiAssistanc;
-using Application.Services.AiAssistant.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Fuel.Api.AiAssistantChat;
 
@@ -27,14 +27,14 @@ public class ChatHub : Hub
                 Text = chunk,
                 ChunkId = chunkId,
                 isComplete = false
-            }; 
+            };
             await Clients.Caller.SendAsync("ReceiveMessage", payload);
             chunkId++;
         }
 
         var finalPayload = new
         {
-            Text = string.Empty, 
+            Text = string.Empty,
             ChunkId = chunkId,
             IsComplete = true
         };
@@ -54,7 +54,6 @@ public class ChatHub : Hub
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         await _aiAssistantService.CloseSessionForCurrentuser();
-        //load existing messages.
         await base.OnDisconnectedAsync(exception);
     }
 

@@ -1,9 +1,7 @@
 ﻿using Application.UseCases.Responses.Get;
-using Application.UseCases.Responses.Update;
 using Application.UseCases.UserData.GetUserData.Request;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
-using Domain.Models;
 
 namespace Application.UseCases.UserData.GetUserData;
 public class GetUserDataUseCase : IGetUserDataUseCase
