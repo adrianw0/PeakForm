@@ -5,13 +5,9 @@ using MongoDB.Driver;
 using System.Linq.Expressions;
 
 namespace DataAccess.Mongo;
-public class WriteRepository<TDocument> : IWriteRepository<TDocument> where TDocument : IEntity
+public class WriteRepository<TDocument>(IDbContext dbContext) : IWriteRepository<TDocument> where TDocument : IEntity
 {
-    private readonly IMongoCollection<TDocument> _collection;
-    public WriteRepository(IDbContext dbContext)
-    {
-        _collection = dbContext.GetCollection<TDocument>();
-    }
+    private readonly IMongoCollection<TDocument> _collection = dbContext.GetCollection<TDocument>();
 
     public async Task InsertOneAsync(TDocument document)
     {

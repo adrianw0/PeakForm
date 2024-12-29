@@ -1,6 +1,4 @@
-﻿using Domain.Models;
-
-namespace Application.Validators.Consts;
+﻿namespace Application.Validators.Consts;
 internal class ValidationMessages
 {
     #region UserData

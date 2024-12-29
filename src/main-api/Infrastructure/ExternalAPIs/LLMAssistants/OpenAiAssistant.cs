@@ -2,16 +2,11 @@
 using OpenAI;
 
 namespace Infrastructure.ExternalAPIs.LLMAssistants;
-public class OpenAiAssistant : ILLMAssistantService
+public class OpenAiAssistant(OpenAIClient openAIClient, ILogger<OpenAiAssistant> logger) : ILLMAssistantService
 {
-    private readonly OpenAIClient _openAiClient;
-    private readonly ILogger<OpenAiAssistant> _logger;
+    private readonly OpenAIClient _openAiClient = openAIClient;
+    private readonly ILogger<OpenAiAssistant> _logger = logger;
 
-    public OpenAiAssistant(OpenAIClient openAIClient, ILogger<OpenAiAssistant> logger)
-    {
-        _openAiClient = openAIClient;
-        _logger = logger;
-    }
     public async IAsyncEnumerable<string> GenerateResponseStreamAsync(string prompt)
     {
         _logger.LogInformation("Generating response stream for prompt:\n {prompt}", prompt); ///TODO: to remove 

@@ -1,5 +1,4 @@
-﻿using Core.Interfaces;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models;
 public class MealFoodItems

@@ -3,13 +3,9 @@ using Fuel.Api.Extensions;
 
 namespace Fuel.Api.Providers;
 
-public class UserProvider : IUserProvider
+public class UserProvider(IHttpContextAccessor accessor) : IUserProvider
 {
-    private readonly IHttpContextAccessor _accessor;
-    public UserProvider(IHttpContextAccessor accessor)
-    {
-        _accessor = accessor;
-    }
+    private readonly IHttpContextAccessor _accessor = accessor;
 
     public string UserId => GetUserId();
 

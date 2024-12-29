@@ -8,18 +8,11 @@ using FluentValidation;
 
 namespace Application.UseCases.Products.AddProduct;
 
-public class AddProductUseCase : IAddProductUseCase
+public class AddProductUseCase(IWriteRepository<Product> productWriteRepository, IUserProvider userProvider, IValidator<AddProductRequest> requestValidator) : IAddProductUseCase
 {
-    private readonly IWriteRepository<Product> _productWriteRepository;
-    private readonly IUserProvider _userProvider;
-    private readonly IValidator<AddProductRequest> _requestValidator;
-
-    public AddProductUseCase(IWriteRepository<Product> productWriteRepository, IUserProvider userProvider, IValidator<AddProductRequest> requestValidator)
-    {
-        _userProvider = userProvider;
-        _requestValidator = requestValidator;
-        _productWriteRepository = productWriteRepository;
-    }
+    private readonly IWriteRepository<Product> _productWriteRepository = productWriteRepository;
+    private readonly IUserProvider _userProvider = userProvider;
+    private readonly IValidator<AddProductRequest> _requestValidator = requestValidator;
 
     public async Task<AddReponse<Product>> Execute(AddProductRequest request)
     {
@@ -55,7 +48,7 @@ public class AddProductUseCase : IAddProductUseCase
         return product;
     }
 
-    private List<NutrientValue> GetValuesPer1G(IEnumerable<NutrientValue> nutrientValuesInBaseUnit, double baseUnitWeight)
+    private static List<NutrientValue> GetValuesPer1G(IEnumerable<NutrientValue> nutrientValuesInBaseUnit, double baseUnitWeight)
     {
         return nutrientValuesInBaseUnit.Select(nutrientValue =>
             new NutrientValue

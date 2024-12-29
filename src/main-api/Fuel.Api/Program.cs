@@ -11,7 +11,7 @@ using Fuel.Api.Middleware;
 using Fuel.Api.Providers;
 using Fuel.Api.Settings;
 using Infrastructure.ExternalAPIs.LLMAssistants;
-using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
+using Infrastructure.ExternalAPIs.OpenFoodFactsApiClient;
 using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.RateLimiting;
@@ -87,11 +87,11 @@ public static class Program
         BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
 
         var openAiApiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
-        
+
         AddUseCases(builder);
 
         if (!string.IsNullOrEmpty(openAiApiKey))
-        { 
+        {
             AddAiServices(builder, openAiApiKey);
             builder.Services.AddSignalR(o =>
             {
@@ -126,7 +126,7 @@ public static class Program
         {
             app.MapHub<ChatHub>("/chatHub");
         }
-       
+
 
         //seed
         var dbContext = app.Services.GetService<DataAccess.Mongo.Interfaces.IDbContext>();

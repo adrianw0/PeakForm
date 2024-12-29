@@ -5,13 +5,9 @@ using MongoDB.Driver;
 using System.Linq.Expressions;
 
 namespace DataAccess.Mongo;
-public class ReadRepository<TDocument> : IReadRepository<TDocument> where TDocument : IEntity
+public class ReadRepository<TDocument>(IDbContext dbContext) : IReadRepository<TDocument> where TDocument : IEntity
 {
-    private readonly IMongoCollection<TDocument> _collection;
-    public ReadRepository(IDbContext dbContext)
-    {
-        _collection = dbContext.GetCollection<TDocument>();
-    }
+    private readonly IMongoCollection<TDocument> _collection = dbContext.GetCollection<TDocument>();
 
     public async Task<TDocument> FindByIdAsync(Guid id)
     {

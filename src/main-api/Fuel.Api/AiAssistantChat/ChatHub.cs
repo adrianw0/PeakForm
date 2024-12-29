@@ -1,19 +1,13 @@
 ﻿using Application.Services.AiAssistant.Interfaces;
-using Domain.Models.AiAssistanc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace Fuel.Api.AiAssistantChat;
 
 [Authorize]
-public class ChatHub : Hub
+public class ChatHub(IAiAssistantService queryAssitantUseCase) : Hub
 {
-    private readonly IAiAssistantService _aiAssistantService;
-
-    public ChatHub(IAiAssistantService queryAssitantUseCase)
-    {
-        _aiAssistantService = queryAssitantUseCase;
-    }
+    private readonly IAiAssistantService _aiAssistantService = queryAssitantUseCase;
 
     public async Task SendMessage(string prompt)
     {

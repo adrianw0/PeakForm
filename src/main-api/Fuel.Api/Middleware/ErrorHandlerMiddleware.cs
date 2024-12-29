@@ -4,15 +4,10 @@ using System.Security;
 
 namespace Fuel.Api.Middleware;
 
-public class ErrorHandlerMiddleware
+public class ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ErrorHandlerMiddleware> _logger;
-    public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
+    private readonly RequestDelegate _next = next;
+    private readonly ILogger<ErrorHandlerMiddleware> _logger = logger;
 
     public async Task Invoke(HttpContext context)
     {
@@ -59,7 +54,7 @@ public class ErrorHandlerMiddleware
             OperationCanceledException => (HttpStatusCode)499,
             NotSupportedException => HttpStatusCode.NotImplemented,
             HttpRequestException => HttpStatusCode.BadGateway,
-            _ => HttpStatusCode.InternalServerError, 
+            _ => HttpStatusCode.InternalServerError,
         };
     }
 }

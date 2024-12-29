@@ -21,5 +21,5 @@ public class UserDataDto
     public decimal GoalWeight { get; set; }
     public decimal GoalMuscleMassPercentage { get; set; }
     public decimal Bmi { get; set; }
-    public decimal bmr { get; set; }
+    public decimal Bmr { get; set; }
 }

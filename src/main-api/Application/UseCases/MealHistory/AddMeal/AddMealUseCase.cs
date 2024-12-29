@@ -5,16 +5,10 @@ using Core.Interfaces.Repositories;
 using Domain.Models;
 
 namespace Application.UseCases.MealHistory.AddMeal;
-public class AddMealUseCase : IAddMealUseCase
+public class AddMealUseCase(IWriteRepository<Meal> mealWriteRepository, IUserProvider userProvider) : IAddMealUseCase
 {
-    private readonly IWriteRepository<Meal> _mealWriteRepository;
-    private readonly IUserProvider _userProvider;
-
-    public AddMealUseCase(IWriteRepository<Meal> mealWriteRepository, IUserProvider userProvider)
-    {
-        _mealWriteRepository = mealWriteRepository;
-        _userProvider = userProvider;
-    }
+    private readonly IWriteRepository<Meal> _mealWriteRepository = mealWriteRepository;
+    private readonly IUserProvider _userProvider = userProvider;
 
     public async Task<AddReponse<Meal>> Execute(AddMealRequest request)
     {

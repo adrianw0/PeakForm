@@ -2,13 +2,9 @@
 using Infrastructure.Interfaces;
 
 namespace Application.Providers.Products;
-public class ExternalProductsProvider : IExternalProductsProvider
+public class ExternalProductsProvider(IExternalProductApiClient externalProductApiWrapper) : IExternalProductsProvider
 {
-    private readonly IExternalProductApiClient _externalProductApiWrapper;
-    public ExternalProductsProvider(IExternalProductApiClient externalProductApiWrapper)
-    {
-        _externalProductApiWrapper = externalProductApiWrapper;
-    }
+    private readonly IExternalProductApiClient _externalProductApiWrapper = externalProductApiWrapper;
 
     public async Task<Product?> GetProductByCodeAsync(string searchParams)
     {

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Infrastructure.ExternalAPIs.OpenFoodFactsApiClient;
 using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
 using Microsoft.Extensions.Logging;
 using Moq;

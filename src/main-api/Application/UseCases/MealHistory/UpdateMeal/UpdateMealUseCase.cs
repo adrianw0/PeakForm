@@ -7,17 +7,11 @@ using Domain.Models;
 
 namespace Application.UseCases.MealHistory.UpdateMeal;
 
-public class UpdateMealUseCase : IUpdateMealUseCase
+public class UpdateMealUseCase(IWriteRepository<Meal> mealWriteRepository, IReadRepository<Meal> mealReadRepository, IUserProvider userProvider) : IUpdateMealUseCase
 {
-    private readonly IWriteRepository<Meal> _mealWriteRepository;
-    private readonly IReadRepository<Meal> _mealReadRepository;
-    private readonly IUserProvider _userProvider;
-    public UpdateMealUseCase(IWriteRepository<Meal> mealWriteRepository, IReadRepository<Meal> mealReadRepository, IUserProvider userProvider)
-    {
-        _mealWriteRepository = mealWriteRepository;
-        _mealReadRepository = mealReadRepository;
-        _userProvider = userProvider;
-    }
+    private readonly IWriteRepository<Meal> _mealWriteRepository = mealWriteRepository;
+    private readonly IReadRepository<Meal> _mealReadRepository = mealReadRepository;
+    private readonly IUserProvider _userProvider = userProvider;
 
     public async Task<UpdateResponse<Meal>> Execute(UpdateMealRequest request)
     {

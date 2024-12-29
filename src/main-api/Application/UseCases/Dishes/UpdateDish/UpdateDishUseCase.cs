@@ -5,26 +5,18 @@ using Core.Interfaces.Repositories;
 using Domain.Models;
 
 namespace Application.UseCases.Dishes.UpdateDish;
-public class UpdateDishUseCase : IUpdateDishUseCase
+public class UpdateDishUseCase(IReadRepository<Dish> dishReadRepository, IWriteRepository<Dish> dishWriteRepository, IUserProvider userProvider) : IUpdateDishUseCase
 {
-    private readonly IReadRepository<Dish> _dishReadRepository;
-    private readonly IWriteRepository<Dish> _dishWriteRepository;
-    private readonly IUserProvider _userProvider;
-    public UpdateDishUseCase(IReadRepository<Dish> dishReadRepository, IWriteRepository<Dish> dishWriteRepository, IUserProvider userProvider)
-    {
-        _dishReadRepository = dishReadRepository;
-        _dishWriteRepository = dishWriteRepository;
-        _userProvider = userProvider;
-    }
-
-
+    private readonly IReadRepository<Dish> _dishReadRepository = dishReadRepository;
+    private readonly IWriteRepository<Dish> _dishWriteRepository = dishWriteRepository;
+    private readonly IUserProvider _userProvider = userProvider;
 
     public async Task<UpdateResponse<Dish>> Execute(UpdateDishRequest request)
     {
 
         var dish = await _dishReadRepository.FindByIdAsync(request.Id);
         if (!dish.OwnerId.Equals(_userProvider.UserId))
-            return new UpdateErrorResponse<Dish> { ErrorMessage = "Dish Not found"};
+            return new UpdateErrorResponse<Dish> { ErrorMessage = "Dish Not found" };
 
         var updateDish = new Dish
         {
@@ -40,7 +32,7 @@ public class UpdateDishUseCase : IUpdateDishUseCase
         if (updated)
             return new UpdateSuccessResponse<Dish> { Entity = updateDish };
 
-        return new UpdateErrorResponse<Dish> { ErrorMessage = "Update failed."};
+        return new UpdateErrorResponse<Dish> { ErrorMessage = "Update failed." };
 
     }
 }

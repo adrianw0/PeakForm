@@ -4,17 +4,10 @@ using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 
 namespace Application.UseCases.UserData.GetUserData;
-public class GetUserDataUseCase : IGetUserDataUseCase
+public class GetUserDataUseCase(IReadRepository<Domain.Models.UserData> readRepository, IUserProvider userProvider) : IGetUserDataUseCase
 {
-    readonly IReadRepository<Domain.Models.UserData> _readRepository;
-    readonly IUserProvider _userProvider;
-    public GetUserDataUseCase(IReadRepository<Domain.Models.UserData> readRepository, IUserProvider userProvider)
-    {
-        _readRepository = readRepository;
-        _userProvider = userProvider;
-
-    }
-
+    readonly IReadRepository<Domain.Models.UserData> _readRepository = readRepository;
+    readonly IUserProvider _userProvider = userProvider;
 
     public async Task<GetReponse<Domain.Models.UserData>> Execute(GetUserDataReuqest request)
     {
@@ -22,11 +15,8 @@ public class GetUserDataUseCase : IGetUserDataUseCase
 
         var userData = await _readRepository.FindByIdAsync(userId);
 
-        if (userData is null)
-        {
-            userData = new Domain.Models.UserData { Id = new Guid(_userProvider.UserId) };
-        }
+        userData ??= new Domain.Models.UserData { Id = new Guid(_userProvider.UserId) };
 
-        return new GetSuccessReponse<Domain.Models.UserData> { Entity = new List<Domain.Models.UserData> { userData } };
+        return new GetSuccessReponse<Domain.Models.UserData> { Entity = [userData] };
     }
 }

@@ -6,16 +6,10 @@ using Domain.Models;
 using System.Linq.Expressions;
 
 namespace Application.UseCases.MealHistory.GetMeals;
-public class GetMealsUseCase : IGetMealsUseCase
+public class GetMealsUseCase(IReadRepository<Meal> mealReadRepository, IUserProvider userProvider) : IGetMealsUseCase
 {
-    private readonly IReadRepository<Meal> _mealReadRepository;
-    private readonly IUserProvider _userProvider;
-
-    public GetMealsUseCase(IReadRepository<Meal> mealReadRepository, IUserProvider userProvider)
-    {
-        _mealReadRepository = mealReadRepository;
-        _userProvider = userProvider;
-    }
+    private readonly IReadRepository<Meal> _mealReadRepository = mealReadRepository;
+    private readonly IUserProvider _userProvider = userProvider;
 
     public async Task<GetReponse<Meal>> Execute(GetMealsRequest request)
     {

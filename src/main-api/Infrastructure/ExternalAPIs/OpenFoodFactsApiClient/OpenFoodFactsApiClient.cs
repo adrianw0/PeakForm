@@ -1,22 +1,16 @@
-﻿
-using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Extensions;
+﻿using Infrastructure.ExternalAPIs.OpenFoodFactsApiClient.Extensions;
+using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
 using Infrastructure.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 
 
-namespace Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
-public class OpenFoodFactsApiClient : IExternalProductApiClient
+namespace Infrastructure.ExternalAPIs.OpenFoodFactsApiClient;
+public class OpenFoodFactsApiClient(HttpClient httpClient, ILogger<OpenFoodFactsApiClient> logger) : IExternalProductApiClient
 {
-    private readonly HttpClient _httpClient;
-    private readonly ILogger<OpenFoodFactsApiClient> _logger;
-
-    public OpenFoodFactsApiClient(HttpClient httpClient, ILogger<OpenFoodFactsApiClient> logger)
-    {
-        _httpClient = httpClient;
-        _logger = logger;
-    }
+    private readonly HttpClient _httpClient = httpClient;
+    private readonly ILogger<OpenFoodFactsApiClient> _logger = logger;
 
     //split because those are returned differently...
     private async Task<List<Product>> GetProductsFromResponseByName(string request, string searchParam, int pageNumber, int pageSize)
@@ -34,14 +28,14 @@ public class OpenFoodFactsApiClient : IExternalProductApiClient
         catch (Exception ex)
         {
             _logger.LogError("Open food api call failed: {ex}", ex);
-            return new List<Product>();
+            return [];
         }
 
         var responseContent = await response.Content.ReadAsStringAsync();
 
         var result = JsonConvert.DeserializeObject<Root>(responseContent)?.Products;
 
-        return result ?? new List<Product>();
+        return result ?? [];
     }
 
     private async Task<Product?> GetProductFromResponseByCodeAsync(string request, string searchParam)
@@ -72,7 +66,7 @@ public class OpenFoodFactsApiClient : IExternalProductApiClient
     {
         var searchResult = await GetProductsFromResponseByName(Constants.SearchByNameRequest, searchParam, pageNumber, pageSize);
 
-        return !searchResult.Any() ? new List<Domain.Models.Product>() : searchResult.Select(p => p.MapToDomain()).ToList();
+        return searchResult.Count == 0 ? [] : searchResult.Select(p => p.MapToDomain()).ToList();
     }
     public async Task<Domain.Models.Product?> GetProductByCodeAsync(string searchParam)
     {

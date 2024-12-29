@@ -9,7 +9,6 @@ using Domain.Models;
 using Domain.Models.Constants;
 using FluentAssertions;
 using FluentValidation;
-using Microsoft.AspNetCore.Components.Forms;
 using Moq;
 using System.Linq.Expressions;
 using ProdUnit = Domain.Models.Unit;
@@ -84,7 +83,7 @@ public class AddProductUseCaseTests
         nutrientPer1G.Nutrient.Unit.Code.Should().Be(baseUnit.Code);
         nutrientPer1G.Nutrient.Unit.Name.Should().Be(baseUnit.Name);
 
-        _mockProductRepo.Verify(x=>x.InsertOneAsync(It.IsAny<Product>()), Times.Once);
+        _mockProductRepo.Verify(x => x.InsertOneAsync(It.IsAny<Product>()), Times.Once);
     }
 
     [Test]

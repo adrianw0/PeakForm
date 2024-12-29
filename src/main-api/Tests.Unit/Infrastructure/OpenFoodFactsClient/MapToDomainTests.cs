@@ -1,8 +1,7 @@
 ﻿using AutoFixture;
 using FluentAssertions;
+using Infrastructure.ExternalAPIs.OpenFoodFactsApiClient.Extensions;
 using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
-using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Extensions;
-using Moq;
 using OpenFoodFactsProduct = Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Product;
 
 namespace Tests.Unit.Infrastructure.OpenFoodFactsClient;

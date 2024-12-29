@@ -9,22 +9,15 @@ using System.Linq.Expressions;
 namespace Application.UseCases.Products.GetProducts;
 
 //TODO: Better paging
-public class GetProductsUseCase : IGetProductsUseCase
+public class GetProductsUseCase(IReadRepository<Product> productReadRepository, IUserProvider userProvider, IExternalProductsProvider productsProvider) : IGetProductsUseCase
 {
-    private readonly IReadRepository<Product> _productReadRepository;
-    private readonly IUserProvider _userProvider;
-    private readonly IExternalProductsProvider _externalProductProvider;
-    public GetProductsUseCase(IReadRepository<Product> productReadRepository, IUserProvider userProvider, IExternalProductsProvider productsProvider)
-    {
-        _productReadRepository = productReadRepository;
-        _userProvider = userProvider;
-        _externalProductProvider = productsProvider;
-
-    }
+    private readonly IReadRepository<Product> _productReadRepository = productReadRepository;
+    private readonly IUserProvider _userProvider = userProvider;
+    private readonly IExternalProductsProvider _externalProductProvider = productsProvider;
 
     public async Task<GetReponse<Product>> Execute(GetProductsRequest request)
     {
-        List<Product> products = new();
+        List<Product> products = [];
 
         products.AddRange(await GetProductsFromDatabase(request));
 

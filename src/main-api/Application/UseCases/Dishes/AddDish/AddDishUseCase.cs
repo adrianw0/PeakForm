@@ -6,16 +6,10 @@ using Domain.Models;
 
 
 namespace Application.UseCases.Dishes.AddDish;
-public class AddDishUseCase : IAddDishUseCase
+public class AddDishUseCase(IWriteRepository<Dish> dishWriteRepository, IUserProvider userProvider) : IAddDishUseCase
 {
-    private readonly IWriteRepository<Dish> _dishWriteRepository;
-    private readonly IUserProvider _userProvider;
-
-    public AddDishUseCase(IWriteRepository<Dish> dishWriteRepository, IUserProvider userProvider)
-    {
-        _dishWriteRepository = dishWriteRepository;
-        _userProvider = userProvider;
-    }
+    private readonly IWriteRepository<Dish> _dishWriteRepository = dishWriteRepository;
+    private readonly IUserProvider _userProvider = userProvider;
 
     public async Task<AddReponse<Dish>> Execute(AddDishRequest request)
     {

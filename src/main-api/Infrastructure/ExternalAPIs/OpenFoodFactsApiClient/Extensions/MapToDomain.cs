@@ -1,8 +1,9 @@
 ﻿using Domain.Models;
 using Domain.Models.Constants;
+using Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
 using OpenFoodFactsProduct = Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Product;
 
-namespace Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper.Extensions;
+namespace Infrastructure.ExternalAPIs.OpenFoodFactsApiClient.Extensions;
 internal static class ProductMapper
 {
     internal static Domain.Models.Product MapToDomain(this OpenFoodFactsProduct externalProduct)

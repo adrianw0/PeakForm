@@ -5,18 +5,11 @@ using Core.Interfaces.Repositories;
 using Domain.Models;
 
 namespace Application.UseCases.Products.UpdateProduct;
-public class UpdateProductUseCase : IUpdateProductUseCase
+public class UpdateProductUseCase(IWriteRepository<Product> productWriteRepository, IReadRepository<Product> productReadRepository, IUserProvider userProvider) : IUpdateProductUseCase
 {
-    private readonly IWriteRepository<Product> _productWriteRepository;
-    private readonly IReadRepository<Product> _productReadRepository;
-    private readonly IUserProvider _userProvider;
-    public UpdateProductUseCase(IWriteRepository<Product> productWriteRepository, IReadRepository<Product> productReadRepository, IUserProvider userProvider)
-    {
-        _productWriteRepository = productWriteRepository;
-        _productReadRepository = productReadRepository;
-        _userProvider = userProvider;
-    }
-
+    private readonly IWriteRepository<Product> _productWriteRepository = productWriteRepository;
+    private readonly IReadRepository<Product> _productReadRepository = productReadRepository;
+    private readonly IUserProvider _userProvider = userProvider;
 
     public async Task<UpdateResponse<Product>> Execute(UpdateProductsRequest request)
     {
@@ -40,7 +33,7 @@ public class UpdateProductUseCase : IUpdateProductUseCase
         if (updated)
             return new UpdateSuccessResponse<Product> { Entity = updateProduct };
 
-        return new UpdateErrorResponse<Product> { ErrorMessage = "Update failed."};
+        return new UpdateErrorResponse<Product> { ErrorMessage = "Update failed." };
 
     }
 }

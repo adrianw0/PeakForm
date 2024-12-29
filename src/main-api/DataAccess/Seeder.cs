@@ -8,7 +8,7 @@ public static class Seeder
 {
     public static async Task SeedAsync(IDbContext db)
     {
-        if (db is null) throw new ArgumentNullException(nameof(db));
+        ArgumentNullException.ThrowIfNull(db);
 
         await SeedUnits(db);
         await SeedNutrients(db);

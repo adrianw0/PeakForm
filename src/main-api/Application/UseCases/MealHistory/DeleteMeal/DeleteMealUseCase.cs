@@ -5,19 +5,11 @@ using Core.Interfaces.Repositories;
 using Domain.Models;
 
 namespace Application.UseCases.MealHistory.DeleteMeal;
-public class DeleteMealUseCase : IDeleteMealUseCase
+public class DeleteMealUseCase(IWriteRepository<Meal> mealWriteRepository, IReadRepository<Meal> mealReadRepository, IUserProvider userProvider) : IDeleteMealUseCase
 {
-    private readonly IWriteRepository<Meal> _mealWriteRepository;
-    private readonly IReadRepository<Meal> _mealReadRepository;
-    private readonly IUserProvider _userProvider;
-    public DeleteMealUseCase(IWriteRepository<Meal> mealWriteRepository, IReadRepository<Meal> mealReadRepository, IUserProvider userProvider)
-    {
-        _mealWriteRepository = mealWriteRepository;
-        _mealReadRepository = mealReadRepository;
-        _userProvider = userProvider;
-    }
-
-
+    private readonly IWriteRepository<Meal> _mealWriteRepository = mealWriteRepository;
+    private readonly IReadRepository<Meal> _mealReadRepository = mealReadRepository;
+    private readonly IUserProvider _userProvider = userProvider;
 
     public async Task<DeleteResponse<Meal>> Execute(DeleteMealRequest request)
     {

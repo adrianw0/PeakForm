@@ -6,17 +6,11 @@ using Domain.Models;
 
 
 namespace Application.UseCases.Dishes.DeleteDish;
-public class DeleteDishUseCase : IDeleteDishUseCase
+public class DeleteDishUseCase(IWriteRepository<Dish> dishWriteRepository, IReadRepository<Dish> dishReadRepository, IUserProvider userProvider) : IDeleteDishUseCase
 {
-    private readonly IWriteRepository<Dish> _dishWriteRepository;
-    private readonly IReadRepository<Dish> _dishReadRepository;
-    private readonly IUserProvider _userProvider;
-    public DeleteDishUseCase(IWriteRepository<Dish> dishWriteRepository, IReadRepository<Dish> dishReadRepository, IUserProvider userProvider)
-    {
-        _dishWriteRepository = dishWriteRepository;
-        _dishReadRepository = dishReadRepository;
-        _userProvider = userProvider;
-    }
+    private readonly IWriteRepository<Dish> _dishWriteRepository = dishWriteRepository;
+    private readonly IReadRepository<Dish> _dishReadRepository = dishReadRepository;
+    private readonly IUserProvider _userProvider = userProvider;
 
     public async Task<DeleteResponse<Dish>> Execute(DeleteDishRequest request)
     {

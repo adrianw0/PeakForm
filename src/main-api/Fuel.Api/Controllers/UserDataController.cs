@@ -18,19 +18,12 @@ namespace Fuel.Api.Controllers;
 [Authorize]
 [ApiController]
 [Route("[Controller]")]
-public class UserDataController : ControllerBase
+public class UserDataController(IUpdateUserDataUseCase updateUserDataUseCase, IGetUserDataUseCase getUserDataUseCase, IDeleteUserDataUseCase deleteUserDataUseCase) : ControllerBase
 {
 
-    readonly IDeleteUserDataUseCase _deleteUserDataUseCase;
-    readonly IGetUserDataUseCase _getUserDataUseCase;
-    readonly IUpdateUserDataUseCase _updateUserDataUseCase;
-
-    public UserDataController(IUpdateUserDataUseCase updateUserDataUseCase, IGetUserDataUseCase getUserDataUseCase, IDeleteUserDataUseCase deleteUserDataUseCase)
-    {
-        _updateUserDataUseCase = updateUserDataUseCase;
-        _getUserDataUseCase = getUserDataUseCase;
-        _deleteUserDataUseCase = deleteUserDataUseCase;
-    }
+    readonly IDeleteUserDataUseCase _deleteUserDataUseCase = deleteUserDataUseCase;
+    readonly IGetUserDataUseCase _getUserDataUseCase = getUserDataUseCase;
+    readonly IUpdateUserDataUseCase _updateUserDataUseCase = updateUserDataUseCase;
 
     [HttpGet]
     public async Task<IActionResult> GetUserData([FromQuery] GetUserDataReuqest request)
@@ -48,7 +41,7 @@ public class UserDataController : ControllerBase
         return response switch
         {
             UpdateSuccessResponse<UserData> successResponse => Ok(successResponse.Entity?.MapToDto()),
-            UpdateErrorResponse<UserData> errorResponse => BadRequest(),
+            UpdateErrorResponse<UserData> => BadRequest(),
             _ => BadRequest()
         };
     }
@@ -59,7 +52,7 @@ public class UserDataController : ControllerBase
         var response = await _deleteUserDataUseCase.Execute(request);
         return response switch
         {
-            DeleteSuccessResponse<UserData> successResponse => Ok(),
+            DeleteSuccessResponse<UserData> => Ok(),
             DeleteErrorResponse<UserData> errorResponse => BadRequest(errorResponse.ErrorMessage),
             _ => BadRequest()
         };

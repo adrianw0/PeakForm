@@ -22,19 +22,12 @@ namespace Fuel.Api.Controllers;
 [ApiController]
 [EnableRateLimiting("fixed")]
 [Route("[Controller]")]
-public class ProductsController : ControllerBase
+public class ProductsController(IGetProductsUseCase getProductsUseCase, IUpdateProductUseCase updateProductUseCase, IAddProductUseCase addProductUseCase, IDeleteProductUseCase deleteProductUseCase) : ControllerBase
 {
-    private readonly IGetProductsUseCase _getProductsUseCase;
-    private readonly IUpdateProductUseCase _updateProductUseCase;
-    private readonly IAddProductUseCase _addProductUseCase;
-    private readonly IDeleteProductUseCase _deleteProductUseCase;
-    public ProductsController(IGetProductsUseCase getProductsUseCase, IUpdateProductUseCase updateProductUseCase, IAddProductUseCase addProductUseCase, IDeleteProductUseCase deleteProductUseCase)
-    {
-        _getProductsUseCase = getProductsUseCase;
-        _updateProductUseCase = updateProductUseCase;
-        _addProductUseCase = addProductUseCase;
-        _deleteProductUseCase = deleteProductUseCase;
-    }
+    private readonly IGetProductsUseCase _getProductsUseCase = getProductsUseCase;
+    private readonly IUpdateProductUseCase _updateProductUseCase = updateProductUseCase;
+    private readonly IAddProductUseCase _addProductUseCase = addProductUseCase;
+    private readonly IDeleteProductUseCase _deleteProductUseCase = deleteProductUseCase;
 
     [HttpGet]
     public async Task<IActionResult> GetProducts([FromQuery] GetProductsRequest request)
@@ -61,11 +54,10 @@ public class ProductsController : ControllerBase
     public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductsRequest request)
     {
         var response = await _updateProductUseCase.Execute(request);
-
         return response switch
         {
             UpdateSuccessResponse<Product> successResponse => Ok(successResponse.Entity?.MapToDto()),
-            UpdateErrorResponse<Product> errorResponse => BadRequest(),
+            UpdateErrorResponse<Product> => BadRequest(),
             _ => BadRequest()
         };
     }
@@ -74,11 +66,10 @@ public class ProductsController : ControllerBase
     public async Task<IActionResult> DeleteProduct([FromQuery] DeleteProductRequest request)
     {
         var response = await _deleteProductUseCase.Execute(request);
-
         return response switch
         {
             DeleteSuccessResponse<Product> => Ok(),
-            DeleteErrorResponse<Product> errorResponse => BadRequest(),
+            DeleteErrorResponse<Product> => BadRequest(),
             _ => BadRequest()
         };
     }

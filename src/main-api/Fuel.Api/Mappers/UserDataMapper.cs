@@ -23,7 +23,7 @@ public static class UserDataMapper
             GoalWeight = userData.GoalWeight,
             GoalMuscleMassPercentage = userData.GoalMuscleMassPercentage,
             Bmi = userData.Bmi,
-            bmr = userData.Bmr
+            Bmr = userData.Bmr
         };
     }
 }

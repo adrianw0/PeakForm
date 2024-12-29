@@ -5,17 +5,11 @@ using Core.Interfaces.Repositories;
 using Domain.Models;
 
 namespace Application.UseCases.Products.DeleteProduct;
-public class DeleteProductUseCase : IDeleteProductUseCase
+public class DeleteProductUseCase(IWriteRepository<Product> productWriteRepository, IReadRepository<Product> readRepository, IUserProvider userProvider) : IDeleteProductUseCase
 {
-    private readonly IWriteRepository<Product> _productWriteRepository;
-    private readonly IReadRepository<Product> _productReadRepository;
-    private readonly IUserProvider _userProvider;
-    public DeleteProductUseCase(IWriteRepository<Product> productWriteRepository, IReadRepository<Product> readRepository, IUserProvider userProvider)
-    {
-        _productWriteRepository = productWriteRepository;
-        _productReadRepository = readRepository;
-        _userProvider = userProvider;
-    }
+    private readonly IWriteRepository<Product> _productWriteRepository = productWriteRepository;
+    private readonly IReadRepository<Product> _productReadRepository = readRepository;
+    private readonly IUserProvider _userProvider = userProvider;
 
     public async Task<DeleteResponse<Product>> Execute(DeleteProductRequest request)
     {
@@ -28,6 +22,6 @@ public class DeleteProductUseCase : IDeleteProductUseCase
 
         if (deleted) return new DeleteSuccessResponse<Product>();
 
-        return new DeleteErrorResponse<Product> { ErrorMessage = "Delete failed."};
+        return new DeleteErrorResponse<Product> { ErrorMessage = "Delete failed." };
     }
 }

@@ -22,20 +22,12 @@ namespace Fuel.Api.Controllers;
 [ApiController]
 [EnableRateLimiting("fixed")]
 [Route("[Controller]")]
-public class DishesController : ControllerBase
+public class DishesController(IGetDishesUseCase getDishesUseCase, IUpdateDishUseCase updateDishesUseCase, IAddDishUseCase addDishUseCase, IDeleteDishUseCase deleteDishUseCase) : ControllerBase
 {
-    readonly IGetDishesUseCase _getDishesUseCase;
-    readonly IUpdateDishUseCase _updateDishUseCase;
-    readonly IAddDishUseCase _addDishUseCase;
-    readonly IDeleteDishUseCase _deleteDishUseCase;
-
-    public DishesController(IGetDishesUseCase getDishesUseCase, IUpdateDishUseCase updateDishesUseCase, IAddDishUseCase addDishUseCase, IDeleteDishUseCase deleteDishUseCase)
-    {
-        _getDishesUseCase = getDishesUseCase;
-        _updateDishUseCase = updateDishesUseCase;
-        _addDishUseCase = addDishUseCase;
-        _deleteDishUseCase = deleteDishUseCase;
-    }
+    readonly IGetDishesUseCase _getDishesUseCase = getDishesUseCase;
+    readonly IUpdateDishUseCase _updateDishUseCase = updateDishesUseCase;
+    readonly IAddDishUseCase _addDishUseCase = addDishUseCase;
+    readonly IDeleteDishUseCase _deleteDishUseCase = deleteDishUseCase;
 
     [HttpGet]
     public async Task<IActionResult> GetDishes([FromQuery] GetDishesRequest request)
@@ -75,11 +67,10 @@ public class DishesController : ControllerBase
     public async Task<IActionResult> DeleteDish([FromQuery] DeleteDishRequest request)
     {
         var response = await _deleteDishUseCase.Execute(request);
-
         return response switch
         {
             DeleteSuccessResponse<Dish> => Ok(),
-            DeleteErrorResponse<Dish> errorResponse => BadRequest(),
+            DeleteErrorResponse<Dish> => BadRequest(),
             _ => BadRequest()
         };
     }

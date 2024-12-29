@@ -5,20 +5,12 @@ using Core.Interfaces.Repositories;
 using FluentValidation;
 
 namespace Application.UseCases.UserData.UpdateUserData;
-public class UpdateUserDataUseCase : IUpdateUserDataUseCase
+public class UpdateUserDataUseCase(IWriteRepository<Domain.Models.UserData> writeRepository, IReadRepository<Domain.Models.UserData> readRepository, IUserProvider userProvider, IValidator<UpdateUserDataRequest> validator) : IUpdateUserDataUseCase
 {
-    readonly IReadRepository<Domain.Models.UserData> _readRepository;
-    readonly IWriteRepository<Domain.Models.UserData> _writeRepository;
-    readonly IUserProvider _userProvider;
-    readonly IValidator<UpdateUserDataRequest> _validator;
-
-    public UpdateUserDataUseCase(IWriteRepository<Domain.Models.UserData> writeRepository, IReadRepository<Domain.Models.UserData> readRepository, IUserProvider userProvider, IValidator<UpdateUserDataRequest> validator)
-    {
-        _writeRepository = writeRepository;
-        _readRepository = readRepository;
-        _userProvider = userProvider;
-        _validator = validator;
-    }
+    readonly IReadRepository<Domain.Models.UserData> _readRepository = readRepository;
+    readonly IWriteRepository<Domain.Models.UserData> _writeRepository = writeRepository;
+    readonly IUserProvider _userProvider = userProvider;
+    readonly IValidator<UpdateUserDataRequest> _validator = validator;
 
     public async Task<UpdateResponse<Domain.Models.UserData>> Execute(UpdateUserDataRequest request)
     {
@@ -47,7 +39,7 @@ public class UpdateUserDataUseCase : IUpdateUserDataUseCase
 
     }
 
-    private void MapRequestToUserData(UpdateUserDataRequest request, Domain.Models.UserData userData)
+    private static void MapRequestToUserData(UpdateUserDataRequest request, Domain.Models.UserData userData)
     {
         userData.Weight = request.Weight ?? userData.Weight;
         userData.Height = request.Height ?? userData.Height;

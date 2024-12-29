@@ -3,14 +3,9 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace DataAccess.Mongo;
-public class DbContext : IDbContext
+public class DbContext(IOptions<DbConfig> dbConfig) : IDbContext
 {
-    private readonly IOptions<DbConfig> _dbConfig;
-
-    public DbContext(IOptions<DbConfig> dbConfig)
-    {
-        _dbConfig = dbConfig;
-    }
+    private readonly IOptions<DbConfig> _dbConfig = dbConfig;
 
     public IMongoCollection<T> GetCollection<T>()
     {

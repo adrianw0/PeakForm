@@ -10,5 +10,5 @@ public class UpdateProductsRequest : UseCases.Request
     public required string Name { get; set; }
     public string Ean { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public List<NutrientValue> Nutrients { get; set; } = new();
+    public List<NutrientValue> Nutrients { get; set; } = [];
 }

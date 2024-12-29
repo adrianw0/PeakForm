@@ -6,17 +6,10 @@ using Domain.Models;
 using System.Linq.Expressions;
 
 namespace Application.UseCases.Dishes.GetDishes;
-public class GetDishesUseCase : IGetDishesUseCase
+public class GetDishesUseCase(IReadRepository<Dish> dishReadRepository, IUserProvider userProvider) : IGetDishesUseCase
 {
-    private readonly IReadRepository<Dish> _dishReadRepository;
-    private readonly IUserProvider _userProvider;
-    public GetDishesUseCase(IReadRepository<Dish> dishReadRepository, IUserProvider userProvider)
-    {
-        _dishReadRepository = dishReadRepository;
-        _userProvider = userProvider;
-    }
-
-
+    private readonly IReadRepository<Dish> _dishReadRepository = dishReadRepository;
+    private readonly IUserProvider _userProvider = userProvider;
 
     public async Task<GetReponse<Dish>> Execute(GetDishesRequest request)
     {

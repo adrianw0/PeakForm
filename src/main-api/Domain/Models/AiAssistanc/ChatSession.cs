@@ -6,6 +6,6 @@ public class ChatSession : IEntity
     public Guid Id { get; init; }
     public Guid UserId { get; set; }
     public DateTime CreationDate { get; set; }
-    public SessionStatus status { get; set; }
+    public SessionStatus Status { get; set; }
     public DateTime LastActivityDate { get; set; }
 }

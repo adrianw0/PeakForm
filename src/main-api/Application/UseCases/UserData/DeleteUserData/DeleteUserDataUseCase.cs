@@ -4,15 +4,11 @@ using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 
 namespace Application.UseCases.UserData.DeleteUserData;
-public class DeleteUserDataUseCase : IDeleteUserDataUseCase
+public class DeleteUserDataUseCase(IWriteRepository<Domain.Models.UserData> writeRepository, IUserProvider userProvider) : IDeleteUserDataUseCase
 {
-    IWriteRepository<Domain.Models.UserData> _writeRepository;
-    IUserProvider _userProvider;
-    public DeleteUserDataUseCase(IWriteRepository<Domain.Models.UserData> writeRepository, IUserProvider userProvider)
-    {
-        _writeRepository = writeRepository;
-        _userProvider = userProvider;
-    }
+    private readonly IWriteRepository<Domain.Models.UserData> _writeRepository = writeRepository;
+    private readonly IUserProvider _userProvider = userProvider;
+
     public async Task<DeleteResponse<Domain.Models.UserData>> Execute(DeleteuserDataRequest request)
     {
         var userId = _userProvider.UserId;

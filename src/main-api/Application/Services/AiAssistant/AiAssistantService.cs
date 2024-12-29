@@ -41,7 +41,7 @@ public class AiAssistantService(IPromptBuilder promptBuilder, ILLMAssistantServi
     {
         Guid userId = GetUserId();
         var session = await _sessionManager.GetActiveSessionForUser(userId) ?? throw new InvalidOperationException(Constants.NoSessionToClose);
-        
+
         var key = GetCacheKey(userId, session.Id);
 
         if (_memoryCache.TryGetValue(key, out List<Message>? messages) && messages is not null)
