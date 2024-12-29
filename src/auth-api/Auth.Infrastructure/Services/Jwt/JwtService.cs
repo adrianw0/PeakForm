@@ -7,14 +7,9 @@ using System.Text;
 
 namespace Auth.Infrastructure.Services.Jwt;
 
-public class JwtService : IAuthTokenService
+public class JwtService(IOptions<JwtSettings> settings) : IAuthTokenService
 {
-    private readonly IOptions<JwtSettings> _settings;
-
-    public JwtService(IOptions<JwtSettings> settings)
-    {
-        _settings = settings;
-    }
+    private readonly IOptions<JwtSettings> _settings = settings;
 
     public JwtSecurityToken GenerateToken(AuthUserDto userDto)
     {

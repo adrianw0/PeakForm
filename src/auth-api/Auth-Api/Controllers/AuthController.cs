@@ -10,16 +10,10 @@ namespace Auth_Api.Controllers;
 [Authorize]
 [ApiController]
 [Route("[Controller]")]
-public class AuthController : ControllerBase
+public class AuthController(IConfiguration configuration, IUserService userService) : ControllerBase
 {
-    private readonly IConfiguration _configuration;
-    private readonly IUserService _userService;
-
-    public AuthController(IConfiguration configuration, IUserService userService)
-    {
-        _configuration = configuration;
-        _userService = userService;
-    }
+    private readonly IConfiguration _configuration = configuration;
+    private readonly IUserService _userService = userService;
 
     [AllowAnonymous]
     [HttpPost(nameof(CreateUser))]

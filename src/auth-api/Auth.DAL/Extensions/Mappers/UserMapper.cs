@@ -10,8 +10,8 @@ public static class UserMapper
         return new User()
         {
             Id = identityUser.Id,
-            Email = identityUser.Email,
-            UserName = identityUser.UserName
+            Email = identityUser.Email ?? "unknown",
+            UserName = identityUser.UserName ?? "unknown"
         };
     }
 }

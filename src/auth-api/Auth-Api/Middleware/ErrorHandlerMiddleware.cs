@@ -4,16 +4,10 @@ using System.Net;
 
 namespace Auth_Api.Middleware;
 
-public class ErrorHandlerMiddleware
+public class ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ErrorHandlerMiddleware> _logger;
-
-    public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
+    private readonly RequestDelegate _next = next;
+    private readonly ILogger<ErrorHandlerMiddleware> _logger = logger;
 
     public async Task Invoke(HttpContext context)
     {
@@ -23,14 +17,13 @@ public class ErrorHandlerMiddleware
         }
         catch (Exception ex)
         {
-            var logMessage = "An unhandled exception has occurred while executing the request.";
-
+            var errors = "";
             if (ex is UserCreationException userCreationException)
             {
-                logMessage += $"{userCreationException.Errors}";
+                errors = $"{userCreationException.Errors}";
             }
 
-            _logger.LogCritical(ex, logMessage);
+            _logger.LogCritical(ex, "An unhandled exception has occurred while executing the request: {errors}", errors );
             await HandleExceptionAsync(context, ex);
         }
     }

@@ -10,18 +10,11 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace Auth.Application.Services;
 
-public class UserService : IUserService
+public class UserService(IUserRepository userRepository, IAuthTokenService authService, ILogger<UserService> logger) : IUserService
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IAuthTokenService _authService;
-    private readonly ILogger<UserService> _logger;
-
-    public UserService(IUserRepository userRepository, IAuthTokenService authService, ILogger<UserService> logger)
-    {
-        _userRepository = userRepository;
-        _authService = authService;
-        _logger = logger;
-    }
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IAuthTokenService _authService = authService;
+    private readonly ILogger<UserService> _logger = logger;
 
     public async Task<Result<string>> LoginAsync(LoginUser loginUser)
     {
@@ -51,7 +44,7 @@ public class UserService : IUserService
 
         if (creationResult.Success) return Result.Ok("Ok");
 
-        _logger.LogError(creationResult.ErrorMessage);
+        _logger.LogError("Error while creating user: {error}", creationResult.ErrorMessage);
         return Result.Fail<string>(creationResult.ErrorMessage);
 
     }

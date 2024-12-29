@@ -4,9 +4,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Auth.DAL;
 
-public class AuthDbContext : IdentityDbContext<IdentityUser>
+public class AuthDbContext(DbContextOptions<AuthDbContext> options) : IdentityDbContext<IdentityUser>(options)
 {
-    public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
-    {
-    }
 }

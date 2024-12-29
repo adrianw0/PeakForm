@@ -7,14 +7,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Auth.DAL.Repository;
 
-public class UserRepository : IUserRepository
+public class UserRepository(UserManager<IdentityUser> userManager) : IUserRepository
 {
-    private readonly UserManager<IdentityUser> _userManager;
-
-    public UserRepository(UserManager<IdentityUser> userManager)
-    {
-        _userManager = userManager;
-    }
+    private readonly UserManager<IdentityUser> _userManager = userManager;
 
     public async Task<Result<User>> FindByEmailAsync(string email)
     {

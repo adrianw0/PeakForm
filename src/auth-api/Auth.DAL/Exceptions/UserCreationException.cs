@@ -1,11 +1,6 @@
 ﻿namespace Auth.DAL.Exceptions;
 
-public class UserCreationException : Exception
+public class UserCreationException(string errors) : Exception
 {
-    public string Errors { get; }
-
-    public UserCreationException(string errors)
-    {
-        Errors = errors;
-    }
+    public string Errors { get; } = errors;
 }
