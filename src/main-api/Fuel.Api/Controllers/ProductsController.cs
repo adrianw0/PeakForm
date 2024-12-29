@@ -65,7 +65,7 @@ public class ProductsController : ControllerBase
         return response switch
         {
             UpdateSuccessResponse<Product> successResponse => Ok(successResponse.Entity?.MapToDto()),
-            UpdateErrorResponse<Product> errorResponse => BadRequest(errorResponse.Message),
+            UpdateErrorResponse<Product> errorResponse => BadRequest(),
             _ => BadRequest()
         };
     }
@@ -78,7 +78,7 @@ public class ProductsController : ControllerBase
         return response switch
         {
             DeleteSuccessResponse<Product> => Ok(),
-            DeleteErrorResponse<Product> errorResponse => BadRequest(errorResponse.Message),
+            DeleteErrorResponse<Product> errorResponse => BadRequest(),
             _ => BadRequest()
         };
     }

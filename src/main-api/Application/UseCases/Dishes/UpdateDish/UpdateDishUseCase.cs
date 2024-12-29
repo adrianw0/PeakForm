@@ -1,6 +1,5 @@
 ﻿using Application.UseCases.Dishes.UpdateDish.Request;
 using Application.UseCases.Responses.Update;
-using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
@@ -25,7 +24,7 @@ public class UpdateDishUseCase : IUpdateDishUseCase
 
         var dish = await _dishReadRepository.FindByIdAsync(request.Id);
         if (!dish.OwnerId.Equals(_userProvider.UserId))
-            return new UpdateErrorResponse<Dish> { Code = ErrorCodes.NotFound };
+            return new UpdateErrorResponse<Dish> { ErrorMessage = "Dish Not found"};
 
         var updateDish = new Dish
         {
@@ -41,7 +40,7 @@ public class UpdateDishUseCase : IUpdateDishUseCase
         if (updated)
             return new UpdateSuccessResponse<Dish> { Entity = updateDish };
 
-        return new UpdateErrorResponse<Dish> { Code = ErrorCodes.UpdateFailed };
+        return new UpdateErrorResponse<Dish> { ErrorMessage = "Update failed."};
 
     }
 }

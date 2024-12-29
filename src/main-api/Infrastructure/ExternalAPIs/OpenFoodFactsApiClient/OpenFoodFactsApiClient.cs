@@ -7,12 +7,12 @@ using Newtonsoft.Json;
 
 
 namespace Infrastructure.ExternalAPIs.OpenFoodFactsApiWrapper;
-public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
+public class OpenFoodFactsApiClient : IExternalProductApiClient
 {
     private readonly HttpClient _httpClient;
-    private readonly ILogger<OpenFoodFactsApiWrapper> _logger;
+    private readonly ILogger<OpenFoodFactsApiClient> _logger;
 
-    public OpenFoodFactsApiWrapper(HttpClient httpClient, ILogger<OpenFoodFactsApiWrapper> logger)
+    public OpenFoodFactsApiClient(HttpClient httpClient, ILogger<OpenFoodFactsApiClient> logger)
     {
         _httpClient = httpClient;
         _logger = logger;
@@ -26,13 +26,14 @@ public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
 
         try
         {
+            _logger.LogInformation("calling OpenFoodFacts, req: {request}", req);
             response = await _httpClient.GetAsync(req);
             response.EnsureSuccessStatusCode();
 
         }
         catch (Exception ex)
         {
-            _logger.LogError("Open food api call failed: ", ex);
+            _logger.LogError("Open food api call failed: {ex}", ex);
             return new List<Product>();
         }
 
@@ -50,13 +51,14 @@ public class OpenFoodFactsApiWrapper : IExternalProductApiWrapper
 
         try
         {
+            _logger.LogInformation("calling OpenFoodFacts, req: {request}", req);
             response = await _httpClient.GetAsync(req);
             response.EnsureSuccessStatusCode();
 
         }
         catch (Exception ex)
         {
-            _logger.LogError("Open food api call failed: ", ex);
+            _logger.LogError("Open food api call failed: {ex}", ex);
             return null;
         }
 

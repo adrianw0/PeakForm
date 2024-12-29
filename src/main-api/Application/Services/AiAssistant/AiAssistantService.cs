@@ -9,27 +9,17 @@ using Microsoft.Extensions.Caching.Memory;
 using System.Text;
 
 namespace Application.Services.AiAssistant;
-public class AiAssistantService : IAiAssistantService
+public class AiAssistantService(IPromptBuilder promptBuilder, ILLMAssistantService assistantService,
+     ISessionManager sessionManager, IDateTimeProvider dateTimeProvider, IUserProvider userProvider,
+     IMemoryCache memoryCache, IReadRepository<UserData> readRepository) : IAiAssistantService
 {
-    private readonly IPromptBuilder _promptBuilder;
-    private readonly ILLMAssistantService _assistantService;
-    private readonly ISessionManager _sessionManager;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IUserProvider _userProvider;
-    private readonly IMemoryCache _memoryCache;
-    private readonly IReadRepository<UserData> _UserDataReadRepo;
-
-    public AiAssistantService(IPromptBuilder promptBuilder, ILLMAssistantService assistantService,
-         ISessionManager sessionManager, IDateTimeProvider dateTimeProvider, IUserProvider userProvider, IMemoryCache memoryCache, IReadRepository<UserData> readRepository)
-    {
-        _promptBuilder = promptBuilder;
-        _assistantService = assistantService;
-        _sessionManager = sessionManager;
-        _dateTimeProvider = dateTimeProvider;
-        _userProvider = userProvider;
-        _memoryCache = memoryCache;
-        _UserDataReadRepo = readRepository;
-    }
+    private readonly IPromptBuilder _promptBuilder = promptBuilder;
+    private readonly ILLMAssistantService _assistantService = assistantService;
+    private readonly ISessionManager _sessionManager = sessionManager;
+    private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
+    private readonly IUserProvider _userProvider = userProvider;
+    private readonly IMemoryCache _memoryCache = memoryCache;
+    private readonly IReadRepository<UserData> _UserDataReadRepo = readRepository;
 
     public async Task<ChatSession> OpenSessionForCurrentUser()
     {
@@ -50,15 +40,11 @@ public class AiAssistantService : IAiAssistantService
     public async Task CloseSessionForCurrentuser()
     {
         Guid userId = GetUserId();
-        var session = await _sessionManager.GetActiveSessionForUser(userId);
-        if (session is null)
-        {
-            throw new InvalidOperationException(Constants.NoSessionToClose);
-        }
-
+        var session = await _sessionManager.GetActiveSessionForUser(userId) ?? throw new InvalidOperationException(Constants.NoSessionToClose);
+        
         var key = GetCacheKey(userId, session.Id);
 
-        if (_memoryCache.TryGetValue(key, out List<Message> messages))
+        if (_memoryCache.TryGetValue(key, out List<Message>? messages) && messages is not null)
         {
             await _sessionManager.DumpMessagesToDatabase(messages);
             _memoryCache.Remove(key);
@@ -107,7 +93,7 @@ public class AiAssistantService : IAiAssistantService
 
     private List<Message> GetMessageHistory(Guid userId, ChatSession session)
     {
-        if (_memoryCache.TryGetValue(GetCacheKey(userId, session.Id), out List<Message> messages))
+        if (_memoryCache.TryGetValue(GetCacheKey(userId, session.Id), out List<Message>? messages) && messages is not null)
         {
             return messages;
         }
@@ -118,9 +104,9 @@ public class AiAssistantService : IAiAssistantService
     private void AddMessageToCache(Guid usertId, Guid sessionId, Message message)
     {
         var cacheKey = GetCacheKey(usertId, sessionId);
-        if (!_memoryCache.TryGetValue(cacheKey, out List<Message> messages))
+        if (!_memoryCache.TryGetValue(cacheKey, out List<Message>? messages) || messages is null)
         {
-            messages = new List<Message>();
+            messages = [];
         }
 
         messages.Add(message);

@@ -37,7 +37,7 @@ public class OpenFoodFactsApiWrapperTests
 
         var expectedResponse = await File.ReadAllTextAsync(Path.Combine("TestData", "OpenFoodFactsApiGetProductResponse.json"));
 
-        var loggerMock = Mock.Of<ILogger<OpenFoodFactsApiWrapper>>();
+        var loggerMock = Mock.Of<ILogger<OpenFoodFactsApiClient>>();
 
         var handlerMock = new Mock<HttpMessageHandler>();
         var httpClient = new HttpClient(handlerMock.Object);
@@ -59,8 +59,8 @@ public class OpenFoodFactsApiWrapperTests
 
 
 
-        var apiWrapper = new OpenFoodFactsApiWrapper(httpClient, loggerMock);
-        var product = (await apiWrapper.GetProductsByNameAsync("Berlinki", 1, 5)).FirstOrDefault();
+        var apiWrapper = new OpenFoodFactsApiClient(httpClient, loggerMock);
+        var product  = (await apiWrapper.GetProductsByNameAsync("Berlinki", 1, 5)).FirstOrDefault();
 
         Assert.IsType<Domain.Models.Product>(product);
 

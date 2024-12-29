@@ -8,7 +8,7 @@ public class AddProductRequest : UseCases.Request
     public required string Name { get; set; }
     public string Ean { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
-    public List<NutrientValue> Nutrients { get; set; } = new();
-    public List<UnitWeight> UnitWeights { get; set; }
-    public Unit BaseUnit { get; set; }
+    public List<NutrientValue> Nutrients { get; set; } = [];
+    public List<UnitWeight> UnitWeights { get; set; } = [];
+    public required Unit BaseUnit { get; set; }
 }

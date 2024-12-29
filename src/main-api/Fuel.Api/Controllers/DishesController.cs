@@ -66,7 +66,7 @@ public class DishesController : ControllerBase
         return response switch
         {
             UpdateSuccessResponse<Dish> successResponse => Ok(successResponse.Entity?.MapToDto()),
-            UpdateErrorResponse<Dish> errorResponse => BadRequest(errorResponse.Message),
+            UpdateErrorResponse<Dish> errorResponse => BadRequest(errorResponse.ErrorMessage),
             _ => BadRequest()
         };
     }
@@ -79,7 +79,7 @@ public class DishesController : ControllerBase
         return response switch
         {
             DeleteSuccessResponse<Dish> => Ok(),
-            DeleteErrorResponse<Dish> errorResponse => BadRequest(errorResponse.Message),
+            DeleteErrorResponse<Dish> errorResponse => BadRequest(),
             _ => BadRequest()
         };
     }

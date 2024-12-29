@@ -4,8 +4,8 @@ using Infrastructure.Interfaces;
 namespace Application.Providers.Products;
 public class ExternalProductsProvider : IExternalProductsProvider
 {
-    private readonly IExternalProductApiWrapper _externalProductApiWrapper;
-    public ExternalProductsProvider(IExternalProductApiWrapper externalProductApiWrapper)
+    private readonly IExternalProductApiClient _externalProductApiWrapper;
+    public ExternalProductsProvider(IExternalProductApiClient externalProductApiWrapper)
     {
         _externalProductApiWrapper = externalProductApiWrapper;
     }

@@ -1,4 +1,6 @@
-﻿namespace Application.Validators.Consts;
+﻿using Domain.Models;
+
+namespace Application.Validators.Consts;
 internal class ValidationMessages
 {
     #region UserData
@@ -15,5 +17,11 @@ internal class ValidationMessages
     public const string GoalWeightGreaterThanZero = "Goal Weight must be greater than 0.";
     public const string GenderRequired = "Gender must be a valid value.";
     public const string ActivityLevelRequired = "Activity Level must be a valid value.";
+    #endregion
+
+    #region Products
+    public const string UnitNotFound = "Unit doesn't exist";
+    public const string BaseUnitDoesntExist = "Base unit doesn't exist";
+    public const string DuplicateUnit = "Duplicate unit in product";
     #endregion
 }

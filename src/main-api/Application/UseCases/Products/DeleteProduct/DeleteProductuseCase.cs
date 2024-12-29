@@ -1,6 +1,5 @@
 ﻿using Application.UseCases.Products.DeleteProduct.Request;
 using Application.UseCases.Responses.Delete;
-using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
@@ -23,12 +22,12 @@ public class DeleteProductUseCase : IDeleteProductUseCase
 
         var product = await _productReadRepository.FindByIdAsync(request.Id);
         if (product is null || !product.OwnerId.Equals(_userProvider.UserId))
-            return new DeleteErrorResponse<Product> { Code = ErrorCodes.NotFound };
+            return new DeleteErrorResponse<Product> { ErrorMessage = "Product not found." };
 
         var deleted = await _productWriteRepository.DeleteByIdAsync(request.Id);
 
         if (deleted) return new DeleteSuccessResponse<Product>();
 
-        return new DeleteErrorResponse<Product> { Code = ErrorCodes.DeleteFailed };
+        return new DeleteErrorResponse<Product> { ErrorMessage = "Delete failed."};
     }
 }

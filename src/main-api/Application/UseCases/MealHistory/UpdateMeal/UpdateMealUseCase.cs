@@ -1,6 +1,5 @@
 ﻿using Application.UseCases.MealHistory.UpdateMeal.Request;
 using Application.UseCases.Responses.Update;
-using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
@@ -25,7 +24,7 @@ public class UpdateMealUseCase : IUpdateMealUseCase
 
         var meal = await _mealReadRepository.FindByIdAsync(request.Id);
         if (!meal.OwnerId.Equals(_userProvider.UserId))
-            return new UpdateErrorResponse<Meal> { Code = ErrorCodes.NotFound };
+            return new UpdateErrorResponse<Meal> { ErrorMessage = "Meal not found." };
 
         var updateMeal = new Meal
         {
@@ -38,6 +37,6 @@ public class UpdateMealUseCase : IUpdateMealUseCase
 
         if (updated) return new UpdateSuccessResponse<Meal> { Entity = updateMeal };
 
-        return new UpdateErrorResponse<Meal> { Code = ErrorCodes.MealUpdateFailed };
+        return new UpdateErrorResponse<Meal> { ErrorMessage = "Update failed" };
     }
 }

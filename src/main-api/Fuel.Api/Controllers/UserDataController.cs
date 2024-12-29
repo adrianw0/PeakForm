@@ -48,7 +48,7 @@ public class UserDataController : ControllerBase
         return response switch
         {
             UpdateSuccessResponse<UserData> successResponse => Ok(successResponse.Entity?.MapToDto()),
-            UpdateErrorResponse<UserData> errorResponse => BadRequest(errorResponse.Message),
+            UpdateErrorResponse<UserData> errorResponse => BadRequest(),
             _ => BadRequest()
         };
     }
@@ -60,7 +60,7 @@ public class UserDataController : ControllerBase
         return response switch
         {
             DeleteSuccessResponse<UserData> successResponse => Ok(),
-            DeleteErrorResponse<UserData> errorResponse => BadRequest(errorResponse.Message),
+            DeleteErrorResponse<UserData> errorResponse => BadRequest(errorResponse.ErrorMessage),
             _ => BadRequest()
         };
     }

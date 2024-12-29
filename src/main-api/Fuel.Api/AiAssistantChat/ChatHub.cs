@@ -10,8 +10,6 @@ public class ChatHub : Hub
 {
     private readonly IAiAssistantService _aiAssistantService;
 
-    private ChatSession session;
-
     public ChatHub(IAiAssistantService queryAssitantUseCase)
     {
         _aiAssistantService = queryAssitantUseCase;
@@ -42,7 +40,7 @@ public class ChatHub : Hub
 
     }
 
-    public async Task GetMessageHistory()
+    public Task GetMessageHistory()
     {
         throw new NotImplementedException();
     }

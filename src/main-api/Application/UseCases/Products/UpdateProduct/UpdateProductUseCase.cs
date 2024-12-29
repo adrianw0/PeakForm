@@ -1,6 +1,5 @@
 ﻿using Application.UseCases.Products.UpdateProduct.Request;
 using Application.UseCases.Responses.Update;
-using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
@@ -24,7 +23,7 @@ public class UpdateProductUseCase : IUpdateProductUseCase
         var product = await _productReadRepository.FindByIdAsync(request.Id);
 
         if (!product.OwnerId.Equals(_userProvider.UserId))
-            return new UpdateErrorResponse<Product> { Code = ErrorCodes.UpdateFailed };
+            return new UpdateErrorResponse<Product> { ErrorMessage = "Update failed" };
 
         var updateProduct = new Product
         {
@@ -41,7 +40,7 @@ public class UpdateProductUseCase : IUpdateProductUseCase
         if (updated)
             return new UpdateSuccessResponse<Product> { Entity = updateProduct };
 
-        return new UpdateErrorResponse<Product> { Message = ErrorCodes.UpdateFailed };
+        return new UpdateErrorResponse<Product> { ErrorMessage = "Update failed."};
 
     }
 }

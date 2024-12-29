@@ -10,7 +10,6 @@ using Application.UseCases.Responses.Add;
 using Application.UseCases.Responses.Delete;
 using Application.UseCases.Responses.Get;
 using Application.UseCases.Responses.Update;
-using Core.Common;
 using Domain.Models;
 using Fuel.Api.Mappers;
 using Microsoft.AspNetCore.Authorization;
@@ -23,20 +22,12 @@ namespace Fuel.Api.Controllers;
 [ApiController]
 [EnableRateLimiting("fixed")]
 [Route("[Controller]")]
-public class MealHistoryController : ControllerBase
+public class MealHistoryController(IAddMealUseCase addMealUseCase, IDeleteMealUseCase deleteMealUseCase, IGetMealsUseCase getMealsUseCase, IUpdateMealUseCase updateMealUseCase) : ControllerBase
 {
-    private readonly IAddMealUseCase _addMealUseCase;
-    private readonly IDeleteMealUseCase _deleteMealUseCase;
-    private readonly IGetMealsUseCase _getMealsUseCase;
-    private readonly IUpdateMealUseCase _updateMealUseCase;
-
-    public MealHistoryController(IAddMealUseCase addMealUseCase, IDeleteMealUseCase deleteMealUseCase, IGetMealsUseCase getMealsUseCase, IUpdateMealUseCase updateMealUseCase)
-    {
-        _addMealUseCase = addMealUseCase;
-        _deleteMealUseCase = deleteMealUseCase;
-        _getMealsUseCase = getMealsUseCase;
-        _updateMealUseCase = updateMealUseCase;
-    }
+    private readonly IAddMealUseCase _addMealUseCase = addMealUseCase;
+    private readonly IDeleteMealUseCase _deleteMealUseCase = deleteMealUseCase;
+    private readonly IGetMealsUseCase _getMealsUseCase = getMealsUseCase;
+    private readonly IUpdateMealUseCase _updateMealUseCase = updateMealUseCase;
 
     [HttpGet()]
     public async Task<IActionResult> GetMeals([FromQuery] GetMealsRequest request)
@@ -52,7 +43,7 @@ public class MealHistoryController : ControllerBase
     public async Task<IActionResult> AddMeal([FromBody] AddMealRequest request)
     {
         var result = await _addMealUseCase.Execute(request);
-        if (result is AddSuccessResponse<Meal> success) return Ok(success.Entity.MapToDto());
+        if (result is AddSuccessResponse<Meal> success) return Ok(success.Entity?.MapToDto());
 
         return BadRequest();
     }
@@ -64,9 +55,9 @@ public class MealHistoryController : ControllerBase
 
         return result switch
         {
-            UpdateSuccessResponse<Meal> success => Ok(success.Entity.MapToDto()),
+            UpdateSuccessResponse<Meal> success => Ok(success.Entity?.MapToDto()),
             UpdateErrorResponse<Meal> error => BadRequest(error),
-            _ => BadRequest(ErrorCodes.SomethingWentWrong)
+            _ => BadRequest()
         };
 
 
@@ -77,11 +68,9 @@ public class MealHistoryController : ControllerBase
     public async Task<IActionResult> DeleteMeal([FromQuery] DeleteMealRequest request)
     {
         var result = await _deleteMealUseCase.Execute(request);
-
         return result switch
         {
             DeleteSuccessResponse<Meal> success => Ok(success.Message),
-            DeleteErrorResponse<Meal> error => BadRequest(error.Message),
             _ => BadRequest()
         };
     }

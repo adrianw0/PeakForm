@@ -1,6 +1,5 @@
 using Application.UseCases.Responses.Update;
 using Application.UseCases.UserData.UpdateUserData.Request;
-using Core.Common;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using FluentValidation;
@@ -26,7 +25,7 @@ public class UpdateUserDataUseCase : IUpdateUserDataUseCase
         var validationResult = await _validator.ValidateAsync(request);
         if (!validationResult.IsValid)
         {
-            return new UpdateErrorResponse<Domain.Models.UserData> { Code = ErrorCodes.UpdateFailed, Message = string.Join(';', validationResult.Errors) };
+            return new UpdateErrorResponse<Domain.Models.UserData> { ErrorMessage = string.Join(';', validationResult.Errors) };
         }
 
         var userGuid = new Guid(_userProvider.UserId);

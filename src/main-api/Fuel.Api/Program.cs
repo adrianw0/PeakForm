@@ -67,10 +67,14 @@ public static class Program
         builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(DataAccess.Mongo.WriteRepository<>));
         builder.Services.AddScoped(typeof(IReadRepository<>), typeof(DataAccess.Mongo.ReadRepository<>));
 
+        var applicationAssembly = AppDomain.CurrentDomain.GetAssemblies()
+            .FirstOrDefault(a => a.FullName != null && a.FullName.StartsWith("Application"));
+        if (applicationAssembly != null)
+        {
+            builder.Services.AddValidatorsFromAssembly(applicationAssembly, ServiceLifetime.Transient);
+        }
 
-        builder.Services.AddValidatorsFromAssembly(AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName.StartsWith("Application")), ServiceLifetime.Transient);
-
-        builder.Services.AddScoped<IExternalProductApiWrapper, OpenFoodFactsApiWrapper>();
+        builder.Services.AddScoped<IExternalProductApiClient, OpenFoodFactsApiClient>();
         builder.Services.AddScoped<IExternalProductsProvider, ExternalProductsProvider>();
 
 
@@ -138,9 +142,9 @@ public static class Program
     {
         builder.Services.AddSingleton(new OpenAIClient(apiKey: openAiApiKey));
         builder.Services.AddTransient<IAiAssistantService, AiAssistantService>();
-        builder.Services.AddScoped(typeof(IPromptBuilder), typeof(PromptBuilder));
-        builder.Services.AddScoped(typeof(ISessionManager), typeof(SessionManager));
-        builder.Services.AddScoped(typeof(ILLMAssistantService), typeof(OpenAiAssistant));
+        builder.Services.AddScoped<IPromptBuilder, PromptBuilder>();
+        builder.Services.AddScoped<ISessionManager, SessionManager>();
+        builder.Services.AddScoped<ILLMAssistantService, OpenAiAssistant>();
     }
 
     private static void SetupJwt(WebApplicationBuilder builder, JwtSettings settings)
