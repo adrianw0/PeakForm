@@ -90,4 +90,4 @@ public class AddMealRequestValidatorTests
             res.ShouldNotHaveValidationErrorFor("FoodItems[0].Weight");
         }
     }
-    }
+}
