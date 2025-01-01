@@ -1,6 +1,22 @@
-﻿namespace Application.Validators.Consts;
-internal class ValidationMessages
+﻿using Domain;
+using Domain.Models;
+
+namespace Application.Validators.Consts;
+public class ValidationMessages
 {
+    #region General
+    public const string UnitDoesNotExist = "Weight unit Does not exist";
+    public const string WeightShouldBeGreaterThanZero = "Weight should be greated than 0.";
+    #endregion
+    #region Dish
+    public const string NameIsRequired = "Name is required.";
+    public const string IngredientsShouldNotBeEmpty = "Ingredients cannot be empty.";
+    #endregion
+    #region Meal
+    public const string FooditemsListCannotBeEmpty = "Fooditems list cannot be empty.";
+    public const string IngredientShouldNotBeNull = "Ingredient should not be null";
+
+    #endregion
     #region UserData
     public const string WeightGreaterThanZero = "Weight must be greater than 0.";
     public const string HeightGreaterThanZero = "Height must be greater than 0.";
@@ -16,9 +32,8 @@ internal class ValidationMessages
     public const string GenderRequired = "Gender must be a valid value.";
     public const string ActivityLevelRequired = "Activity Level must be a valid value.";
     #endregion
-
     #region Products
-    public const string UnitNotFound = "Unit doesn't exist";
+    public const string NoWeightForBaseUnit = "No weight for base unit specified";
     public const string BaseUnitDoesntExist = "Base unit doesn't exist";
     public const string DuplicateUnit = "Duplicate unit in product";
     #endregion

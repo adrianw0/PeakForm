@@ -4,9 +4,9 @@ using Core.Interfaces.Repositories;
 using Domain.Models;
 using FluentValidation;
 
-namespace Application.Validators;
+namespace Application.Validators.Requests;
 
-public class AddProductRequestValidator : AbstractValidator<AddProductRequest>
+internal class AddProductRequestValidator : AbstractValidator<AddProductRequest>
 {
 
     public AddProductRequestValidator(IReadRepository<Unit> unitReadRepository)
@@ -14,12 +14,12 @@ public class AddProductRequestValidator : AbstractValidator<AddProductRequest>
         RuleFor(x => x.BaseUnit)
             .MustAsync(async (unit, cancellation) =>
                 await unitReadRepository.ExistsAsync(u => u.Code == unit.Code))
-            .WithMessage(ValidationMessages.UnitNotFound);
+            .WithMessage(ValidationMessages.BaseUnitDoesntExist );
         RuleFor(x => x.UnitWeights)
             .Must(uws => uws.GroupBy(uw => uw.Unit.Code).All(g => g.Count() == 1))
             .WithMessage(ValidationMessages.DuplicateUnit);
         RuleFor(x => x)
             .Must(r => r.UnitWeights.Any(uw => uw.Unit.Code == r.BaseUnit.Code))
-            .WithMessage(ValidationMessages.BaseUnitDoesntExist);
+            .WithMessage(ValidationMessages.NoWeightForBaseUnit);
     }
 }

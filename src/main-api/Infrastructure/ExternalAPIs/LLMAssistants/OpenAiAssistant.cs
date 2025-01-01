@@ -13,7 +13,8 @@ public class OpenAiAssistant(OpenAIClient openAIClient, ILogger<OpenAiAssistant>
 
         await foreach (var chunk in _openAiClient.GetChatClient("gpt-4o-mini").CompleteChatStreamingAsync(prompt))
         {
-            yield return $"{chunk.ContentUpdate[0].Text}";
+            if (chunk.ContentUpdate != null && chunk.ContentUpdate.Count != 0)
+                yield return $"{chunk.ContentUpdate[0].Text}";
         }
     }
 }

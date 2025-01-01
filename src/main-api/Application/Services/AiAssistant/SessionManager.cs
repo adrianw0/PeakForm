@@ -29,6 +29,7 @@ public class SessionManager(IWriteRepository<ChatSession> writeRepository, IRead
         try
         {
             await CloseActiveSession(session);
+            _logger.LogInformation("session {id} for user {userId} closed.", session.Id, userId);
         }
         catch (Exception ex)
         {
@@ -43,6 +44,7 @@ public class SessionManager(IWriteRepository<ChatSession> writeRepository, IRead
             throw new ArgumentException(Constants.NullMessagesError);
         }
         await _messagesWriteRepository.InsertManyAsync(messages);
+        _logger.LogInformation("Messages saved to database: {messages}", messages);
     }
 
     public async Task<ChatSession> GetActiveSessionForUser(Guid userId)
@@ -91,7 +93,6 @@ public class SessionManager(IWriteRepository<ChatSession> writeRepository, IRead
     {
         session.Status = SessionStatus.Closed;
         await _sessionWriteRepository.UpdateAsync(session);
-        _logger.LogInformation("Session closed Id: {Id}, userId = {userId}", session.Id, session.UserId);
     }
 
 }

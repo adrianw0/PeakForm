@@ -4,6 +4,7 @@ using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using Domain.Models;
 using FluentValidation;
+using FluentValidation.Results;
 
 
 namespace Application.UseCases.Products.AddProduct;
@@ -16,11 +17,9 @@ public class AddProductUseCase(IWriteRepository<Product> productWriteRepository,
 
     public async Task<AddReponse<Product>> Execute(AddProductRequest request)
     {
-
         var validationResult = await _requestValidator.ValidateAsync(request);
         if (!validationResult.IsValid)
-            return new AddErrorResponse<Product>
-            { ErrorMessage = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)) };
+            return CreateErrorResponse(validationResult);
 
         var product = CreateProductFromRequest(request);
         await _productWriteRepository.InsertOneAsync(product);
@@ -28,6 +27,11 @@ public class AddProductUseCase(IWriteRepository<Product> productWriteRepository,
         return new AddSuccessResponse<Product> { Entity = product };
     }
 
+    private static AddReponse<Product> CreateErrorResponse(ValidationResult validationResult)
+    {
+        return new AddErrorResponse<Product>
+        { ErrorMessage = string.Join("; ", validationResult.Errors.Select(e => e.ErrorMessage)) };
+    }
 
     private Product CreateProductFromRequest(AddProductRequest request)
     {

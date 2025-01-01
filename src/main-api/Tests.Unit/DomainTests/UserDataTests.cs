@@ -2,7 +2,7 @@
 using Domain.Models.Enums;
 using FluentAssertions;
 
-namespace Tests.Unit.Domain;
+namespace Tests.Unit.DomainTests;
 public class UserDataTests
 {
     [Test]
@@ -66,8 +66,6 @@ public class UserDataTests
             Gender = gender
         };
 
-        // male : 10 * Weight + 6.25m * Height - 5 * Age + 5; 
-        // female : 10 * Weight + 6.25m * Height - 5 * Age - 161;
         Math.Round(user.Bmr, 2).Should().Be(expected);
     }
 

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Models;
-public record Product : IEntity, IFoodItem, IVisibilityControl
+public class Product : IEntity, IFoodItem, IVisibilityControl
 {
     public Guid Id { get; init; }
     [Required]

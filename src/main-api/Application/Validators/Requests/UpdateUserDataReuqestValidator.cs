@@ -2,10 +2,10 @@
 using Application.Validators.Consts;
 using FluentValidation;
 
-namespace Application.Validators;
-public class UserDataReuqestValidator : AbstractValidator<UpdateUserDataRequest>
+namespace Application.Validators.Requests;
+public class UpdateUserDataReuqestValidator : AbstractValidator<UpdateUserDataRequest>
 {
-    public UserDataReuqestValidator()
+    public UpdateUserDataReuqestValidator()
     {
         RuleFor(x => x.Weight)
             .GreaterThan(0)

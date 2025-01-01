@@ -6,5 +6,5 @@ public class UpdateMealRequest : UseCases.Request
 {
     [Required]
     public required Guid Id { get; set; }
-    public List<MealFoodItems> FoodItems { get; set; } = [];
+    public List<MealFoodItem> FoodItems { get; set; } = [];
 }

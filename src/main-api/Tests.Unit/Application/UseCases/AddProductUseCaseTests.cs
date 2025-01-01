@@ -1,7 +1,7 @@
 ﻿using Application.UseCases.Products.AddProduct;
 using Application.UseCases.Products.AddProduct.Request;
 using Application.UseCases.Responses.Add;
-using Application.Validators;
+using Application.Validators.Requests;
 using AutoFixture;
 using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
