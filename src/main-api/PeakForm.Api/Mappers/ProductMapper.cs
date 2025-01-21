@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
-using Fuel.Api.DTOs;
+using PeakForm.Api.DTOs;
 
-namespace Fuel.Api.Mappers;
+namespace PeakForm.Api.Mappers;
 
 public static class ProductMapper
 {

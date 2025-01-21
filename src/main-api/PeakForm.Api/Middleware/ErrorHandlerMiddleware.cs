@@ -2,7 +2,7 @@
 using System.Net;
 using System.Security;
 
-namespace Fuel.Api.Middleware;
+namespace PeakForm.Api.Middleware;
 
 public class ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
 {

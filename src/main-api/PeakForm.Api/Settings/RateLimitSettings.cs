@@ -1,4 +1,4 @@
-﻿namespace Fuel.Api.Settings;
+﻿namespace PeakForm.Api.Settings;
 
 public class RateLimitSettings
 {

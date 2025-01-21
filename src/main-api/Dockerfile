@@ -9,16 +9,16 @@ ENV ASPNETCORE_ENVIRONMENT=Development
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
-COPY ["Fuel.Api/Fuel.Api.csproj", "Fuel.Api/"]
-RUN dotnet restore "Fuel.Api/Fuel.Api.csproj"
+COPY ["PeakForm.Api/PeakForm.Api.csproj", "PeakForm.Api/"]
+RUN dotnet restore "PeakForm.Api/PeakForm.Api.csproj"
 COPY . .
-WORKDIR "/src/Fuel.Api"
-RUN dotnet build "Fuel.Api.csproj" -c Release -o /app/build
+WORKDIR "/src/PeakForm.Api"
+RUN dotnet build "PeakForm.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Fuel.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "PeakForm.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Fuel.Api.dll"]
+ENTRYPOINT ["dotnet", "PeakForm.Api.dll"]

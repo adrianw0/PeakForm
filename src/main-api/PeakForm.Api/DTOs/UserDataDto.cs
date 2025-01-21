@@ -1,6 +1,6 @@
 ﻿using Domain.Models.Enums;
 
-namespace Fuel.Api.DTOs;
+namespace PeakForm.Api.DTOs;
 
 public class UserDataDto
 {

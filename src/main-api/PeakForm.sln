@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fuel.Api", "Fuel.Api\Fuel.Api.csproj", "{8E8A4311-A86E-4FBB-9B51-012DA142EA73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeakForm.Api", "PeakForm.Api\PeakForm.Api.csproj", "{8E8A4311-A86E-4FBB-9B51-012DA142EA73}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{3A76ED62-696E-49E6-83E9-32D7C463EE3F}"
 EndProject

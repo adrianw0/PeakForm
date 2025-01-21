@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
-namespace Fuel.Api.Controllers;
+namespace PeakForm.Api.Controllers;
 
 [Authorize]
 [ApiController]

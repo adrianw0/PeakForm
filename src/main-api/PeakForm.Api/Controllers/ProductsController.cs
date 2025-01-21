@@ -11,12 +11,12 @@ using Application.UseCases.Responses.Delete;
 using Application.UseCases.Responses.Get;
 using Application.UseCases.Responses.Update;
 using Domain.Models;
-using Fuel.Api.Mappers;
+using PeakForm.Api.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
-namespace Fuel.Api.Controllers;
+namespace PeakForm.Api.Controllers;
 
 [Authorize]
 [ApiController]

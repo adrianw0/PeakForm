@@ -8,12 +8,12 @@ using Application.UseCases.UserData.GetUserData.Request;
 using Application.UseCases.UserData.UpdateUserData;
 using Application.UseCases.UserData.UpdateUserData.Request;
 using Domain.Models;
-using Fuel.Api.Mappers;
+using PeakForm.Api.Mappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
-namespace Fuel.Api.Controllers;
+namespace PeakForm.Api.Controllers;
 
 [Authorize]
 [ApiController]

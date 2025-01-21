@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Fuel.Api.Extensions;
+namespace PeakForm.Api.Extensions;
 
 public static class ClaimsPrincipalExtensions
 {

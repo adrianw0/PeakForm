@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
-namespace Fuel.Api.AiAssistantChat;
+namespace PeakForm.Api.AiAssistantChat;
 
 [Authorize]
 public class ChatHub(IAiAssistantService queryAssitantUseCase) : Hub

@@ -1,7 +1,7 @@
 ﻿using Core.Interfaces.Providers;
-using Fuel.Api.Extensions;
+using PeakForm.Api.Extensions;
 
-namespace Fuel.Api.Providers;
+namespace PeakForm.Api.Providers;
 
 public class UserProvider(IHttpContextAccessor accessor) : IUserProvider
 {

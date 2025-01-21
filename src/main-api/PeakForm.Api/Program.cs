@@ -6,10 +6,10 @@ using Core.Interfaces.Providers;
 using Core.Interfaces.Repositories;
 using DataAccess.Mongo;
 using FluentValidation;
-using Fuel.Api.AiAssistantChat;
-using Fuel.Api.Middleware;
-using Fuel.Api.Providers;
-using Fuel.Api.Settings;
+using PeakForm.Api.AiAssistantChat;
+using PeakForm.Api.Middleware;
+using PeakForm.Api.Providers;
+using PeakForm.Api.Settings;
 using Infrastructure.ExternalAPIs.LLMAssistants;
 using Infrastructure.ExternalAPIs.OpenFoodFactsApiClient;
 using Infrastructure.Interfaces;
@@ -23,7 +23,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.RateLimiting;
 
-namespace Fuel.Api;
+namespace PeakForm.Api;
 
 public static class Program
 {

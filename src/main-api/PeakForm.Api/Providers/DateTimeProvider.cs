@@ -1,6 +1,6 @@
 ﻿using Core.Interfaces.Providers;
 
-namespace Fuel.Api.Providers;
+namespace PeakForm.Api.Providers;
 
 public class DateTimeProvider : IDateTimeProvider
 {
