@@ -23,7 +23,7 @@
 
 ## 1. Download the Release
 
-Instead of building the application yourself, you can simply download the latest release from the [Releases section](#) on GitHub.
+Instead of building the application yourself, you can simply download the latest release from the [Releases section](https://github.com/adrianw0/PeakForm/releases) on GitHub.
 
 - Download the `docker-compose.yml` and `.env` files.
 
