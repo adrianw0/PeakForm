@@ -38,9 +38,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
-    - name: Restore dependencies for Fuel
-      run: dotnet restore src/main-api/Fuel.sln
-    - name: Build Fuel
-      run: dotnet build src/main-api/Fuel.sln --no-restore
-    - name: test Fuel
-      run: dotnet test src/main-api/Fuel.sln --no-build --verbosity normal      
+    - name: Restore dependencies for PeakForm
+      run: dotnet restore src/main-api/PeakForm.sln
+    - name: Build PeakForm
+      run: dotnet build src/main-api/PeakForm.sln --no-restore
+    - name: test PeakForm
+      run: dotnet test src/main-api/PeakForm.sln --no-build --verbosity normal      
