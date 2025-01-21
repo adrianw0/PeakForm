@@ -5,7 +5,7 @@ using Domain.Models;
 using FluentValidation;
 
 namespace Application.Validators.Requests;
-internal class AddDishRequestValidator : AbstractValidator<AddDishRequest>
+public class AddDishRequestValidator : AbstractValidator<AddDishRequest>
 {
     public AddDishRequestValidator(IReadRepository<Unit> unitRepo)
     {

@@ -5,7 +5,7 @@ using Domain.Models;
 using FluentValidation;
 
 namespace Application.Validators.Requests;
-internal class AddMealRequestValidator : AbstractValidator<AddMealRequest>
+public class AddMealRequestValidator : AbstractValidator<AddMealRequest>
 {
     public AddMealRequestValidator(IReadRepository<Unit> unitReadRepo)
     {

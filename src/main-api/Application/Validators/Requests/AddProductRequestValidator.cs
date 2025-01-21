@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace Application.Validators.Requests;
 
-internal class AddProductRequestValidator : AbstractValidator<AddProductRequest>
+public class AddProductRequestValidator : AbstractValidator<AddProductRequest>
 {
 
     public AddProductRequestValidator(IReadRepository<Unit> unitReadRepository)
